@@ -13,3 +13,21 @@ export const registerApi = (payload: any) => {
 export const logoutApi = () => {
   return api.post(AUTH_ENDPOINTS.LOGOUT);
 };
+
+export const requestPasswordResetApi = (email: string, redirectTo: string) => {
+  return api.post(AUTH_ENDPOINTS.REQUEST_PASSWORD_RESET, { email, redirectTo });
+};
+
+export const resetPasswordApi = (token: string, newPassword: string) => {
+  return api.post(`${AUTH_ENDPOINTS.RESET_PASSWORD}/${token}`, { newPassword });
+};
+
+export const changePasswordApi = (
+  currentPassword: string,
+  newPassword: string,
+) => {
+  return api.post(AUTH_ENDPOINTS.CHANGE_PASSWORD, {
+    currentPassword,
+    newPassword,
+  });
+};

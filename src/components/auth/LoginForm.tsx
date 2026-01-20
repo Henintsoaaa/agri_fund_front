@@ -26,6 +26,10 @@ export function LoginForm() {
     await login({ email, password });
   };
 
+  const handleForgotPassword = () => {
+    navigate("/forgot-password");
+  };
+
   const handleRegisterRedirect = () => {
     navigate("/register");
   };
@@ -82,6 +86,7 @@ export function LoginForm() {
               />
               <a
                 href="#"
+                onClick={handleForgotPassword}
                 className="ml-auto text-olive inline-block text-sm underline-offset-4 hover:underline"
               >
                 Mot de passe oublié ?
