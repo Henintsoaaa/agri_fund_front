@@ -1,12 +1,15 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import AuthPage from "./pages/AuthPage";
+import LoginPage from "./pages/auth/LoginPage";
+import RegisterPage from "./pages/auth/RegisterPage";
+import HomePage from "./pages/HomePage";
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<div>Home Page</div>} />
-        <Route path="/login" element={<AuthPage />} />
+        <Route path="/" element={<HomePage />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/register" element={<RegisterPage />} />
         <Route
           path="/reset-password"
           element={<div>Reset Password Page</div>}
