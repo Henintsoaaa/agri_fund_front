@@ -10,14 +10,33 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useRegister } from "@/features/auth/hooks/useRegister";
 import { User } from "lucide-react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 export function RegisterForm() {
   const navigate = useNavigate();
+  const { register, isLoading, error } = useRegister();
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [phone, setPhone] = useState("");
+  const [country, setCountry] = useState("");
 
   const handleLoginRedirect = () => {
     navigate("/login");
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    await register({
+      name,
+      email,
+      password,
+      phoneNumber: phone,
+      country,
+    });
   };
 
   return (
@@ -33,8 +52,8 @@ export function RegisterForm() {
           Entrez vos informations ci-dessous pour accéder au plateforme
         </CardDescription>
       </CardHeader>
-      <CardContent>
-        <form className="">
+      <form onSubmit={handleSubmit} className="flex flex-col">
+        <CardContent>
           <div className="flex flex-col gap-6 ">
             <div className="grid gap-2">
               <Label
@@ -48,6 +67,8 @@ export function RegisterForm() {
                 type="name"
                 placeholder="John Doe"
                 required
+                value={name}
+                onChange={(e) => setName(e.target.value)}
                 className="w-full px-4 py-3 border border-sage/20 rounded-lg focus:outline-none focus:border-olive focus:ring-2 focus:ring-olive/20"
               />
             </div>
@@ -64,6 +85,8 @@ export function RegisterForm() {
                 type="phone"
                 placeholder="+261 xx xx xxx xx"
                 required
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
                 className="w-full px-4 py-3 border border-sage/20 rounded-lg focus:outline-none focus:border-olive focus:ring-2 focus:ring-olive/20"
               />
             </div>
@@ -80,6 +103,8 @@ export function RegisterForm() {
                 type="country"
                 placeholder="Madagascar"
                 required
+                value={country}
+                onChange={(e) => setCountry(e.target.value)}
                 className="w-full px-4 py-3 border border-sage/20 rounded-lg focus:outline-none focus:border-olive focus:ring-2 focus:ring-olive/20"
               />
             </div>
@@ -96,6 +121,8 @@ export function RegisterForm() {
                 type="email"
                 placeholder="m@example.com"
                 required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 className="w-full px-4 py-3 border border-sage/20 rounded-lg focus:outline-none focus:border-olive focus:ring-2 focus:ring-olive/20"
               />
             </div>
@@ -113,38 +140,42 @@ export function RegisterForm() {
                 id="password"
                 type="password"
                 required
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
                 className="w-full px-4 py-3 border border-sage/20 rounded-lg focus:outline-none focus:border-olive focus:ring-2 focus:ring-olive/20"
               />
             </div>
+            {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
+
+            <Button
+              disabled={isLoading}
+              type="submit"
+              className="w-full py-3 px-6 rounded-lg font-semibold transition-colors duration-200 bg-olive text-cream hover:bg-forest/70"
+            >
+              {isLoading ? "inscription..." : "S'inscrire"}
+            </Button>
           </div>
-        </form>
-      </CardContent>
-      <CardFooter className="flex-col  justify-center items-center w-full">
-        <Button
-          type="submit"
-          className="w-full py-3 px-6 rounded-lg font-semibold transition-colors duration-200 bg-olive text-cream hover:bg-forest/70"
-        >
-          S'inscrire
-        </Button>
+        </CardContent>
+        <CardFooter className="flex-col  justify-center items-center w-full">
+          <div className="relative flex justify-center text-sm pt-5">
+            <span className="px-2 bg-white text-sage">ou</span>
+          </div>
 
-        <div className="relative flex justify-center text-sm pt-5">
-          <span className="px-2 bg-white text-sage">ou</span>
-        </div>
+          <CardAction>
+            <Button
+              onClick={handleLoginRedirect}
+              variant="link"
+              className=" text-sage hover:text-olive transition-colors duration-200 text-sm"
+            >
+              Se connecter si vous avez deja un compte
+            </Button>
+          </CardAction>
 
-        <CardAction>
-          <Button
-            onClick={handleLoginRedirect}
-            variant="link"
-            className=" text-sage hover:text-olive transition-colors duration-200 text-sm"
-          >
-            Se connecter si vous avez deja un compte
-          </Button>
-        </CardAction>
-
-        {/* <Button variant="outline" className="w-full">
+          {/* <Button variant="outline" className="w-full">
           Login with Google
         </Button> */}
-      </CardFooter>
+        </CardFooter>
+      </form>
     </Card>
   );
 }

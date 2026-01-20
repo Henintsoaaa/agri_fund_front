@@ -16,16 +16,13 @@ export const useLogout = () => {
 
     try {
       await logoutApi();
-
-      // Clear user state
-      setUser(null);
-
-      // Redirect to login page
-      navigate("/login");
     } catch (err: any) {
-      console.error("Erreur de déconnexion:", err);
-      setError(err?.response?.data?.message || "Échec de déconnexion");
+      // Si c'est une erreur 404 ou session inexistante, on continue quand même
+      console.warn("Erreur de déconnexion (ignorée):", err);
     } finally {
+      // Toujours nettoyer l'état local et rediriger
+      setUser(null);
+      navigate("/login");
       setIsLoading(false);
     }
   };
