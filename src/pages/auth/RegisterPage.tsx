@@ -3,7 +3,7 @@ import { Sprout } from "lucide-react";
 
 export default function RegisterPage() {
   return (
-    <div className="min-h-screen w-screen bg-linear-to-br from-cream via-sage/10 to-olive/10 flex items-center justify-center p-4">
+    <div className="min-h-screen w-full bg-linear-to-br from-cream via-sage/10 to-olive/10 flex items-center justify-center p-4">
       <div className="max-w-5xl w-full">
         {/* Header */}
         <div className="text-center mb-12">

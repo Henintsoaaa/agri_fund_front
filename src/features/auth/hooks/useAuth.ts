@@ -1,18 +1,84 @@
 import { useState } from "react";
-import { useAuth as useAuthContext } from "../context/AuthContext";
+import { useNavigate } from "react-router-dom";
+import { useAuthContext } from "../context/AuthContext";
 import {
+  loginApi,
+  registerApi,
+  logoutApi,
   changePasswordApi,
   requestPasswordResetApi,
   resetPasswordApi,
 } from "../api/auth.api";
-import { useNavigate } from "react-router-dom";
+import type { LoginPayload } from "../types/auth.types";
 
 export const useAuth = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const { setUser } = useAuthContext();
-
+  const { user, setUser } = useAuthContext();
   const navigate = useNavigate();
+
+  const login = async (payload: LoginPayload) => {
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const loginResponse = await loginApi(payload);
+      console.log("Login response:", loginResponse);
+
+      setUser(loginResponse.data.user);
+
+      // Redirection selon le rôle de l'utilisateur
+      if (loginResponse.data.user.role === "ADMIN") {
+        navigate("/");
+      } else if (loginResponse.data.user.role === "INVESTOR") {
+        navigate("/");
+      } else if (loginResponse.data.user.role === "PROJECT_OWNER") {
+        navigate("/");
+      } else {
+        navigate("/");
+      }
+    } catch (err: any) {
+      console.error("Erreur de connexion:", err);
+      setError(err?.response?.data?.message || "Échec de connexion");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const register = async (payload: any) => {
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const registerResponse = await registerApi(payload);
+      console.log("Register response:", registerResponse);
+
+      setUser(registerResponse.data.user);
+      navigate("/");
+    } catch (err: any) {
+      console.error("Erreur d'inscription:", err);
+      setError(err?.response?.data?.message || "Échec de l'inscription");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const logout = async () => {
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      await logoutApi();
+    } catch (err: any) {
+      // Si c'est une erreur 404 ou session inexistante, on continue quand même
+      console.warn("Erreur de déconnexion (ignorée):", err);
+    } finally {
+      // Toujours nettoyer l'état local et rediriger
+      setUser(null);
+      navigate("/login");
+      setIsLoading(false);
+    }
+  };
 
   const requestPasswordReset = async (email: string, redirectTo: string) => {
     setIsLoading(true);
@@ -67,7 +133,6 @@ export const useAuth = () => {
 
     try {
       await changePasswordApi(currentPassword, newPassword);
-
       navigate("/");
     } catch (err: any) {
       console.error("Erreur de changement de mot de passe:", err);
@@ -80,8 +145,12 @@ export const useAuth = () => {
   };
 
   return {
-    resetPassword,
+    user,
+    login,
+    register,
+    logout,
     requestPasswordReset,
+    resetPassword,
     changePassword,
     isLoading,
     error,

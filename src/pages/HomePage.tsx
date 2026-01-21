@@ -1,8 +1,8 @@
 import { Button } from "@/components/ui/button";
-import { useLogout } from "@/features/auth/hooks/useLogout";
+import { useAuth } from "@/features/auth/hooks/useAuth";
 
 export default function HomePage() {
-  const { logout } = useLogout();
+  const { logout } = useAuth();
   const handleLogout = () => {
     logout();
   };

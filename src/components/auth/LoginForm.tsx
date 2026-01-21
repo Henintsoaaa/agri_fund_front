@@ -13,11 +13,11 @@ import { Label } from "@/components/ui/label";
 import { User } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { useLogin } from "@/features/auth/hooks/useLogin";
+import { useAuth } from "@/features/auth/hooks/useAuth";
 
 export function LoginForm() {
   const navigate = useNavigate();
-  const { login, isLoading, error } = useLogin();
+  const { login, isLoading, error } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 

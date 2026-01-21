@@ -10,14 +10,14 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useRegister } from "@/features/auth/hooks/useRegister";
+import { useAuth } from "@/features/auth/hooks/useAuth";
 import { User } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 export function RegisterForm() {
   const navigate = useNavigate();
-  const { register, isLoading, error } = useRegister();
+  const { register, isLoading, error } = useAuth();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
