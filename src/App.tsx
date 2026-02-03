@@ -5,6 +5,7 @@ import HomePage from "./pages/HomePage";
 import ResetPasswordPage from "./pages/auth/ResetPasswordPage";
 import RequestResetPasswordPage from "./pages/auth/RequestResetPasswordPage";
 import { AuthProvider } from "./features/auth/context/AuthContext";
+import AdminDashboard from "./pages/admin/AdminDashboard";
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
             element={<RequestResetPasswordPage />}
           />
           <Route path="/reset-password" element={<ResetPasswordPage />} />
+          <Route path="/admin-dashboard" element={<AdminDashboard />} />
         </Routes>
       </BrowserRouter>
     </AuthProvider>
