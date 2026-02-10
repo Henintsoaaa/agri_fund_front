@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/features/auth/hooks/useAuth";
-import { Sprout, LogOut, LayoutDashboard } from "lucide-react";
+import { Sprout, LogOut } from "lucide-react";
 
 export default function AdminLayout() {
   const { logout } = useAuth();
