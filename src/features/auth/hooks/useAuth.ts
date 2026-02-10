@@ -29,7 +29,7 @@ export const useAuth = () => {
 
       // Redirection selon le rôle de l'utilisateur
       if (loginResponse.data.user.role === "ADMIN") {
-        navigate("/admin/dashboard");
+        navigate("/admin-dashboard");
       } else if (loginResponse.data.user.role === "INVESTOR") {
         navigate("/investor");
       } else if (loginResponse.data.user.role === "PROJECT_OWNER") {

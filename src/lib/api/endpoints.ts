@@ -7,23 +7,23 @@ export const AUTH_ENDPOINTS = {
   CHANGE_PASSWORD: "/auth/change-password",
 };
 
-export const ADMIN_ENDPOINTS = {
-  CREATE_USER: "admin/create-user",
-  EDIT_USER: (userId: string) => `admin/edit-user/${userId}`,
-  DELETE_USER: (userId: string) => `admin/delete-user/${userId}`,
+export const ADMIN_USER_ENDPOINTS = {
+  CREATE_USER: "user/create-user",
+  EDIT_USER: (userId: string) => `user/edit-user/${userId}`,
+  DELETE_USER: (userId: string) => `user/delete-user/${userId}`,
 
-  GET_ALL_USERS: "admin/users",
-  GET_USER_BY_ID: (userId: string) => `admin/users/${userId}`,
+  GET_ALL_USERS: "user/users",
+  GET_USER_BY_ID: (userId: string) => `user/users/${userId}`,
 
-  GET_ACTIVE_USERS: "admin/users/active",
-  GET_INACTIVE_USERS: "admin/users/inactive",
-  GET_USER_DELETED: "admin/users/deleted",
+  GET_ACTIVE_USERS: "user/users/active",
+  GET_INACTIVE_USERS: "user/users/inactive",
+  GET_USER_DELETED: "user/users/deleted",
 
-  GET_PROJECT_OWNERS: "admin/project-owners",
-  GET_ACTIVE_PROJECT_OWNERS: "admin/project-owners/active",
-  GET_INACTIVE_PROJECT_OWNERS: "admin/project-owners/inactive",
+  GET_PROJECT_OWNERS: "user/project-owners",
+  GET_ACTIVE_PROJECT_OWNERS: "user/project-owners/active",
+  GET_INACTIVE_PROJECT_OWNERS: "user/project-owners/inactive",
 
-  GET_INVESTORS: "admin/investors",
-  GET_ACTIVE_INVESTORS: "admin/investors/active",
-  GET_INACTIVE_INVESTORS: "admin/investors/inactive",
+  GET_INVESTORS: "user/investors",
+  GET_ACTIVE_INVESTORS: "user/investors/active",
+  GET_INACTIVE_INVESTORS: "user/investors/inactive",
 };
