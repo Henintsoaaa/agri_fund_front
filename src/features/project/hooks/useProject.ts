@@ -5,10 +5,15 @@ import {
   getProjectByIdApi,
   updateProjectApi,
   deleteProjectApi,
+  createProjectStageApi,
+  updateProjectStageApi,
+  deleteProjectStageApi,
 } from "../api/project.api";
 import type {
   CreateProjectPayload,
   UpdateProjectPayload,
+  CreateProjectStagePayload,
+  UpdateProjectStagePayload,
 } from "../types/project.types";
 import { toast } from "sonner";
 
@@ -93,6 +98,64 @@ export const useProject = () => {
     },
   });
 
+  // Stage-related mutations
+  const createProjectStageMutation = useMutation({
+    mutationFn: ({
+      projectId,
+      stageData,
+    }: {
+      projectId: string;
+      stageData: CreateProjectStagePayload;
+    }) => createProjectStageApi(projectId, stageData),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["my-projects"] });
+      queryClient.invalidateQueries({ queryKey: ["project"] });
+      toast.success("Étape créée avec succès");
+    },
+    onError: (error: any) => {
+      toast.error(
+        error?.response?.data?.message ||
+          "Erreur lors de la création de l'étape",
+      );
+    },
+  });
+
+  const updateProjectStageMutation = useMutation({
+    mutationFn: ({
+      stageId,
+      stageData,
+    }: {
+      stageId: string;
+      stageData: UpdateProjectStagePayload;
+    }) => updateProjectStageApi(stageId, stageData),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["my-projects"] });
+      queryClient.invalidateQueries({ queryKey: ["project"] });
+      toast.success("Étape mise à jour avec succès");
+    },
+    onError: (error: any) => {
+      toast.error(
+        error?.response?.data?.message ||
+          "Erreur lors de la mise à jour de l'étape",
+      );
+    },
+  });
+
+  const deleteProjectStageMutation = useMutation({
+    mutationFn: (stageId: string) => deleteProjectStageApi(stageId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["my-projects"] });
+      queryClient.invalidateQueries({ queryKey: ["project"] });
+      toast.success("Étape supprimée avec succès");
+    },
+    onError: (error: any) => {
+      toast.error(
+        error?.response?.data?.message ||
+          "Erreur lors de la suppression de l'étape",
+      );
+    },
+  });
+
   return {
     myProjects,
     isLoadingMyProjects,
@@ -105,5 +168,12 @@ export const useProject = () => {
     isUpdatingProject: updateProjectMutation.isPending,
     deleteProject: deleteProjectMutation.mutate,
     isDeletingProject: deleteProjectMutation.isPending,
+    // Stage-related functions
+    createProjectStage: createProjectStageMutation.mutate,
+    isCreatingProjectStage: createProjectStageMutation.isPending,
+    updateProjectStage: updateProjectStageMutation.mutate,
+    isUpdatingProjectStage: updateProjectStageMutation.isPending,
+    deleteProjectStage: deleteProjectStageMutation.mutate,
+    isDeletingProjectStage: deleteProjectStageMutation.isPending,
   };
 };

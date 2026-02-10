@@ -31,3 +31,7 @@ export const changePasswordApi = (
     newPassword,
   });
 };
+
+export const getSessionApi = () => {
+  return api.get(AUTH_ENDPOINTS.SESSION);
+};

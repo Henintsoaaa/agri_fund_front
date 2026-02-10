@@ -9,23 +9,24 @@ import { Button } from "@/components/ui/button";
 export default function ProjectStageList() {
   const { projectId } = useParams<{ projectId: string }>();
   const navigate = useNavigate();
-  const { useGetProjectById } = useProject();
+  const { useGetProjectById, deleteProjectStage } = useProject();
   const { data: project, isLoading } = useGetProjectById(projectId || "");
 
   const stages = project?.stages || [];
 
   const handleEditStage = (stageId: string) => {
-    // TODO: Implement edit functionality
+    // TODO: Open edit modal/form
     console.log("Edit stage:", stageId);
   };
 
   const handleDeleteStage = (stageId: string) => {
-    // TODO: Implement delete functionality
-    console.log("Delete stage:", stageId);
+    if (window.confirm("Êtes-vous sûr de vouloir supprimer cette étape ?")) {
+      deleteProjectStage(stageId);
+    }
   };
 
   const handleViewDetails = (stageId: string) => {
-    // TODO: Implement view details functionality
+    // TODO: Navigate to stage details page or open modal
     console.log("View details:", stageId);
   };
 

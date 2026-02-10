@@ -14,7 +14,7 @@ import type { LoginPayload } from "../types/auth.types";
 export const useAuth = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const { user, setUser } = useAuthContext();
+  const { user, setUser, isLoading: isAuthLoading } = useAuthContext();
   const navigate = useNavigate();
 
   const login = async (payload: LoginPayload) => {
@@ -33,7 +33,7 @@ export const useAuth = () => {
       } else if (loginResponse.data.user.role === "INVESTOR") {
         navigate("/investor");
       } else if (loginResponse.data.user.role === "PROJECT_OWNER") {
-        navigate("/project-owner");
+        navigate("/project-owner-dashboard");
       } else {
         navigate("/");
       }
@@ -152,7 +152,7 @@ export const useAuth = () => {
     requestPasswordReset,
     resetPassword,
     changePassword,
-    isLoading,
+    isLoading: isLoading || isAuthLoading,
     error,
   };
 };

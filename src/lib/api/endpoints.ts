@@ -5,6 +5,7 @@ export const AUTH_ENDPOINTS = {
   REQUEST_PASSWORD_RESET: "/auth/request-password-reset",
   RESET_PASSWORD: "/auth/reset-password",
   CHANGE_PASSWORD: "/auth/change-password",
+  SESSION: "/auth/session",
 };
 
 export const ADMIN_USER_ENDPOINTS = {
@@ -37,4 +38,10 @@ export const PROJECT_ENDPOINTS = {
   SUSPEND_PROJECT: (projectId: string) => `project/suspend/${projectId}`,
   ACTIVATE_PROJECT: (projectId: string) => `project/activate/${projectId}`,
   GET_ALL_PROJECTS: "project",
+
+  // Stage-related endpoints
+  CREATE_PROJECT_STAGE: (projectId: string) => `project/${projectId}/stages`,
+  GET_PROJECT_STAGE_BY_ID: (stageId: string) => `project/stages/${stageId}`,
+  UPDATE_PROJECT_STAGE: (stageId: string) => `project/stages/${stageId}`,
+  DELETE_PROJECT_STAGE: (stageId: string) => `project/stages/${stageId}`,
 };

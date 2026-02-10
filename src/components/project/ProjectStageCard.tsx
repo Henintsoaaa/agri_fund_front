@@ -18,7 +18,10 @@ export default function ProjectStageCard({
   onDelete,
   onViewDetails,
 }: ProjectStageCardProps) {
-  const progressPercentage = (stage.collectedAmount / stage.targetAmount) * 100;
+  const progressPercentage =
+    stage.targetAmount && stage.collectedAmount
+      ? (stage.collectedAmount / stage.targetAmount) * 100
+      : 0;
 
   const getStatusColor = (statut: string) => {
     switch (statut) {
@@ -89,8 +92,8 @@ export default function ProjectStageCard({
             <div className="mb-4">
               <div className="flex justify-between items-center mb-2">
                 <span className="text-sm font-medium text-forest">
-                  €{stage.collectedAmount.toLocaleString()} / €
-                  {stage.targetAmount.toLocaleString()}
+                  €{(stage.collectedAmount || 0).toLocaleString()} / €
+                  {(stage.targetAmount || 0).toLocaleString()}
                 </span>
                 <span className="text-sm font-medium text-olive">
                   {Math.round(progressPercentage)}%
