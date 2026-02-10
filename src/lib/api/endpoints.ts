@@ -27,3 +27,14 @@ export const ADMIN_USER_ENDPOINTS = {
   GET_ACTIVE_INVESTORS: "user/investors/active",
   GET_INACTIVE_INVESTORS: "user/investors/inactive",
 };
+
+export const PROJECT_ENDPOINTS = {
+  CREATE_PROJECT: "project/create",
+  GET_MY_PROJECTS: "project/my-projects",
+  GET_PROJECT_BY_ID: (projectId: string) => `project/${projectId}`,
+  UPDATE_PROJECT: (projectId: string) => `project/update/${projectId}`,
+  DELETE_PROJECT: (projectId: string) => `project/delete/${projectId}`,
+  SUSPEND_PROJECT: (projectId: string) => `project/suspend/${projectId}`,
+  ACTIVATE_PROJECT: (projectId: string) => `project/activate/${projectId}`,
+  GET_ALL_PROJECTS: "project",
+};

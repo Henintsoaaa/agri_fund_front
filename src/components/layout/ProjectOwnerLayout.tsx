@@ -1,26 +1,8 @@
 import { useAuth } from "@/features/auth/hooks/useAuth";
-import {
-  Sprout,
-  LogOut,
-  TrendingUp,
-  MessageCircle,
-  FolderOpen,
-  Home,
-  Bell,
-  Settings,
-} from "lucide-react";
-import { useState } from "react";
+import { Sprout, LogOut, MessageCircle, Bell, Settings } from "lucide-react";
 
 export default function ProjectOwnerLayout() {
   const { logout, user } = useAuth();
-  const [activeTab, setActiveTab] = useState("dashboard");
-
-  const navItems = [
-    { id: "dashboard", label: "Accueil", icon: Home },
-    { id: "projects", label: "Mes Projets", icon: FolderOpen },
-    { id: "messaging", label: "Messages", icon: MessageCircle },
-    { id: "investments", label: "Mes Finances", icon: TrendingUp },
-  ];
 
   const handleLogout = () => {
     logout();
@@ -39,27 +21,10 @@ export default function ProjectOwnerLayout() {
             </span>
           </div>
 
-          <nav className="hidden md:flex items-center space-x-1">
-            {navItems.map((item) => {
-              const IconComponent = item.icon;
-              return (
-                <button
-                  key={item.id}
-                  onClick={() => setActiveTab(item.id)}
-                  className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition-all duration-200 ${
-                    activeTab === item.id
-                      ? "bg-olive text-cream shadow-md"
-                      : "text-sage hover:bg-olive hover:text-cream"
-                  }`}
-                >
-                  <IconComponent className="h-4 w-4" />
-                  <span className="text-sm font-medium">{item.label}</span>
-                </button>
-              );
-            })}
-          </nav>
-
           <div className="flex items-center space-x-3">
+            <button className="p-2 text-sage hover:text-cream hover:bg-olive rounded-full transition-colors duration-200">
+              <MessageCircle className="h-5 w-5" />
+            </button>
             <button className="p-2 text-sage hover:text-cream hover:bg-olive rounded-full transition-colors duration-200">
               <Bell className="h-5 w-5" />
             </button>

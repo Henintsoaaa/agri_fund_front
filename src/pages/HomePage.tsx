@@ -1,20 +1,27 @@
-import { Button } from "@/components/ui/button";
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/features/auth/hooks/useAuth";
 
 export default function HomePage() {
-  const { logout } = useAuth();
-  const handleLogout = () => {
-    logout();
-  };
+  const { user } = useAuth();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!user) {
+      navigate("/login");
+    } else if (user.role === "ADMIN") {
+      navigate("/admin-dashboard");
+    } else if (user.role === "PROJECT_OWNER") {
+      navigate("/project-owner-dashboard");
+    } else {
+      // For investors, redirect to a different page when implemented
+      navigate("/login");
+    }
+  }, [user, navigate]);
+
   return (
-    <div className="p-4 flex justify-between items-center bg-forest">
-      <p className="text-olive">Home Page</p>
-      <Button
-        onClick={handleLogout}
-        className="text-cream border-white hover:bg-olive bg-olive/70"
-      >
-        Logout
-      </Button>
+    <div className="flex items-center justify-center min-h-screen">
+      <p className="text-sage">Redirection...</p>
     </div>
   );
 }
