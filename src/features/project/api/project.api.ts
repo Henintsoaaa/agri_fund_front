@@ -43,3 +43,7 @@ export const activateProjectApi = (projectId: string) => {
 export const getAllProjectsApi = () => {
   return api.get<Project[]>(PROJECT_ENDPOINTS.GET_ALL_PROJECTS);
 };
+
+export const getPublicProjectsApi = () => {
+  return api.get<Project[]>(PROJECT_ENDPOINTS.GET_PUBLIC_PROJECTS);
+};

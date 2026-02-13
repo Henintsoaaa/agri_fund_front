@@ -12,7 +12,7 @@ export default function HomePage() {
     } else if (user.role === "ADMIN") {
       navigate("/admin-dashboard");
     } else if (user.role === "PROJECT_OWNER") {
-      navigate("/project-owner-dashboard");
+      navigate("/project-owner");
     } else {
       // For investors, redirect to a different page when implemented
       navigate("/login");

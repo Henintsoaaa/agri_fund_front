@@ -37,4 +37,5 @@ export const PROJECT_ENDPOINTS = {
   SUSPEND_PROJECT: (projectId: string) => `project/suspend/${projectId}`,
   ACTIVATE_PROJECT: (projectId: string) => `project/activate/${projectId}`,
   GET_ALL_PROJECTS: "project",
+  GET_PUBLIC_PROJECTS: "project/public",
 };

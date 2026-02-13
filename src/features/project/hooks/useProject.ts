@@ -5,15 +5,19 @@ import {
   getProjectByIdApi,
   updateProjectApi,
   deleteProjectApi,
+  getAllProjectsApi,
+  getPublicProjectsApi,
 } from "../api/project.api";
 import type {
   CreateProjectPayload,
   UpdateProjectPayload,
 } from "../types/project.types";
 import { toast } from "sonner";
+import { useAuthContext } from "@/features/auth/context/AuthContext";
 
 export const useProject = () => {
   const queryClient = useQueryClient();
+  const { user } = useAuthContext();
 
   // Get my projects
   const {
@@ -27,6 +31,27 @@ export const useProject = () => {
       const response = await getMyProjectsApi();
       return response.data;
     },
+  });
+
+  // Get all projects (with stages) - different endpoints based on role
+  const {
+    data: allProjects,
+    isLoading: isLoadingAllProjects,
+    error: allProjectsError,
+    refetch: refetchAllProjects,
+  } = useQuery({
+    queryKey: ["all-projects", user?.role],
+    queryFn: async () => {
+      if (user?.role === "ADMIN") {
+        const response = await getAllProjectsApi();
+        return response.data;
+      } else {
+        // For investors and project owners, use public projects
+        const response = await getPublicProjectsApi();
+        return response.data;
+      }
+    },
+    enabled: !!user, // Only run when user is available
   });
 
   // Get project by ID
@@ -98,6 +123,10 @@ export const useProject = () => {
     isLoadingMyProjects,
     myProjectsError,
     refetchMyProjects,
+    allProjects,
+    isLoadingAllProjects,
+    allProjectsError,
+    refetchAllProjects,
     useGetProjectById,
     createProject: createProjectMutation.mutate,
     isCreatingProject: createProjectMutation.isPending,

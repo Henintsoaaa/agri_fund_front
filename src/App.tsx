@@ -11,6 +11,11 @@ import ProjectStageList from "./pages/project/ProjectStageList";
 import CreateProject from "./pages/project/CreateProject";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "sonner";
+import InvestorDashboard from "./pages/project/InvestorDashboard";
+import ProjectShowcase from "./pages/project/ProjectShowcase";
+import AdminLayout from "./components/layout/AdminLayout";
+import InvestorLayout from "./components/layout/InvestorLayout";
+import ProjectOwnerLayout from "./components/layout/ProjectOwnerLayout";
 
 const queryClient = new QueryClient();
 
@@ -29,17 +34,27 @@ function App() {
               element={<RequestResetPasswordPage />}
             />
             <Route path="/reset-password" element={<ResetPasswordPage />} />
-            <Route path="/admin-dashboard" element={<AdminDashboard />} />
 
-            <Route
-              path="/project-owner-dashboard"
-              element={<ProjectOwnerDashboard />}
-            />
-            <Route
-              path="/project-stage/:projectId"
-              element={<ProjectStageList />}
-            />
-            <Route path="/create-project" element={<CreateProject />} />
+            <Route element={<AdminLayout />}>
+              <Route path="/admin-dashboard" element={<AdminDashboard />} />
+            </Route>
+
+            <Route element={<ProjectOwnerLayout />}>
+              <Route
+                path="/project-owner"
+                element={<ProjectOwnerDashboard />}
+              />
+              <Route
+                path="/project-stage/:projectId"
+                element={<ProjectStageList />}
+              />
+              <Route path="/create-project" element={<CreateProject />} />
+            </Route>
+
+            <Route element={<InvestorLayout />}>
+              <Route path="/investor" element={<InvestorDashboard />} />
+              <Route path="/project-show" element={<ProjectShowcase />} />
+            </Route>
           </Routes>
         </BrowserRouter>
         <Toaster position="top-right" richColors />
