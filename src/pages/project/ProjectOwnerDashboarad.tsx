@@ -1,4 +1,3 @@
-import ProjectOwnerLayout from "@/components/layout/ProjectOwnerLayout";
 import ProjectCard from "@/components/project/ProjectCard";
 import ProjectStatsCard from "@/components/project/ProjectStatsCard";
 import { useProject } from "@/features/project/hooks/useProject";
@@ -40,26 +39,25 @@ export default function ProjectOwnerDashboard() {
   ];
 
   return (
-    <div>
-      <ProjectOwnerLayout />
-
-      <div className="space-y-8 p-12">
+    <div className=" bg-linear-to-br from-cream via-sage/5 to-olive/10 w-full flex justify-center">
+      <div className="space-y-8 p-6 sm:p-8 lg:px-92 w-full">
         {/* Hero Section */}
-        <Card className="bg-gradient-to-r from-forest to-olive border-none">
-          <CardContent className="p-8 text-cream">
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 max-w-full">
+        <Card className="bg-linear-to-br from-forest via-forest/95 to-olive border-none shadow-2xl overflow-hidden relative">
+          <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZGVmcz48cGF0dGVybiBpZD0iZ3JpZCIgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiBwYXR0ZXJuVW5pdHM9InVzZXJTcGFjZU9uVXNlIj48cGF0aCBkPSJNIDQwIDAgTCAwIDAgMCA0MCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLW9wYWNpdHk9IjAuMDUiIHN0cm9rZS13aWR0aD0iMSIvPjwvcGF0dGVybj48L2RlZnM+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0idXJsKCNncmlkKSIvPjwvc3ZnPg==')] opacity-30"></div>
+          <CardContent className="p-8 lg:p-10 text-cream relative z-10">
+            <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6">
               <div className="max-w-2xl">
-                <h2 className="text-3xl font-bold mb-4">
+                <h1 className="text-3xl lg:text-4xl font-bold mb-3 tracking-tight">
                   Bienvenue dans votre espace agriculteur
-                </h2>
-                <p className="text-lg mb-6 text-cream/90">
+                </h1>
+                <p className="text-base lg:text-lg text-cream/90 leading-relaxed">
                   Gérez vos projets, communiquez avec vos investisseurs et
                   développez votre activité agricole.
                 </p>
               </div>
               <Button
                 onClick={() => navigate("/create-project")}
-                className="bg-cream text-forest hover:bg-sage hover:text-cream shadow-lg"
+                className="bg-cream text-forest hover:bg-cream/90 hover:scale-105 shadow-xl transition-all duration-200 font-semibold"
                 size="lg"
               >
                 <Plus className="h-5 w-5 mr-2" />
@@ -70,7 +68,7 @@ export default function ProjectOwnerDashboard() {
         </Card>
 
         {/* Stats Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {stats.map((stat, index) => (
             <ProjectStatsCard
               key={index}
@@ -83,32 +81,55 @@ export default function ProjectOwnerDashboard() {
         </div>
 
         {/* Projects List */}
-        <Card className="border border-sage/10">
-          <CardContent className="p-6">
-            <h3 className="text-lg font-bold text-forest mb-6">Mes projets</h3>
+        <Card className="border-none shadow-lg bg-white/80 backdrop-blur-sm">
+          <CardContent className="p-6 lg:p-8">
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-2xl font-bold text-forest">Mes projets</h2>
+              {myProjects && myProjects.length > 0 && (
+                <span className="text-sm text-sage font-medium">
+                  {myProjects.length}{" "}
+                  {myProjects.length > 1 ? "projets" : "projet"}
+                </span>
+              )}
+            </div>
 
             {isLoadingMyProjects ? (
-              <div className="text-center py-8">
-                <p className="text-sage">Chargement des projets...</p>
+              <div className="text-center py-16">
+                <div className="inline-block h-12 w-12 animate-spin rounded-full border-4 border-sage/20 border-t-forest mb-4"></div>
+                <p className="text-sage font-medium">
+                  Chargement de vos projets...
+                </p>
               </div>
             ) : myProjects && myProjects.length > 0 ? (
-              <div className="space-y-6">
+              <div className="space-y-4">
                 {myProjects.map((project) => (
-                  <ProjectCard
+                  <div
                     key={project.id}
-                    project={project}
-                    onClick={() => navigate(`/project-stage/${project.id}`)}
-                  />
+                    className="transform transition-all duration-200 hover:scale-[1.01]"
+                  >
+                    <ProjectCard
+                      project={project}
+                      onClick={() => navigate(`/project-stage/${project.id}`)}
+                    />
+                  </div>
                 ))}
               </div>
             ) : (
-              <div className="text-center py-8">
-                <p className="text-sage mb-4">
-                  Vous n'avez pas encore de projets
+              <div className="text-center py-16 px-4">
+                <div className="bg-sage/10 rounded-full w-24 h-24 flex items-center justify-center mx-auto mb-6">
+                  <BarChart3 className="h-12 w-12 text-sage" />
+                </div>
+                <h3 className="text-xl font-semibold text-forest mb-3">
+                  Aucun projet pour le moment
+                </h3>
+                <p className="text-sage mb-6 max-w-md mx-auto">
+                  Commencez votre aventure agricole en créant votre premier
+                  projet
                 </p>
                 <Button
                   onClick={() => navigate("/create-project")}
-                  className="bg-forest text-cream hover:bg-olive"
+                  className="bg-forest text-cream hover:bg-olive hover:scale-105 transition-all duration-200 shadow-lg"
+                  size="lg"
                 >
                   <Plus className="h-5 w-5 mr-2" />
                   Créer votre premier projet
@@ -119,25 +140,29 @@ export default function ProjectOwnerDashboard() {
         </Card>
 
         {/* Quick Actions */}
-        <Card className="bg-sage/10 border border-sage/20">
-          <CardContent className="p-8 text-center">
-            <h3 className="text-2xl font-bold text-forest mb-4">
+        <Card className="bg-linear-to-br from-sage/20 via-olive/10 to-sage/10 border-none shadow-lg relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-64 h-64 bg-olive/10 rounded-full blur-3xl"></div>
+          <CardContent className="p-8 lg:p-10 text-center relative z-10">
+            <h2 className="text-2xl lg:text-3xl font-bold text-forest mb-4">
               Développez votre activité
-            </h3>
-            <p className="text-sage mb-6 max-w-2xl mx-auto">
+            </h2>
+            <p className="text-sage mb-8 max-w-2xl mx-auto leading-relaxed">
               Créez de nouveaux projets, communiquez avec vos investisseurs et
               développez votre réseau professionnel.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button
                 onClick={() => navigate("/create-project")}
-                className="bg-forest text-cream hover:bg-olive"
+                className="bg-forest text-cream hover:bg-olive hover:scale-105 transition-all duration-200 shadow-lg font-semibold"
+                size="lg"
               >
+                <Plus className="h-5 w-5 mr-2" />
                 Créer un nouveau projet
               </Button>
               <Button
                 variant="outline"
-                className="border-forest text-forest hover:bg-forest hover:text-cream"
+                className="border-2 border-forest text-forest hover:bg-forest hover:text-cream hover:scale-105 transition-all duration-200 font-semibold"
+                size="lg"
               >
                 Publier sur le marché
               </Button>

@@ -5,15 +5,23 @@ import {
   getProjectByIdApi,
   updateProjectApi,
   deleteProjectApi,
+  getAllProjectsApi,
+  getPublicProjectsApi,
+  updateProjectStageApi,
+  deleteProjectStageApi,
+  getAllProjectStagesOfProjectApi,
+  countProjectStagesApi,
 } from "../api/project.api";
 import type {
   CreateProjectPayload,
   UpdateProjectPayload,
 } from "../types/project.types";
 import { toast } from "sonner";
+import { useAuthContext } from "@/features/auth/context/AuthContext";
 
 export const useProject = () => {
   const queryClient = useQueryClient();
+  const { user } = useAuthContext();
 
   // Get my projects
   const {
@@ -27,6 +35,27 @@ export const useProject = () => {
       const response = await getMyProjectsApi();
       return response.data;
     },
+  });
+
+  // Get all projects (with stages) - different endpoints based on role
+  const {
+    data: allProjects,
+    isLoading: isLoadingAllProjects,
+    error: allProjectsError,
+    refetch: refetchAllProjects,
+  } = useQuery({
+    queryKey: ["all-projects", user?.role],
+    queryFn: async () => {
+      if (user?.role === "ADMIN") {
+        const response = await getAllProjectsApi();
+        return response.data;
+      } else {
+        // For investors and project owners, use public projects
+        const response = await getPublicProjectsApi();
+        return response.data;
+      }
+    },
+    enabled: !!user, // Only run when user is available
   });
 
   // Get project by ID
@@ -93,11 +122,83 @@ export const useProject = () => {
     },
   });
 
+  const updateProjectStage = useMutation({
+    mutationFn: ({
+      projectStageId,
+      data,
+    }: {
+      projectStageId: string;
+      data: any;
+    }) => updateProjectStageApi(projectStageId, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["my-projects"] });
+      queryClient.invalidateQueries({ queryKey: ["project"] });
+      toast.success("Étape du projet mise à jour avec succès");
+    },
+    onError: (error: any) => {
+      toast.error(
+        error?.response?.data?.message ||
+          "Erreur lors de la mise à jour de l'étape du projet",
+      );
+    },
+  });
+
+  const deleteProjectStageMutation = useMutation({
+    mutationFn: ({
+      projectStageId,
+      isDeleted,
+    }: {
+      projectStageId: string;
+      isDeleted: boolean;
+    }) => deleteProjectStageApi(projectStageId, isDeleted),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["my-projects"] });
+      queryClient.invalidateQueries({ queryKey: ["project"] });
+      queryClient.invalidateQueries({ queryKey: ["project-stages"] });
+      queryClient.invalidateQueries({ queryKey: ["project-stages-count"] });
+      toast.success(
+        "Étape supprimée avec succès. L'étape suivante a été mise à jour automatiquement.",
+      );
+    },
+    onError: (error: any) => {
+      toast.error(
+        error?.response?.data?.message ||
+          "Erreur lors de la suppression de l'étape du projet",
+      );
+    },
+  });
+
+  const getAllProjectStagesOfProject = (projectId: string) => {
+    return useQuery({
+      queryKey: ["project-stages", projectId],
+      queryFn: async () => {
+        const response = await getAllProjectStagesOfProjectApi(projectId);
+        return response.data;
+      },
+      enabled: !!projectId,
+    });
+  };
+
+  const useCountProjectStages = (projectId: string) => {
+    return useQuery({
+      queryKey: ["project-stages-count", projectId],
+      queryFn: async () => {
+        const response = await countProjectStagesApi(projectId);
+        return response.data;
+      },
+      enabled: !!projectId,
+    });
+  };
+
   return {
     myProjects,
     isLoadingMyProjects,
     myProjectsError,
     refetchMyProjects,
+    allProjects,
+    isLoadingAllProjects,
+    allProjectsError,
+    refetchAllProjects,
     useGetProjectById,
     createProject: createProjectMutation.mutate,
     isCreatingProject: createProjectMutation.isPending,
@@ -105,5 +206,11 @@ export const useProject = () => {
     isUpdatingProject: updateProjectMutation.isPending,
     deleteProject: deleteProjectMutation.mutate,
     isDeletingProject: deleteProjectMutation.isPending,
+    updateProjectStage: updateProjectStage.mutate,
+    isUpdatingProjectStage: updateProjectStage.isPending,
+    deleteProjectStage: deleteProjectStageMutation.mutate,
+    isDeletingProjectStage: deleteProjectStageMutation.isPending,
+    getAllProjectStagesOfProject,
+    useCountProjectStages,
   };
 };

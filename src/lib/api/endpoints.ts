@@ -37,4 +37,13 @@ export const PROJECT_ENDPOINTS = {
   SUSPEND_PROJECT: (projectId: string) => `project/suspend/${projectId}`,
   ACTIVATE_PROJECT: (projectId: string) => `project/activate/${projectId}`,
   GET_ALL_PROJECTS: "project",
+  GET_PUBLIC_PROJECTS: "project/public",
+  UPDATE_PROJECT_STAGE: (projectStageId: string) =>
+    `project/update-stage/${projectStageId}`,
+  DELETE_PROJECT_STAGE: (projectStageId: string) =>
+    `project/delete-stage/${projectStageId}`,
+  GET_ALL_PROJECT_STAGES_OF_PROJECT: (projectId: string) =>
+    `project/stages/${projectId}`,
+  COUNT_PROJECT_STAGES: (projectId: string) =>
+    `project/stages-count/${projectId}`,
 };
