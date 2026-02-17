@@ -29,8 +29,8 @@ export default function ProjectStageList() {
   };
 
   return (
-    <div className="min-h-screen bg-linear-to-br from-cream via-sage/5 to-olive/10 px-36">
-      <div className="p-6 sm:p-8 lg:p-12">
+    <div className="min-h-screen bg-linear-to-br from-cream via-sage/5 to-olive/10 lg:px-96 w-full flex justify-center">
+      <div className="lg:py-12 w-full">
         {/* Header */}
         <div className="mb-8">
           <button
@@ -133,7 +133,7 @@ export default function ProjectStageList() {
                 ajouter votre première étape.
               </p>
               <Button
-                className="bg-forest text-cream hover:bg-olive hover:scale-105 transition-all duration-200 shadow-lg"
+                className="bg-forest text-cream hover:bg-olive transition-all duration-200 shadow-lg"
                 size="lg"
               >
                 <Plus className="h-5 w-5 mr-2" />

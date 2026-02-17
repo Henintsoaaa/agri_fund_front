@@ -9,9 +9,9 @@ export default function ProjectOwnerLayout() {
     logout();
   };
   return (
-    <>
-      <header className="bg-forest shadow-lg">
-        <div className="container mx-auto px-4">
+    <div className="w-full">
+      <header className="bg-forest shadow-lg w-full flex justify-center md:px-56 lg:px-96">
+        <div className="container">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center space-x-3">
               <Sprout className="h-8 w-8 text-cream" />
@@ -70,6 +70,6 @@ export default function ProjectOwnerLayout() {
         </div>
       </header>
       <Outlet />
-    </>
+    </div>
   );
 }

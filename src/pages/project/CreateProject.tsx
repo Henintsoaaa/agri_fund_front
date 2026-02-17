@@ -34,6 +34,7 @@ export default function CreateProject() {
       description: "",
       targetAmount: 0,
       stageOrder: 1,
+      image: "",
     },
   ]);
 
@@ -45,6 +46,7 @@ export default function CreateProject() {
         description: "",
         targetAmount: 0,
         stageOrder: stages.length + 1,
+        image: "",
       },
     ]);
   };
@@ -88,8 +90,8 @@ export default function CreateProject() {
   };
 
   return (
-    <div className="min-h-screen bg-linear-to-br from-cream via-sage/5 to-olive/10">
-      <div className="p-6 sm:p-8 lg:p-12 max-w-5xl mx-auto">
+    <div className="min-h-screen bg-linear-to-br from-cream via-sage/5 to-olive/10 w-full flex justify-center">
+      <div className="p-6 sm:p-8 lg:px-96 w-full">
         {/* Header */}
         <div className="mb-8">
           <button
@@ -157,39 +159,20 @@ export default function CreateProject() {
                 />
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                <div className="space-y-2">
-                  <Label htmlFor="image" className="text-forest font-semibold">
-                    URL de l'image
-                  </Label>
-                  <Input
-                    id="image"
-                    value={formData.image}
-                    onChange={(e) =>
-                      setFormData({ ...formData, image: e.target.value })
-                    }
-                    placeholder="https://example.com/image.jpg"
-                    className="border-sage/30 focus:border-forest transition-colors"
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <Label
-                    htmlFor="category"
-                    className="text-forest font-semibold"
-                  >
-                    Catégorie
-                  </Label>
-                  <Input
-                    id="category"
-                    value={formData.category}
-                    onChange={(e) =>
-                      setFormData({ ...formData, category: e.target.value })
-                    }
-                    placeholder="Ex: Riziculture, Maraîchage..."
-                    className="border-sage/30 focus:border-forest transition-colors"
-                  />
-                </div>
+              <div className="space-y-2">
+                <Label htmlFor="image" className="text-forest font-semibold">
+                  URL de l'image *
+                </Label>
+                <Input
+                  id="image"
+                  value={formData.image}
+                  onChange={(e) =>
+                    setFormData({ ...formData, image: e.target.value })
+                  }
+                  placeholder="https://example.com/image.jpg"
+                  className="border-sage/30 focus:border-forest transition-colors"
+                  required
+                />
               </div>
 
               <div className="space-y-2">
@@ -311,7 +294,7 @@ export default function CreateProject() {
                         htmlFor={`stage-amount-${index}`}
                         className="text-forest font-semibold"
                       >
-                        Montant cible (€) *
+                        Montant cible (Ar) *
                       </Label>
                       <Input
                         id={`stage-amount-${index}`}
@@ -327,6 +310,25 @@ export default function CreateProject() {
                           )
                         }
                         placeholder="5000"
+                        className="border-sage/30 focus:border-forest transition-colors"
+                        required
+                      />
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label
+                        htmlFor={`stage-image-${index}`}
+                        className="text-forest font-semibold"
+                      >
+                        URL de l'image *
+                      </Label>
+                      <Input
+                        id={`stage-image-${index}`}
+                        value={stage.image}
+                        onChange={(e) =>
+                          handleStageChange(index, "image", e.target.value)
+                        }
+                        placeholder="https://example.com/stage-image.jpg"
                         className="border-sage/30 focus:border-forest transition-colors"
                         required
                       />

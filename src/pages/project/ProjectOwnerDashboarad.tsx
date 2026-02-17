@@ -39,8 +39,8 @@ export default function ProjectOwnerDashboard() {
   ];
 
   return (
-    <div className="min-h-screen bg-linear-to-br from-cream via-sage/5 to-olive/10">
-      <div className="space-y-8 p-6 sm:p-8 lg:p-12 max-w-7xl mx-auto">
+    <div className=" bg-linear-to-br from-cream via-sage/5 to-olive/10 w-full flex justify-center">
+      <div className="space-y-8 p-6 sm:p-8 lg:px-92 w-full">
         {/* Hero Section */}
         <Card className="bg-linear-to-br from-forest via-forest/95 to-olive border-none shadow-2xl overflow-hidden relative">
           <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZGVmcz48cGF0dGVybiBpZD0iZ3JpZCIgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiBwYXR0ZXJuVW5pdHM9InVzZXJTcGFjZU9uVXNlIj48cGF0aCBkPSJNIDQwIDAgTCAwIDAgMCA0MCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLW9wYWNpdHk9IjAuMDUiIHN0cm9rZS13aWR0aD0iMSIvPjwvcGF0dGVybj48L2RlZnM+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0idXJsKCNncmlkKSIvPjwvc3ZnPg==')] opacity-30"></div>

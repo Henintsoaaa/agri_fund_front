@@ -1,6 +1,7 @@
-import { Calendar, TrendingUp } from "lucide-react";
+import { Calendar, TrendingUp, Target, CheckCircle } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { useProject } from "@/features/project/hooks/useProject";
 import type { Project } from "@/features/project/types/project.types";
 
 interface ProjectCardProps {
@@ -9,6 +10,8 @@ interface ProjectCardProps {
 }
 
 export default function ProjectCard({ project, onClick }: ProjectCardProps) {
+  const { useCountProjectStages } = useProject();
+  const { data: stagesCount } = useCountProjectStages(project.id);
   const getStatusColor = (statut: string) => {
     switch (statut) {
       case "ACTIVE":
@@ -86,20 +89,28 @@ export default function ProjectCard({ project, onClick }: ProjectCardProps) {
             </div>
 
             {/* Stats */}
-            <div className="grid grid-cols-3 gap-4 mb-4">
-              <div className="text-center">
-                <p className="text-lg font-bold text-forest">
-                  {project.stages?.length || 0}
-                </p>
-                <p className="text-xs text-sage">Étapes</p>
+            <div className="grid grid-cols-2 gap-3 mb-4">
+              <div className="flex items-center space-x-2 p-2 bg-forest/5 rounded-lg">
+                <div className="p-2 bg-forest/10 rounded">
+                  <Target className="h-4 w-4 text-forest" />
+                </div>
+                <div>
+                  <p className="text-sm font-bold text-forest">
+                    {stagesCount?.total || project.stages?.length || 0}
+                  </p>
+                  <p className="text-xs text-sage">Étapes</p>
+                </div>
               </div>
-              <div className="text-center">
-                <p className="text-lg font-bold text-forest">0</p>
-                <p className="text-xs text-sage">Investisseurs</p>
-              </div>
-              <div className="text-center">
-                <p className="text-lg font-bold text-forest">0</p>
-                <p className="text-xs text-sage">Messages</p>
+              <div className="flex items-center space-x-2 p-2 bg-green-50 rounded-lg">
+                <div className="p-2 bg-green-100 rounded">
+                  <CheckCircle className="h-4 w-4 text-green-600" />
+                </div>
+                <div>
+                  <p className="text-sm font-bold text-green-600">
+                    {stagesCount?.funded || 0}
+                  </p>
+                  <p className="text-xs text-sage">Terminées</p>
+                </div>
               </div>
             </div>
 

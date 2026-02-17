@@ -47,3 +47,33 @@ export const getAllProjectsApi = () => {
 export const getPublicProjectsApi = () => {
   return api.get<Project[]>(PROJECT_ENDPOINTS.GET_PUBLIC_PROJECTS);
 };
+
+export const updateProjectStageApi = (
+  projectStageId: string,
+  data: {
+    title?: string;
+    description?: string;
+    statut?: "OPEN" | "FUNDED" | "CLOSED";
+  },
+) => {
+  return api.put(PROJECT_ENDPOINTS.UPDATE_PROJECT_STAGE(projectStageId), data);
+};
+
+export const deleteProjectStageApi = (
+  projectStageId: string,
+  isDeleted: boolean,
+) => {
+  return api.put(PROJECT_ENDPOINTS.DELETE_PROJECT_STAGE(projectStageId), {
+    isDeleted: true,
+  });
+};
+
+export const getAllProjectStagesOfProjectApi = (projectId: string) => {
+  return api.get(
+    PROJECT_ENDPOINTS.GET_ALL_PROJECT_STAGES_OF_PROJECT(projectId),
+  );
+};
+
+export const countProjectStagesApi = (projectId: string) => {
+  return api.get(PROJECT_ENDPOINTS.COUNT_PROJECT_STAGES(projectId));
+};

@@ -33,8 +33,8 @@ export default function InvestorLayout() {
     { id: "projects", label: "Projets", icon: FolderOpen },
   ];
   return (
-    <>
-      <header className="bg-forest shadow-lg">
+    <div className="w-full">
+      <header className="bg-forest shadow-lg w-full">
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center space-x-3">
@@ -120,6 +120,6 @@ export default function InvestorLayout() {
         </div>
       </header>
       <Outlet />
-    </>
+    </div>
   );
 }

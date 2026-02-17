@@ -70,7 +70,7 @@ export default function InvestorDashboard() {
     },
   ];
   return (
-    <div>
+    <div className="flex justify-center w-full">
       <div className="space-y-8 px-48 py-8">
         {/* Hero Section */}
         <div className="bg-gradient-to-r from-forest to-olive rounded-2xl p-8 text-cream">

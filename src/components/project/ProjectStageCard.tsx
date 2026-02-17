@@ -1,8 +1,21 @@
-import { Edit, Trash2, Eye } from "lucide-react";
+import { useState } from "react";
+import { Edit, Trash2 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import EditProjectStageModal from "./EditProjectStageModal";
+import { useProject } from "@/features/project/hooks/useProject";
 import type { ProjectStage } from "@/features/project/types/project.types";
 
 interface ProjectStageCardProps {
@@ -16,14 +29,58 @@ export default function ProjectStageCard({
   stage,
   onEdit,
   onDelete,
-  onViewDetails,
 }: ProjectStageCardProps) {
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+
+  const {
+    updateProjectStage,
+    isUpdatingProjectStage,
+    deleteProjectStage,
+    isDeletingProjectStage,
+  } = useProject();
+
+  const handleEditClick = () => {
+    setIsEditModalOpen(true);
+    onEdit?.(stage.id);
+  };
+
+  const handleDeleteClick = () => {
+    setIsDeleteDialogOpen(true);
+  };
+
+  const handleUpdate = (
+    stageId: string,
+    data: { title: string; description: string },
+  ) => {
+    updateProjectStage(
+      { projectStageId: stageId, data },
+      {
+        onSuccess: () => {
+          setIsEditModalOpen(false);
+        },
+      },
+    );
+  };
+
+  const handleDeleteConfirm = () => {
+    deleteProjectStage(
+      { projectStageId: stage.id, isDeleted: true },
+      {
+        onSuccess: () => {
+          setIsDeleteDialogOpen(false);
+          onDelete?.(stage.id);
+        },
+      },
+    );
+  };
+
   const progressPercentage = (stage.collectedAmount / stage.targetAmount) * 100;
 
   const getStatusColor = (statut: string) => {
     switch (statut) {
       case "CLOSED":
-        return "bg-green-100 text-green-800";
+        return "bg-grey-100 text-green-800";
       case "FUNDED":
         return "bg-blue-100 text-blue-800";
       case "OPEN":
@@ -36,7 +93,7 @@ export default function ProjectStageCard({
   const getStatusLabel = (statut: string) => {
     switch (statut) {
       case "CLOSED":
-        return "Terminée";
+        return "Fermee";
       case "FUNDED":
         return "Financée";
       case "OPEN":
@@ -60,7 +117,7 @@ export default function ProjectStageCard({
   };
 
   return (
-    <Card className="border border-sage/10 hover:shadow-xl transition-all duration-200">
+    <Card className="border border-sage/10 hover:shadow-xl">
       <CardContent className="p-6">
         <div className="flex flex-col lg:flex-row gap-6">
           {/* Stage Order Indicator */}
@@ -106,7 +163,7 @@ export default function ProjectStageCard({
             {/* Actions */}
             <div className="flex flex-wrap gap-3">
               <Button
-                onClick={() => onEdit?.(stage.id)}
+                onClick={handleEditClick}
                 className="bg-forest text-cream hover:bg-olive"
                 size="sm"
               >
@@ -114,16 +171,7 @@ export default function ProjectStageCard({
                 Modifier
               </Button>
               <Button
-                onClick={() => onViewDetails?.(stage.id)}
-                variant="outline"
-                className="border-sage text-sage hover:border-olive hover:text-olive"
-                size="sm"
-              >
-                <Eye className="h-4 w-4 mr-2" />
-                Voir détails
-              </Button>
-              <Button
-                onClick={() => onDelete?.(stage.id)}
+                onClick={handleDeleteClick}
                 variant="outline"
                 className="border-red-300 text-red-600 hover:bg-red-50"
                 size="sm"
@@ -135,6 +183,43 @@ export default function ProjectStageCard({
           </div>
         </div>
       </CardContent>
+
+      {/* Edit Modal */}
+      <EditProjectStageModal
+        isOpen={isEditModalOpen}
+        onClose={() => setIsEditModalOpen(false)}
+        stage={stage}
+        onUpdate={handleUpdate}
+        isUpdating={isUpdatingProjectStage}
+      />
+
+      {/* Delete Confirmation Dialog */}
+      <AlertDialog
+        open={isDeleteDialogOpen}
+        onOpenChange={setIsDeleteDialogOpen}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Êtes-vous sûr ?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Cette action supprimera l'étape "{stage.title}". Cette action est
+              irréversible.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={isDeletingProjectStage}>
+              Annuler
+            </AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleDeleteConfirm}
+              disabled={isDeletingProjectStage}
+              className="bg-red-600 hover:bg-red-700"
+            >
+              {isDeletingProjectStage ? "Suppression..." : "Supprimer"}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </Card>
   );
 }
