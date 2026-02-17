@@ -65,7 +65,7 @@ export default function ProjectStageCard({
 
   const handleDeleteConfirm = () => {
     deleteProjectStage(
-      { projectStageId: stage.id, isDeleted: true },
+      { projectStageId: stage.id },
       {
         onSuccess: () => {
           setIsDeleteDialogOpen(false);

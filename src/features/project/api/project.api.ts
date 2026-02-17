@@ -59,10 +59,7 @@ export const updateProjectStageApi = (
   return api.put(PROJECT_ENDPOINTS.UPDATE_PROJECT_STAGE(projectStageId), data);
 };
 
-export const deleteProjectStageApi = (
-  projectStageId: string,
-  isDeleted: boolean,
-) => {
+export const deleteProjectStageApi = (projectStageId: string) => {
   return api.put(PROJECT_ENDPOINTS.DELETE_PROJECT_STAGE(projectStageId), {
     isDeleted: true,
   });

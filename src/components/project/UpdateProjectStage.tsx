@@ -61,7 +61,7 @@ export default function UpdateProjectStage({
   const handleDeleteConfirm = () => {
     if (stageToDelete) {
       deleteProjectStage(
-        { projectStageId: stageToDelete.id, isDeleted: true },
+        { projectStageId: stageToDelete.id },
         {
           onSuccess: () => {
             setStageToDelete(null);

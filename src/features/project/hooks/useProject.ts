@@ -144,13 +144,8 @@ export const useProject = () => {
   });
 
   const deleteProjectStageMutation = useMutation({
-    mutationFn: ({
-      projectStageId,
-      isDeleted,
-    }: {
-      projectStageId: string;
-      isDeleted: boolean;
-    }) => deleteProjectStageApi(projectStageId, isDeleted),
+    mutationFn: ({ projectStageId }: { projectStageId: string }) =>
+      deleteProjectStageApi(projectStageId),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["my-projects"] });
       queryClient.invalidateQueries({ queryKey: ["project"] });
