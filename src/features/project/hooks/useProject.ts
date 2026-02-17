@@ -46,14 +46,23 @@ export const useProject = () => {
   } = useQuery({
     queryKey: ["all-projects", user?.role],
     queryFn: async () => {
+      console.log("useProject queryFn - user role:", user?.role);
       if (user?.role === "ADMIN") {
         const response = await getAllProjectsApi();
+        console.log("Admin projects:", response.data);
+        return response.data;
+      } else if (user?.role === "INVESTOR") {
+        // For investors, use public projects
+        const response = await getPublicProjectsApi();
+        console.log("Public projects for investor:", response.data);
         return response.data;
       } else {
-        // For investors and project owners, use public projects
-        const response = await getPublicProjectsApi();
+        const response = await getMyProjectsApi();
         return response.data;
       }
+      // Return empty array if no role matches
+      console.log("No role match, returning empty array");
+      return [];
     },
     enabled: !!user, // Only run when user is available
   });
@@ -122,6 +131,7 @@ export const useProject = () => {
     },
   });
 
+  // Update project stage
   const updateProjectStage = useMutation({
     mutationFn: ({
       projectStageId,
@@ -143,6 +153,7 @@ export const useProject = () => {
     },
   });
 
+  // Delete project stage
   const deleteProjectStageMutation = useMutation({
     mutationFn: ({
       projectStageId,
@@ -168,6 +179,7 @@ export const useProject = () => {
     },
   });
 
+  // Get all project stages of a project
   const getAllProjectStagesOfProject = (projectId: string) => {
     return useQuery({
       queryKey: ["project-stages", projectId],
@@ -179,6 +191,7 @@ export const useProject = () => {
     });
   };
 
+  // Count
   const useCountProjectStages = (projectId: string) => {
     return useQuery({
       queryKey: ["project-stages-count", projectId],
@@ -189,6 +202,8 @@ export const useProject = () => {
       enabled: !!projectId,
     });
   };
+
+  // Get all project of all project owner for investor
 
   return {
     myProjects,
