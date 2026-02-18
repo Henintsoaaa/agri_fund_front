@@ -74,3 +74,7 @@ export const getAllProjectStagesOfProjectApi = (projectId: string) => {
 export const countProjectStagesApi = (projectId: string) => {
   return api.get(PROJECT_ENDPOINTS.COUNT_PROJECT_STAGES(projectId));
 };
+
+export const getProjectInvestorsApi = (projectId: string) => {
+  return api.get(PROJECT_ENDPOINTS.GET_PROJECT_INVESTORS(projectId));
+};

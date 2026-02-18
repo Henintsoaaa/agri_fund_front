@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import AdminLayout from "@/components/layout/AdminLayout";
 import UserTable from "@/components/admin/UserTable";
 import CreateUserDialog from "@/components/admin/CreateUserDialog";
 import { useUser } from "@/features/user/hooks/useUser";
@@ -86,8 +85,6 @@ export default function AdminDashboard() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-cream via-sage/10 to-olive/10">
-      <AdminLayout />
-
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
@@ -472,6 +469,7 @@ export default function AdminDashboard() {
                           <ProjectCard
                             key={project.id}
                             project={project}
+                            showAdminActions={true}
                             onClick={() => {
                               // Navigation vers les détails du projet
                               console.log("Project clicked:", project.id);

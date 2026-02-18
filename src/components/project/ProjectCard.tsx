@@ -3,13 +3,21 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { useProject } from "@/features/project/hooks/useProject";
 import type { Project } from "@/features/project/types/project.types";
+import AdminProjectActions from "@/components/admin/AdminProjectActions";
 
 interface ProjectCardProps {
   project: Project;
   onClick?: () => void;
+  showAdminActions?: boolean;
 }
 
-export default function ProjectCard({ project, onClick }: ProjectCardProps) {
+export default function ProjectCard({
+  project,
+  onClick,
+  showAdminActions = false,
+}: ProjectCardProps) {
+  console.log("ProjectCard props:", { project, showAdminActions });
+
   const { useCountProjectStages } = useProject();
   const { data: stagesCount } = useCountProjectStages(project.id);
   const getStatusColor = (statut: string) => {
@@ -81,11 +89,15 @@ export default function ProjectCard({ project, onClick }: ProjectCardProps) {
                 </div>
               </div>
 
-              <Badge
-                className={`mt-4 sm:mt-0 ${getStatusColor(project.statut)}`}
-              >
-                {getStatusLabel(project.statut)}
-              </Badge>
+              <div className="mt-4 sm:mt-0 flex items-center gap-2">
+                {showAdminActions === false ? (
+                  <Badge className={getStatusColor(project.statut)}>
+                    {getStatusLabel(project.statut)}
+                  </Badge>
+                ) : (
+                  <AdminProjectActions project={project} />
+                )}
+              </div>
             </div>
 
             {/* Stats */}

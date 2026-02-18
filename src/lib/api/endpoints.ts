@@ -46,4 +46,6 @@ export const PROJECT_ENDPOINTS = {
     `project/stages/${projectId}`,
   COUNT_PROJECT_STAGES: (projectId: string) =>
     `project/stages-count/${projectId}`,
+  GET_PROJECT_INVESTORS: (projectId: string) =>
+    `project/investors/${projectId}`,
 };

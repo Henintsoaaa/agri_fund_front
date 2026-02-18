@@ -11,6 +11,9 @@ import {
   deleteProjectStageApi,
   getAllProjectStagesOfProjectApi,
   countProjectStagesApi,
+  suspendProjectApi,
+  activateProjectApi,
+  getProjectInvestorsApi,
 } from "../api/project.api";
 import type {
   CreateProjectPayload,
@@ -178,6 +181,38 @@ export const useProject = () => {
     },
   });
 
+  // Admin: Suspend project
+  const suspendProjectMutation = useMutation({
+    mutationFn: (projectId: string) => suspendProjectApi(projectId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["all-projects"] });
+      queryClient.invalidateQueries({ queryKey: ["project"] });
+      toast.success("Projet suspendu avec succès");
+    },
+    onError: (error: any) => {
+      toast.error(
+        error?.response?.data?.message ||
+          "Erreur lors de la suspension du projet",
+      );
+    },
+  });
+
+  // Admin: Activate project
+  const activateProjectMutation = useMutation({
+    mutationFn: (projectId: string) => activateProjectApi(projectId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["all-projects"] });
+      queryClient.invalidateQueries({ queryKey: ["project"] });
+      toast.success("Projet activé avec succès");
+    },
+    onError: (error: any) => {
+      toast.error(
+        error?.response?.data?.message ||
+          "Erreur lors de l'activation du projet",
+      );
+    },
+  });
+
   // Get all project stages of a project
   const getAllProjectStagesOfProject = (projectId: string) => {
     return useQuery({
@@ -199,6 +234,18 @@ export const useProject = () => {
         return response.data;
       },
       enabled: !!projectId,
+    });
+  };
+
+  // Get project investors (Admin only)
+  const useGetProjectInvestors = (projectId: string) => {
+    return useQuery({
+      queryKey: ["project-investors", projectId],
+      queryFn: async () => {
+        const response = await getProjectInvestorsApi(projectId);
+        return response.data;
+      },
+      enabled: !!projectId && user?.role === "ADMIN",
     });
   };
 
@@ -226,5 +273,11 @@ export const useProject = () => {
     isDeletingProjectStage: deleteProjectStageMutation.isPending,
     getAllProjectStagesOfProject,
     useCountProjectStages,
+    useGetProjectInvestors,
+    // Admin actions
+    suspendProject: suspendProjectMutation.mutate,
+    isSuspendingProject: suspendProjectMutation.isPending,
+    activateProject: activateProjectMutation.mutate,
+    isActivatingProject: activateProjectMutation.isPending,
   };
 };
