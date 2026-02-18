@@ -97,26 +97,16 @@ export default function ProjectOwnerDashboard() {
       : 0;
 
   return (
-    <div className="h-screen">
+    <div className="min-h-screen">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
         {/* Header */}
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-          <div>
-            <h1 className="text-3xl font-bold text-forest">
-              Mes Projets Agricoles
-            </h1>
-            <p className="text-sage text-lg">
-              Gérez et suivez l'évolution de vos projets
-            </p>
-          </div>
-          <Button
-            onClick={() => navigate("/create-project")}
-            className="bg-forest hover:bg-forest/90 text-cream gap-2"
-            size="lg"
-          >
-            <Plus className="h-5 w-5" />
-            Nouveau Projet
-          </Button>
+        <div className="flex flex-col gap-2">
+          <h1 className="text-3xl font-bold text-forest">
+            Mes Projets Agricoles
+          </h1>
+          <p className="text-sage text-lg">
+            Gérez et suivez l'évolution de vos projets
+          </p>
         </div>
 
         {/* Statistics Cards */}
@@ -194,10 +184,21 @@ export default function ProjectOwnerDashboard() {
         {/* Projects List */}
         <Card className="bg-cream/50 border-sage/30">
           <CardHeader>
-            <CardTitle className="text-forest">Mes Projets</CardTitle>
-            <CardDescription className="text-sage">
-              Vue d'ensemble de tous vos projets
-            </CardDescription>
+            <div className="flex justify-between items-center">
+              <div>
+                <CardTitle className="text-forest">Mes Projets</CardTitle>
+                <CardDescription className="text-sage">
+                  Vue d'ensemble de tous vos projets
+                </CardDescription>
+              </div>
+              <Button
+                onClick={() => navigate("/create-project")}
+                className="bg-forest hover:bg-forest/90 text-cream gap-2"
+              >
+                <Plus className="h-4 w-4" />
+                Nouveau Projet
+              </Button>
+            </div>
           </CardHeader>
           <CardContent>
             {isLoadingMyProjects ? (
@@ -222,8 +223,8 @@ export default function ProjectOwnerDashboard() {
                 </Button>
               </div>
             ) : (
-              <div className="h-fit">
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 pr-4">
+              <ScrollArea className="h-[600px]">
+                <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6 pr-4">
                   {myProjects.map((project) => {
                     const projectTotalTarget =
                       project.stages?.reduce(
@@ -249,11 +250,17 @@ export default function ProjectOwnerDashboard() {
                       >
                         {/* Project Image */}
                         <div className="relative h-48 overflow-hidden bg-gradient-to-br from-olive/20 to-sage/20">
-                          <img
-                            src={project.image || "/placeholder-project.jpg"}
-                            alt={project.title}
-                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                          />
+                          {project.image ? (
+                            <img
+                              src={project.image}
+                              alt={project.title}
+                              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                            />
+                          ) : (
+                            <div className="w-full h-full flex items-center justify-center">
+                              <FolderKanban className="h-16 w-16 text-olive/50" />
+                            </div>
+                          )}
                           <Badge
                             className={`absolute top-3 right-3 ${getStatutColor(
                               project.statut,
@@ -293,7 +300,8 @@ export default function ProjectOwnerDashboard() {
                           <div>
                             <div className="flex justify-between text-sm mb-2">
                               <span className="text-forest font-semibold">
-                                {projectTotalCollected.toLocaleString("fr-FR")}€
+                                {projectTotalCollected.toLocaleString("fr-FR")}{" "}
+                                €
                               </span>
                               <span className="text-sage">
                                 / {projectTotalTarget.toLocaleString("fr-FR")} €
@@ -362,7 +370,7 @@ export default function ProjectOwnerDashboard() {
                     );
                   })}
                 </div>
-              </div>
+              </ScrollArea>
             )}
           </CardContent>
         </Card>

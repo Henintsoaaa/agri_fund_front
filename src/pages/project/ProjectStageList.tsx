@@ -1,9 +1,23 @@
 import ProjectStageCard from "@/components/project/ProjectStageCard";
 import { useProject } from "@/features/project/hooks/useProject";
-import { ArrowLeftIcon, Plus } from "lucide-react";
+import {
+  ArrowLeftIcon,
+  Plus,
+  Target,
+  TrendingUp,
+  CheckCircle2,
+} from "lucide-react";
 import { useParams, useNavigate } from "react-router-dom";
-import { Card, CardContent } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 export default function ProjectStageList() {
   const { projectId } = useParams<{ projectId: string }>();
@@ -12,6 +26,10 @@ export default function ProjectStageList() {
   const { data: project, isLoading } = useGetProjectById(projectId || "");
 
   const stages = project?.stages || [];
+
+  const totalCollected = stages.reduce((sum, s) => sum + s.collectedAmount, 0);
+  const totalTarget = stages.reduce((sum, s) => sum + s.targetAmount, 0);
+  const completedStages = stages.filter((s) => s.statut === "CLOSED").length;
 
   const handleEditStage = (stageId: string) => {
     // TODO: Implement edit functionality
@@ -29,30 +47,27 @@ export default function ProjectStageList() {
   };
 
   return (
-    <div className="min-h-screen bg-linear-to-br from-cream via-sage/5 to-olive/10 lg:px-96 w-full flex justify-center">
-      <div className="lg:py-12 w-full">
+    <div className="min-h-screen">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
         {/* Header */}
-        <div className="mb-8">
-          <button
-            className="flex items-center space-x-2 text-sage hover:text-forest mb-4 group transition-colors duration-200"
+        <div className="flex flex-col gap-4">
+          <Button
+            variant="ghost"
             onClick={() => navigate("/project-owner")}
+            className="w-fit text-sage hover:text-forest hover:bg-sage/10 gap-2"
           >
-            <div className="p-2 rounded-full group-hover:bg-sage/10 transition-colors duration-200">
-              <ArrowLeftIcon className="h-5 w-5" />
-            </div>
-            <span className="font-medium">Retour au tableau de bord</span>
-          </button>
-          <Card className="border-none shadow-xl bg-linear-to-br from-forest via-forest/95 to-olive relative overflow-hidden">
-            <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZGVmcz48cGF0dGVybiBpZD0iZ3JpZCIgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiBwYXR0ZXJuVW5pdHM9InVzZXJTcGFjZU9uVXNlIj48cGF0aCBkPSJNIDQwIDAgTCAwIDAgMCA0MCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLW9wYWNpdHk9IjAuMDUiIHN0cm9rZS13aWR0aD0iMSIvPjwvcGF0dGVybj48L2RlZnM+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0idXJsKCNncmlkKSIvPjwvc3ZnPg==')] opacity-30"></div>
-            <CardContent className="p-6 lg:p-8 text-cream relative z-10">
-              <h1 className="text-3xl lg:text-4xl font-bold mb-3">
-                {project?.title || "Étapes du projet"}
-              </h1>
-              <p className="text-cream/90 text-lg">
-                Suivez l'avancement de votre projet étape par étape
-              </p>
-            </CardContent>
-          </Card>
+            <ArrowLeftIcon className="h-4 w-4" />
+            Retour au tableau de bord
+          </Button>
+
+          <div className="flex flex-col gap-2">
+            <h1 className="text-3xl font-bold text-forest">
+              {project?.title || "Étapes du projet"}
+            </h1>
+            <p className="text-sage text-lg">
+              Suivez l'avancement de votre projet étape par étape
+            </p>
+          </div>
         </div>
 
         {isLoading ? (
@@ -62,81 +77,103 @@ export default function ProjectStageList() {
           </div>
         ) : stages.length > 0 ? (
           <>
-            {/* Stages List */}
-            <div className="space-y-5 mb-8">
-              {stages.map((stage) => (
-                <div
-                  key={stage.id}
-                  className="transform transition-all duration-200 hover:scale-[1.01]"
-                >
-                  <ProjectStageCard
-                    stage={stage}
-                    onEdit={handleEditStage}
-                    onDelete={handleDeleteStage}
-                    onViewDetails={handleViewDetails}
-                  />
-                </div>
-              ))}
+            {/* Summary Stats */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+              <Card className="bg-cream/50 border-sage/30 hover:shadow-lg transition-shadow">
+                <CardHeader className="flex flex-row items-center justify-between pb-2">
+                  <CardTitle className="text-sm font-medium text-forest">
+                    Étapes Terminées
+                  </CardTitle>
+                  <CheckCircle2 className="h-5 w-5 text-olive" />
+                </CardHeader>
+                <CardContent>
+                  <div className="text-3xl font-bold text-forest">
+                    {completedStages}
+                  </div>
+                  <p className="text-xs text-sage mt-2">
+                    Sur {stages.length} étapes
+                  </p>
+                </CardContent>
+              </Card>
+
+              <Card className="bg-cream/50 border-sage/30 hover:shadow-lg transition-shadow">
+                <CardHeader className="flex flex-row items-center justify-between pb-2">
+                  <CardTitle className="text-sm font-medium text-forest">
+                    Total Collecté
+                  </CardTitle>
+                  <TrendingUp className="h-5 w-5 text-olive" />
+                </CardHeader>
+                <CardContent>
+                  <div className="text-3xl font-bold text-olive">
+                    {totalCollected.toLocaleString("fr-FR")} €
+                  </div>
+                  <p className="text-xs text-sage mt-2">
+                    {totalTarget > 0
+                      ? Math.round((totalCollected / totalTarget) * 100)
+                      : 0}
+                    % de l'objectif
+                  </p>
+                </CardContent>
+              </Card>
+
+              <Card className="bg-cream/50 border-sage/30 hover:shadow-lg transition-shadow">
+                <CardHeader className="flex flex-row items-center justify-between pb-2">
+                  <CardTitle className="text-sm font-medium text-forest">
+                    Objectif Total
+                  </CardTitle>
+                  <Target className="h-5 w-5 text-olive" />
+                </CardHeader>
+                <CardContent>
+                  <div className="text-3xl font-bold text-forest">
+                    {totalTarget.toLocaleString("fr-FR")} €
+                  </div>
+                  <p className="text-xs text-sage mt-2">
+                    Toutes étapes confondues
+                  </p>
+                </CardContent>
+              </Card>
             </div>
 
-            {/* Summary */}
-            <Card className="bg-linear-to-br from-sage/20 via-olive/10 to-sage/10 border-none shadow-xl relative overflow-hidden">
-              <div className="absolute top-0 right-0 w-64 h-64 bg-olive/10 rounded-full blur-3xl"></div>
-              <CardContent className="p-8 lg:p-10 text-center relative z-10">
-                <h2 className="text-2xl lg:text-3xl font-bold text-forest mb-6">
-                  Avancement global
-                </h2>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                  <div className="bg-white/60 backdrop-blur-sm rounded-2xl p-6 shadow-md">
-                    <p className="text-4xl font-bold text-forest mb-2">
-                      {stages.filter((s) => s.statut === "CLOSED").length}
-                    </p>
-                    <p className="text-sage font-medium">Étapes terminées</p>
+            <Separator className="bg-sage/30" />
+
+            {/* Stages List */}
+            <Card className="bg-cream/50 border-sage/30">
+              <CardHeader>
+                <CardTitle className="text-forest">Étapes du projet</CardTitle>
+                <CardDescription className="text-sage">
+                  Gérez les étapes de financement de votre projet
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <ScrollArea className="h-[600px]">
+                  <div className="space-y-4 pr-4">
+                    {stages.map((stage) => (
+                      <div key={stage.id}>
+                        <ProjectStageCard
+                          stage={stage}
+                          onEdit={handleEditStage}
+                          onDelete={handleDeleteStage}
+                          onViewDetails={handleViewDetails}
+                        />
+                      </div>
+                    ))}
                   </div>
-                  <div className="bg-white/60 backdrop-blur-sm rounded-2xl p-6 shadow-md">
-                    <p className="text-4xl font-bold text-forest mb-2">
-                      €
-                      {stages
-                        .reduce((sum, s) => sum + s.collectedAmount, 0)
-                        .toLocaleString()}
-                    </p>
-                    <p className="text-sage font-medium">Total collecté</p>
-                  </div>
-                  <div className="bg-white/60 backdrop-blur-sm rounded-2xl p-6 shadow-md">
-                    <p className="text-4xl font-bold text-forest mb-2">
-                      €
-                      {stages
-                        .reduce((sum, s) => sum + s.targetAmount, 0)
-                        .toLocaleString()}
-                    </p>
-                    <p className="text-sage font-medium">Objectif total</p>
-                  </div>
-                </div>
-                <p className="text-sage text-lg leading-relaxed max-w-2xl mx-auto">
-                  Gérez les étapes de votre projet pour suivre l'avancement et
-                  atteindre vos objectifs agricoles.
-                </p>
+                </ScrollArea>
               </CardContent>
             </Card>
           </>
         ) : (
-          <Card className="border-none shadow-lg bg-white/80 backdrop-blur-sm">
-            <CardContent className="p-12 text-center">
-              <div className="bg-sage/10 rounded-full w-24 h-24 flex items-center justify-center mx-auto mb-6">
-                <Plus className="h-12 w-12 text-sage" />
-              </div>
-              <h3 className="text-2xl font-semibold text-forest mb-3">
+          <Card className="bg-cream/50 border-sage/30">
+            <CardContent className="py-12 text-center">
+              <Plus className="h-16 w-16 mx-auto text-sage/50 mb-4" />
+              <h3 className="text-lg font-semibold text-forest mb-2">
                 Aucune étape définie
               </h3>
-              <p className="text-sage mb-6 max-w-md mx-auto">
-                Ce projet n'a pas encore d'étapes de financement. Commencez par
-                ajouter votre première étape.
+              <p className="text-sage mb-4">
+                Ce projet n'a pas encore d'étapes de financement.
               </p>
-              <Button
-                className="bg-forest text-cream hover:bg-olive transition-all duration-200 shadow-lg"
-                size="lg"
-              >
-                <Plus className="h-5 w-5 mr-2" />
+              <Button className="bg-forest text-cream hover:bg-forest/90">
+                <Plus className="h-4 w-4 mr-2" />
                 Ajouter des étapes
               </Button>
             </CardContent>
