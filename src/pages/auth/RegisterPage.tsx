@@ -3,22 +3,21 @@ import { Sprout } from "lucide-react";
 
 export default function RegisterPage() {
   return (
-    <div className="min-h-screen w-full bg-linear-to-br from-cream via-sage/10 to-olive/10 flex items-center justify-center p-4">
-      <div className="max-w-5xl w-full">
+    <div className="min-h-screen bg-gradient-to-br from-cream via-sage/10 to-olive/10 flex items-center justify-center p-4">
+      <div className="max-w-6xl w-full">
         {/* Header */}
-        <div className="text-center mb-12">
-          <div className="flex items-center justify-center space-x-3 mb-6">
-            <Sprout className="h-12 w-12 text-forest" />
-            <h1 className="text-4xl font-bold text-forest">
-              AgriConnect Madagascar
-            </h1>
+        <div className="text-center mb-8">
+          <div className="flex items-center justify-center gap-3 mb-4">
+            <div className="w-12 h-12 rounded-full bg-forest flex items-center justify-center">
+              <Sprout className="h-7 w-7 text-cream" />
+            </div>
+            <h1 className="text-4xl font-bold text-forest">AgriConnect</h1>
           </div>
-          <p className="text-xl text-sage max-w-2xl mx-auto">
-            La plateforme qui unit la passion agricole et les opportunités
-            d'investissement pour créer un impact durable sur nos communautés
+          <p className="text-lg text-sage max-w-2xl mx-auto">
+            Rejoignez la plateforme et investissez dans l'agriculture durable
           </p>
         </div>
-        {/* Auth Options */}
+        {/* Auth Form */}
         <div className="flex justify-center">
           <RegisterForm />
         </div>

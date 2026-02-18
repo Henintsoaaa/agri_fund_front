@@ -35,26 +35,23 @@ export function LoginForm() {
   };
 
   return (
-    <Card className="w-full max-w-sm bg-white rounded-2xl p-8 shadow-xl border-none">
+    <Card className="w-full max-w-md bg-cream/50 border-sage/30 shadow-lg">
       <CardHeader>
-        <div className="rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4 bg-olive/10">
-          <User className="h-8 w-8 text-olive" />
+        <div className="w-16 h-16 rounded-full bg-forest/10 flex items-center justify-center mx-auto mb-4">
+          <User className="h-8 w-8 text-forest" />
         </div>
         <CardTitle className="text-center text-2xl font-bold text-forest">
-          Se connecter avec votre compte
+          Connexion
         </CardTitle>
-        <CardDescription className="text-sage mt-2 text-center">
-          Entrez vos informations ci-dessous pour accéder au plateforme
+        <CardDescription className="text-sage text-center">
+          Connectez-vous pour accéder à votre compte
         </CardDescription>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit}>
-          <div className="flex flex-col gap-6 ">
-            <div className="grid gap-2">
-              <Label
-                htmlFor="email"
-                className="block text-sm font-medium text-forest"
-              >
+          <div className="flex flex-col gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="email" className="text-forest font-semibold">
                 Email
               </Label>
               <Input
@@ -62,51 +59,53 @@ export function LoginForm() {
                 type="email"
                 placeholder="m@example.com"
                 required
-                className="w-full px-4 py-3 border border-sage/20 rounded-lg focus:outline-none focus:border-olive focus:ring-2 focus:ring-olive/20"
+                className="border-sage/30 focus:border-forest"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
             </div>
-            <div className="grid gap-2">
-              <div className="flex items-center">
-                <Label
-                  htmlFor="password"
-                  className="block text-sm font-medium text-forest"
-                >
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <Label htmlFor="password" className="text-forest font-semibold">
                   Mot de passe
                 </Label>
+                <a
+                  href="#"
+                  onClick={handleForgotPassword}
+                  className="text-olive text-sm hover:underline"
+                >
+                  Oublié ?
+                </a>
               </div>
               <Input
                 id="password"
                 type="password"
                 required
-                className="w-full px-4 py-3 border border-sage/20 rounded-lg focus:outline-none focus:border-olive focus:ring-2 focus:ring-olive/20"
+                className="border-sage/30 focus:border-forest"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
-              <a
-                href="#"
-                onClick={handleForgotPassword}
-                className="ml-auto text-olive inline-block text-sm underline-offset-4 hover:underline"
-              >
-                Mot de passe oublié ?
-              </a>
             </div>
           </div>
 
-          {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
+          {error && <p className="text-destructive text-sm mt-2">{error}</p>}
 
-          <CardFooter className="flex-col justify-center items-center w-full px-0 mt-6">
+          <CardFooter className="flex-col px-0 mt-6 gap-4">
             <Button
               disabled={isLoading}
               type="submit"
-              className="w-full py-3 px-6 rounded-lg font-semibold transition-colors duration-200 bg-olive text-cream hover:bg-forest/70"
+              className="w-full bg-forest hover:bg-forest/90 text-cream"
             >
               {isLoading ? "Connexion..." : "Se connecter"}
             </Button>
 
-            <div className="relative flex justify-center text-sm pt-5">
-              <span className="px-2 bg-white text-sage">ou</span>
+            <div className="relative w-full">
+              <div className="absolute inset-0 flex items-center">
+                <span className="w-full border-t border-sage/30" />
+              </div>
+              <div className="relative flex justify-center text-xs uppercase">
+                <span className="bg-cream/50 px-2 text-sage">ou</span>
+              </div>
             </div>
 
             <CardAction className="text-center">
@@ -114,9 +113,9 @@ export function LoginForm() {
                 onClick={handleRegisterRedirect}
                 type="button"
                 variant="link"
-                className=" text-sage hover:text-olive transition-colors duration-200 text-sm"
+                className="text-sage hover:text-forest"
               >
-                Creer un compte Investisseur
+                Créer un compte Investisseur
               </Button>
             </CardAction>
           </CardFooter>

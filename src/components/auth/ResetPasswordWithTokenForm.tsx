@@ -62,15 +62,15 @@ export default function ResetPasswordForm() {
 
   if (success) {
     return (
-      <Card className="w-full max-w-sm bg-white rounded-2xl p-8 shadow-xl border-none">
+      <Card className="w-full max-w-md bg-cream/50 border-sage/30 shadow-lg">
         <CardHeader>
-          <div className="rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4 bg-green-100">
-            <Lock className="h-8 w-8 text-green-600" />
+          <div className="w-16 h-16 rounded-full bg-olive/10 flex items-center justify-center mx-auto mb-4">
+            <Lock className="h-8 w-8 text-olive" />
           </div>
           <CardTitle className="text-center text-2xl font-bold text-forest">
             Mot de passe modifié !
           </CardTitle>
-          <CardDescription className="text-sage mt-2 text-center">
+          <CardDescription className="text-sage text-center">
             Votre mot de passe a été réinitialisé avec succès. Vous pouvez
             maintenant vous connecter.
           </CardDescription>
@@ -78,7 +78,7 @@ export default function ResetPasswordForm() {
         <CardContent>
           <Button
             onClick={() => navigate("/login")}
-            className="w-full bg-olive text-cream hover:bg-forest"
+            className="w-full bg-forest text-cream hover:bg-forest/90"
           >
             Se connecter
           </Button>
@@ -88,25 +88,22 @@ export default function ResetPasswordForm() {
   }
 
   return (
-    <Card className="w-full max-w-sm bg-white rounded-2xl p-8 shadow-xl border-none">
+    <Card className="w-full max-w-md bg-cream/50 border-sage/30 shadow-lg">
       <CardHeader>
-        <div className="rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4 bg-olive/10">
-          <Lock className="h-8 w-8 text-olive" />
+        <div className="w-16 h-16 rounded-full bg-forest/10 flex items-center justify-center mx-auto mb-4">
+          <Lock className="h-8 w-8 text-forest" />
         </div>
         <CardTitle className="text-center text-2xl font-bold text-forest">
           Nouveau mot de passe
         </CardTitle>
-        <CardDescription className="text-sage mt-2 text-center">
+        <CardDescription className="text-sage text-center">
           Entrez votre nouveau mot de passe
         </CardDescription>
       </CardHeader>
       <form onSubmit={handleSubmit}>
         <CardContent className="space-y-4">
-          <div className="grid gap-2">
-            <Label
-              htmlFor="newPassword"
-              className="block text-sm font-medium text-forest"
-            >
+          <div className="space-y-2">
+            <Label htmlFor="newPassword" className="text-forest font-semibold">
               Nouveau mot de passe
             </Label>
             <Input
@@ -115,14 +112,14 @@ export default function ResetPasswordForm() {
               required
               value={newPassword}
               onChange={(e) => setNewPassword(e.target.value)}
-              className="w-full px-4 py-3 border border-sage/20 rounded-lg focus:outline-none focus:border-olive focus:ring-2 focus:ring-olive/20"
+              className="border-sage/30 focus:border-forest"
             />
           </div>
 
-          <div className="grid gap-2">
+          <div className="space-y-2">
             <Label
               htmlFor="confirmPassword"
-              className="block text-sm font-medium text-forest"
+              className="text-forest font-semibold"
             >
               Confirmer le mot de passe
             </Label>
@@ -132,16 +129,16 @@ export default function ResetPasswordForm() {
               required
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
-              className="w-full px-4 py-3 border border-sage/20 rounded-lg focus:outline-none focus:border-olive focus:ring-2 focus:ring-olive/20"
+              className="border-sage/30 focus:border-forest"
             />
           </div>
 
-          {error && <p className="text-red-500 text-sm">{error}</p>}
+          {error && <p className="text-destructive text-sm">{error}</p>}
 
           <Button
             type="submit"
             disabled={isLoading}
-            className="w-full py-3 px-6 rounded-lg font-semibold transition-colors duration-200 bg-olive text-cream hover:bg-forest"
+            className="w-full bg-forest text-cream hover:bg-forest/90"
           >
             {isLoading ? "Réinitialisation..." : "Réinitialiser"}
           </Button>
@@ -150,7 +147,7 @@ export default function ResetPasswordForm() {
             type="button"
             variant="link"
             onClick={() => navigate("/login")}
-            className="w-full text-sage hover:text-olive"
+            className="w-full text-sage hover:text-forest"
           >
             Retour à la connexion
           </Button>

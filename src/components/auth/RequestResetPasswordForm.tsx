@@ -43,15 +43,15 @@ export default function RequestResetPasswordForm() {
 
   if (success) {
     return (
-      <Card className="w-full max-w-sm bg-white rounded-2xl p-8 shadow-xl border-none">
+      <Card className="w-full max-w-md bg-cream/50 border-sage/30 shadow-lg">
         <CardHeader>
-          <div className="rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4 bg-green-100">
-            <Mail className="h-8 w-8 text-green-600" />
+          <div className="w-16 h-16 rounded-full bg-olive/10 flex items-center justify-center mx-auto mb-4">
+            <Mail className="h-8 w-8 text-olive" />
           </div>
           <CardTitle className="text-center text-2xl font-bold text-forest">
             Email envoyé !
           </CardTitle>
-          <CardDescription className="text-sage mt-2 text-center">
+          <CardDescription className="text-sage text-center">
             Un email avec un lien de réinitialisation a été envoyé à {email}.
             Vérifiez votre boîte mail (et les spams).
           </CardDescription>
@@ -59,7 +59,7 @@ export default function RequestResetPasswordForm() {
         <CardContent>
           <Button
             onClick={() => navigate("/login")}
-            className="w-full bg-olive text-cream hover:bg-forest"
+            className="w-full bg-forest text-cream hover:bg-forest/90"
           >
             Retour à la connexion
           </Button>
@@ -69,25 +69,22 @@ export default function RequestResetPasswordForm() {
   }
 
   return (
-    <Card className="w-full max-w-sm bg-white rounded-2xl p-8 shadow-xl border-none">
+    <Card className="w-full max-w-md bg-cream/50 border-sage/30 shadow-lg">
       <CardHeader>
-        <div className="rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4 bg-olive/10">
-          <Mail className="h-8 w-8 text-olive" />
+        <div className="w-16 h-16 rounded-full bg-forest/10 flex items-center justify-center mx-auto mb-4">
+          <Mail className="h-8 w-8 text-forest" />
         </div>
         <CardTitle className="text-center text-2xl font-bold text-forest">
           Mot de passe oublié ?
         </CardTitle>
-        <CardDescription className="text-sage mt-2 text-center">
+        <CardDescription className="text-sage text-center">
           Entrez votre email pour recevoir un lien de réinitialisation
         </CardDescription>
       </CardHeader>
       <form onSubmit={handleSubmit}>
         <CardContent className="space-y-4">
-          <div className="grid gap-2">
-            <Label
-              htmlFor="email"
-              className="block text-sm font-medium text-forest"
-            >
+          <div className="space-y-2">
+            <Label htmlFor="email" className="text-forest font-semibold">
               Email
             </Label>
             <Input
@@ -97,16 +94,16 @@ export default function RequestResetPasswordForm() {
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-4 py-3 border border-sage/20 rounded-lg focus:outline-none focus:border-olive focus:ring-2 focus:ring-olive/20"
+              className="border-sage/30 focus:border-forest"
             />
           </div>
 
-          {error && <p className="text-red-500 text-sm">{error}</p>}
+          {error && <p className="text-destructive text-sm">{error}</p>}
 
           <Button
             type="submit"
             disabled={isLoading}
-            className="w-full py-3 px-6 rounded-lg font-semibold transition-colors duration-200 bg-olive text-cream hover:bg-forest"
+            className="w-full bg-forest text-cream hover:bg-forest/90"
           >
             {isLoading ? "Envoi en cours..." : "Envoyer le lien"}
           </Button>
@@ -115,7 +112,7 @@ export default function RequestResetPasswordForm() {
             type="button"
             variant="link"
             onClick={() => navigate("/login")}
-            className="w-full text-sage hover:text-olive"
+            className="w-full text-sage hover:text-forest"
           >
             Retour à la connexion
           </Button>

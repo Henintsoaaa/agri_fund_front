@@ -40,80 +40,38 @@ export function RegisterForm() {
   };
 
   return (
-    <Card className="w-full max-w-sm bg-white rounded-2xl p-8 shadow-xl border-none">
+    <Card className="w-full max-w-md bg-cream/50 border-sage/30 shadow-lg">
       <CardHeader>
-        <div className="rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4 bg-olive/10">
-          <User className="h-8 w-8 text-olive" />
+        <div className="w-16 h-16 rounded-full bg-forest/10 flex items-center justify-center mx-auto mb-4">
+          <User className="h-8 w-8 text-forest" />
         </div>
         <CardTitle className="text-center text-2xl font-bold text-forest">
-          Inscrivez vous
+          Inscription
         </CardTitle>
-        <CardDescription className="text-sage mt-2 text-center">
-          Entrez vos informations ci-dessous pour accéder au plateforme
+        <CardDescription className="text-sage text-center">
+          Créez votre compte pour accéder à la plateforme
         </CardDescription>
       </CardHeader>
       <form onSubmit={handleSubmit} className="flex flex-col">
         <CardContent>
-          <div className="flex flex-col gap-6 ">
-            <div className="grid gap-2">
-              <Label
-                htmlFor="name"
-                className="block text-sm font-medium text-forest"
-              >
-                Nom
+          <div className="flex flex-col gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="name" className="text-forest font-semibold">
+                Nom complet
               </Label>
               <Input
                 id="name"
-                type="name"
+                type="text"
                 placeholder="John Doe"
                 required
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="w-full px-4 py-3 border border-sage/20 rounded-lg focus:outline-none focus:border-olive focus:ring-2 focus:ring-olive/20"
+                className="border-sage/30 focus:border-forest"
               />
             </div>
 
-            <div className="grid gap-2">
-              <Label
-                htmlFor="phone"
-                className="block text-sm font-medium text-forest"
-              >
-                Numero Telephone
-              </Label>
-              <Input
-                id="phone"
-                type="phone"
-                placeholder="+261 xx xx xxx xx"
-                required
-                value={phone}
-                onChange={(e) => setPhone(e.target.value)}
-                className="w-full px-4 py-3 border border-sage/20 rounded-lg focus:outline-none focus:border-olive focus:ring-2 focus:ring-olive/20"
-              />
-            </div>
-
-            <div className="grid gap-2">
-              <Label
-                htmlFor="country"
-                className="block text-sm font-medium text-forest"
-              >
-                Pays
-              </Label>
-              <Input
-                id="country"
-                type="country"
-                placeholder="Madagascar"
-                required
-                value={country}
-                onChange={(e) => setCountry(e.target.value)}
-                className="w-full px-4 py-3 border border-sage/20 rounded-lg focus:outline-none focus:border-olive focus:ring-2 focus:ring-olive/20"
-              />
-            </div>
-
-            <div className="grid gap-2">
-              <Label
-                htmlFor="email"
-                className="block text-sm font-medium text-forest"
-              >
+            <div className="space-y-2">
+              <Label htmlFor="email" className="text-forest font-semibold">
                 Email
               </Label>
               <Input
@@ -123,57 +81,84 @@ export function RegisterForm() {
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-4 py-3 border border-sage/20 rounded-lg focus:outline-none focus:border-olive focus:ring-2 focus:ring-olive/20"
+                className="border-sage/30 focus:border-forest"
               />
             </div>
 
-            <div className="grid gap-2">
-              <div className="flex items-center">
-                <Label
-                  htmlFor="password"
-                  className="block text-sm font-medium text-forest"
-                >
-                  Mot de passe
-                </Label>
-              </div>
+            <div className="space-y-2">
+              <Label htmlFor="phone" className="text-forest font-semibold">
+                Numéro de téléphone
+              </Label>
+              <Input
+                id="phone"
+                type="tel"
+                placeholder="+261 xx xx xxx xx"
+                required
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                className="border-sage/30 focus:border-forest"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="country" className="text-forest font-semibold">
+                Pays
+              </Label>
+              <Input
+                id="country"
+                type="text"
+                placeholder="Madagascar"
+                required
+                value={country}
+                onChange={(e) => setCountry(e.target.value)}
+                className="border-sage/30 focus:border-forest"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="password" className="text-forest font-semibold">
+                Mot de passe
+              </Label>
               <Input
                 id="password"
                 type="password"
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-4 py-3 border border-sage/20 rounded-lg focus:outline-none focus:border-olive focus:ring-2 focus:ring-olive/20"
+                className="border-sage/30 focus:border-forest"
               />
             </div>
-            {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
+
+            {error && <p className="text-destructive text-sm">{error}</p>}
 
             <Button
               disabled={isLoading}
               type="submit"
-              className="w-full py-3 px-6 rounded-lg font-semibold transition-colors duration-200 bg-olive text-cream hover:bg-forest/70"
+              className="w-full bg-forest hover:bg-forest/90 text-cream"
             >
-              {isLoading ? "inscription..." : "S'inscrire"}
+              {isLoading ? "Inscription..." : "S'inscrire"}
             </Button>
           </div>
         </CardContent>
-        <CardFooter className="flex-col  justify-center items-center w-full">
-          <div className="relative flex justify-center text-sm pt-5">
-            <span className="px-2 bg-white text-sage">ou</span>
+        <CardFooter className="flex-col justify-center items-center w-full">
+          <div className="relative w-full pt-2 ">
+            <div className="absolute inset-0 flex items-center">
+              <span className="w-full border-t border-sage/30" />
+            </div>
+            <div className="relative flex justify-center text-xs uppercase">
+              <span className="bg-[#fbf8e8] px-2 text-sage">ou</span>
+            </div>
           </div>
 
-          <CardAction>
+          <CardAction className="mt-4">
             <Button
               onClick={handleLoginRedirect}
               variant="link"
-              className=" text-sage hover:text-olive transition-colors duration-200 text-sm"
+              className="text-sage hover:text-forest"
             >
-              Se connecter si vous avez deja un compte
+              Se connecter si vous avez déjà un compte
             </Button>
           </CardAction>
-
-          {/* <Button variant="outline" className="w-full">
-          Login with Google
-        </Button> */}
         </CardFooter>
       </form>
     </Card>
