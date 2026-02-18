@@ -22,6 +22,7 @@ import { useAuthContext } from "@/features/auth/context/AuthContext";
 export const useProject = () => {
   const queryClient = useQueryClient();
   const { user } = useAuthContext();
+  console.log("USER:", user);
 
   // Get my projects
   const {
@@ -32,8 +33,11 @@ export const useProject = () => {
   } = useQuery({
     queryKey: ["my-projects"],
     queryFn: async () => {
-      const response = await getMyProjectsApi();
-      return response.data;
+      if (user?.role === "PROJECT_OWNER") {
+        const response = await getMyProjectsApi();
+        return response.data;
+      }
+      return [];
     },
   });
 
@@ -56,7 +60,7 @@ export const useProject = () => {
         const response = await getPublicProjectsApi();
         console.log("Public projects for investor:", response.data);
         return response.data;
-      } else {
+      } else if (user?.role === "PROJECT_OWNER") {
         const response = await getMyProjectsApi();
         return response.data;
       }
