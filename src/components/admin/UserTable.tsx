@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import type { User } from "../../features/admin/types/admin.types";
+import type { User } from "@/features/user/types/user.types";
 
 interface UserTableProps {
   users: User[];
