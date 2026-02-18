@@ -1,264 +1,269 @@
-import React, { useState } from "react";
-import { MapPin, Clock, Users, Plus, Filter } from "lucide-react";
+import { useEffect, useState } from "react";
 import { useProject } from "@/features/project/hooks/useProject";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+  CardFooter,
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import {
+  Search,
+  Filter,
+  Heart,
+  TrendingUp,
+  Users,
+  MapPin,
+  Eye,
+} from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Progress } from "@/components/ui/progress";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Separator } from "@/components/ui/separator";
 
-const ProjectShowcase: React.FC = () => {
-  const [selectedCategory, setSelectedCategory] = useState("all");
-  const { allProjects, isLoadingAllProjects, allProjectsError } = useProject();
+export default function ProjectShowcase() {
+  const {
+    allProjects: publicProjects,
+    isLoadingAllProjects: isLoadingPublicProjects,
+  } = useProject();
+  const [searchQuery, setSearchQuery] = useState("");
+  const [filterStatus, setFilterStatus] = useState("all");
 
-  const categories = [
-    { id: "all", label: "Tous les projets" },
-    { id: "rice", label: "Riziculture" },
-    { id: "livestock", label: "Élevage" },
-    { id: "vegetables", label: "Maraîchage" },
-    { id: "fruits", label: "Arboriculture" },
-  ];
+  useEffect(() => {
+    // Projects are automatically fetched by useQuery
+  }, []);
 
-  // Transform API data to match component structure
-  const projects =
-    allProjects?.map((project) => ({
-      id: project.id,
-      title: project.title,
-      farmer: "Project Owner", // You might want to add owner info to the API
-      location: "Location TBD", // You might want to add location to the API
-      category: project.category || "other",
-      description: project.description,
-      fundingGoal:
-        project.stages?.reduce(
-          (total, stage) => total + stage.targetAmount,
-          0,
-        ) || 0,
-      currentFunding:
-        project.stages?.reduce(
-          (total, stage) => total + stage.collectedAmount,
-          0,
-        ) || 0,
-      investors: 0, // You might want to add investor count to the API
-      timeLeft: "TBD", // You might want to add deadline to the API
-      image:
-        project.image ||
-        "https://images.pexels.com/photos/1595104/pexels-photo-1595104.jpeg?auto=compress&cs=tinysrgb&w=400",
-      roi: "TBD", // You might want to add ROI to the API
-      tags: ["En cours"], // You might want to add tags to the API
-      stages: project.stages || [],
-    })) || [];
-
-  const filteredProjects =
-    selectedCategory === "all"
-      ? projects
-      : projects.filter((project) => project.category === selectedCategory);
-
-  if (isLoadingAllProjects) {
-    return (
-      <div className="flex justify-center items-center min-h-screen">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-forest mx-auto"></div>
-          <p className="mt-4 text-sage">Chargement des projets...</p>
-        </div>
-      </div>
-    );
-  }
-
-  if (allProjectsError) {
-    return (
-      <div className="flex justify-center items-center min-h-screen">
-        <div className="text-center">
-          <p className="text-red-600">Erreur lors du chargement des projets</p>
-          <p className="text-sage mt-2">{allProjectsError.message}</p>
-        </div>
-      </div>
-    );
-  }
+  const filteredProjects = publicProjects?.filter((project) => {
+    const matchesSearch = project.title
+      .toLowerCase()
+      .includes(searchQuery.toLowerCase());
+    return matchesSearch;
+  });
 
   return (
-    <div>
-      <div className="space-y-8 px-48 py-8">
+    <div className="min-h-screen">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
         {/* Header */}
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-          <div>
-            <h2 className="text-2xl font-bold text-forest mb-2">
-              Projets agricoles
-            </h2>
-            <p className="text-sage">
-              Découvrez et financez les initiatives de nos agriculteurs formés
-              par le GAE
-            </p>
-          </div>
-          <button className="flex items-center space-x-2 bg-forest text-cream px-4 py-2 rounded-lg hover:bg-olive transition-colors duration-200">
-            <Plus className="h-4 w-4" />
-            <span>Présenter mon projet</span>
-          </button>
+        <div className="flex flex-col gap-2">
+          <h1 className="text-3xl font-bold text-forest">
+            Explorer les Projets
+          </h1>
+          <p className="text-sage text-lg">
+            Découvrez des opportunités d'investissement agricole
+          </p>
         </div>
 
-        {/* Filters */}
-        <div className="flex flex-wrap items-center gap-3">
-          <Filter className="h-5 w-5 text-sage" />
-          {categories.map((category) => (
-            <button
-              key={category.id}
-              onClick={() => setSelectedCategory(category.id)}
-              className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-200 ${
-                selectedCategory === category.id
-                  ? "bg-forest text-cream"
-                  : "bg-white text-sage border border-sage/20 hover:border-olive hover:text-olive"
-              }`}
-            >
-              {category.label}
-            </button>
-          ))}
+        {/* Search and Filters */}
+        <Card className="bg-cream/50 border-sage/30">
+          <CardContent className="p-6">
+            <div className="flex flex-col md:flex-row gap-4">
+              <div className="flex-1 relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-sage" />
+                <Input
+                  placeholder="Rechercher un projet..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="pl-10 border-sage/30 bg-cream"
+                />
+              </div>
+              <Select value={filterStatus} onValueChange={setFilterStatus}>
+                <SelectTrigger className="w-full md:w-48 border-sage/30 bg-cream">
+                  <Filter className="h-4 w-4 mr-2" />
+                  <SelectValue placeholder="Filtrer" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">Tous les projets</SelectItem>
+                  <SelectItem value="trending">Tendance</SelectItem>
+                  <SelectItem value="new">Nouveaux</SelectItem>
+                  <SelectItem value="almost-funded">
+                    Presque financés
+                  </SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Statistics Banner */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <Card className="bg-gradient-to-br from-olive/20 to-olive/10 border-olive/30">
+            <CardContent className="p-4 flex items-center gap-3">
+              <div className="flex items-center justify-center w-12 h-12 rounded-full bg-olive/20">
+                <TrendingUp className="h-6 w-6 text-olive" />
+              </div>
+              <div>
+                <p className="text-2xl font-bold text-forest">
+                  {publicProjects?.length || 0}
+                </p>
+                <p className="text-sm text-sage">Projets actifs</p>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="bg-gradient-to-br from-sage/20 to-sage/10 border-sage/30">
+            <CardContent className="p-4 flex items-center gap-3">
+              <div className="flex items-center justify-center w-12 h-12 rounded-full bg-sage/20">
+                <Users className="h-6 w-6 text-forest" />
+              </div>
+              <div>
+                <p className="text-2xl font-bold text-forest">342</p>
+                <p className="text-sm text-sage">Investisseurs</p>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="bg-gradient-to-br from-forest/20 to-forest/10 border-forest/30">
+            <CardContent className="p-4 flex items-center gap-3">
+              <div className="flex items-center justify-center w-12 h-12 rounded-full bg-forest/20">
+                <TrendingUp className="h-6 w-6 text-forest" />
+              </div>
+              <div>
+                <p className="text-2xl font-bold text-forest">458K €</p>
+                <p className="text-sm text-sage">Fonds levés</p>
+              </div>
+            </CardContent>
+          </Card>
         </div>
+
+        <Separator className="bg-sage/30" />
 
         {/* Projects Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {filteredProjects.map((project) => {
-            const progressPercentage =
-              (project.currentFunding / project.fundingGoal) * 100;
+        <div>
+          {isLoadingPublicProjects ? (
+            <div className="text-center py-12 text-sage">
+              Chargement des projets...
+            </div>
+          ) : !filteredProjects || filteredProjects.length === 0 ? (
+            <Card className="bg-cream/50 border-sage/30">
+              <CardContent className="p-12 text-center">
+                <Search className="h-16 w-16 mx-auto text-sage/50 mb-4" />
+                <h3 className="text-lg font-semibold text-forest mb-2">
+                  Aucun projet trouvé
+                </h3>
+                <p className="text-sage">
+                  Modifiez vos critères de recherche ou revenez plus tard
+                </p>
+              </CardContent>
+            </Card>
+          ) : (
+            <ScrollArea className="h-200">
+              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 pr-4">
+                {filteredProjects.map((project) => {
+                  const totalTarget =
+                    project.stages?.reduce(
+                      (acc, stage) => acc + stage.targetAmount,
+                      0,
+                    ) || 0;
+                  const totalCollected =
+                    project.stages?.reduce(
+                      (acc, stage) => acc + stage.collectedAmount,
+                      0,
+                    ) || 0;
+                  const progress =
+                    totalTarget > 0
+                      ? Math.round((totalCollected / totalTarget) * 100)
+                      : 0;
 
-            return (
-              <div
-                key={project.id}
-                className="bg-white rounded-xl shadow-lg border border-sage/10 overflow-hidden hover:shadow-xl transition-shadow duration-200"
-              >
-                <div className="relative">
-                  <img
-                    src={project.image}
-                    alt={project.title}
-                    className="w-full h-48 object-cover"
-                  />
-                  <div className="absolute top-4 right-4 bg-forest text-cream px-3 py-1 rounded-full text-sm font-medium">
-                    ROI: {project.roi}
-                  </div>
-                </div>
+                  return (
+                    <Card
+                      key={project.id}
+                      className="bg-cream border-sage/30 hover:shadow-xl transition-all duration-300 overflow-hidden group"
+                    >
+                      {/* Project Image */}
+                      <div className="relative h-56 overflow-hidden bg-gradient-to-br from-olive/20 to-sage/20">
+                        <img
+                          src={project.image || "/placeholder-project.jpg"}
+                          alt={project.title}
+                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                        />
+                        <Button
+                          size="icon"
+                          variant="ghost"
+                          className="absolute top-3 right-3 bg-cream/90 hover:bg-cream text-forest"
+                        >
+                          <Heart className="h-4 w-4" />
+                        </Button>
+                        <Badge className="absolute bottom-3 left-3 bg-olive text-cream">
+                          {project.stages?.length || 0} étapes
+                        </Badge>
+                      </div>
 
-                <div className="p-6">
-                  <div className="flex flex-wrap gap-2 mb-3">
-                    {project.tags.map((tag, index) => (
-                      <span
-                        key={index}
-                        className="bg-sage/20 text-olive px-2 py-1 rounded text-xs font-medium"
-                      >
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
+                      <CardHeader>
+                        <CardTitle className="text-forest line-clamp-1 text-xl">
+                          {project.title}
+                        </CardTitle>
+                        <CardDescription className="text-sage line-clamp-2 text-sm">
+                          {project.description}
+                        </CardDescription>
+                      </CardHeader>
 
-                  <h3 className="font-bold text-forest text-lg mb-2">
-                    {project.title}
-                  </h3>
-                  <p className="text-sage text-sm mb-1">Par {project.farmer}</p>
+                      <CardContent className="space-y-4">
+                        {/* Location (mock) */}
+                        <div className="flex items-center gap-2 text-sm text-sage">
+                          <MapPin className="h-4 w-4 text-olive" />
+                          <span>France</span>
+                        </div>
 
-                  <div className="flex items-center text-sage/80 text-sm mb-4">
-                    <MapPin className="h-4 w-4 mr-1" />
-                    {project.location}
-                  </div>
+                        <Separator className="bg-sage/30" />
 
-                  <p className="text-sage text-sm mb-6 line-clamp-3">
-                    {project.description}
-                  </p>
-
-                  {/* Funding Progress */}
-                  <div className="mb-6">
-                    <div className="flex justify-between items-center mb-2">
-                      <span className="text-sm font-medium text-forest">
-                        €{project.currentFunding.toLocaleString()} / €
-                        {project.fundingGoal.toLocaleString()}
-                      </span>
-                      <span className="text-sm font-medium text-olive">
-                        {Math.round(progressPercentage)}%
-                      </span>
-                    </div>
-                    <div className="w-full bg-sage/20 rounded-full h-3">
-                      <div
-                        className="bg-olive h-3 rounded-full transition-all duration-300"
-                        style={{ width: `${progressPercentage}%` }}
-                      />
-                    </div>
-                  </div>
-
-                  {/* Stats */}
-                  <div className="grid grid-cols-2 gap-4 mb-6">
-                    <div className="flex items-center space-x-2 text-sage">
-                      <Users className="h-4 w-4" />
-                      <span className="text-sm">
-                        {project.investors} investisseurs
-                      </span>
-                    </div>
-                    <div className="flex items-center space-x-2 text-sage">
-                      <Clock className="h-4 w-4" />
-                      <span className="text-sm">
-                        {project.timeLeft} restants
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* Project Stages */}
-                  {project.stages && project.stages.length > 0 && (
-                    <div className="mb-6">
-                      <h4 className="text-sm font-medium text-forest mb-3">
-                        Étapes du projet
-                      </h4>
-                      <div className="space-y-2">
-                        {project.stages.map((stage, index) => (
-                          <div
-                            key={stage.id}
-                            className="flex items-center justify-between text-xs"
-                          >
-                            <span className="text-sage">
-                              Étape {index + 1}: {stage.title}
+                        {/* Funding Progress */}
+                        <div>
+                          <div className="flex justify-between text-sm mb-2">
+                            <span className="font-semibold text-forest">
+                              {totalCollected.toLocaleString("fr-FR")} €
                             </span>
-                            <span
-                              className={`px-2 py-1 rounded-full text-xs font-medium ${
-                                stage.statut === "FUNDED"
-                                  ? "bg-green-100 text-green-800"
-                                  : stage.statut === "OPEN"
-                                    ? "bg-blue-100 text-blue-800"
-                                    : "bg-gray-100 text-gray-800"
-                              }`}
-                            >
-                              {stage.statut === "FUNDED"
-                                ? "Financé"
-                                : stage.statut === "OPEN"
-                                  ? "Ouvert"
-                                  : "Fermé"}
+                            <span className="text-sage">
+                              / {totalTarget.toLocaleString("fr-FR")} €
                             </span>
                           </div>
-                        ))}
-                      </div>
-                    </div>
-                  )}
+                          <Progress value={progress} className="h-2" />
+                          <div className="flex justify-between items-center mt-2">
+                            <span className="text-xs text-sage">
+                              {progress}% financé
+                            </span>
+                            <div className="flex items-center gap-1 text-xs text-sage">
+                              <Users className="h-3 w-3" />
+                              <span>0 investisseurs</span>
+                            </div>
+                          </div>
+                        </div>
 
-                  {/* Actions */}
-                  <div className="flex gap-3">
-                    <button className="flex-1 bg-forest text-cream py-3 px-4 rounded-lg hover:bg-olive transition-colors duration-200 font-medium">
-                      Investir maintenant
-                    </button>
-                    <button className="border border-sage text-sage py-3 px-4 rounded-lg hover:border-olive hover:text-olive transition-colors duration-200 font-medium">
-                      En savoir plus
-                    </button>
-                  </div>
-                </div>
+                        {/* ROI Badge (mock) */}
+                        <div className="flex gap-2">
+                          <Badge
+                            variant="outline"
+                            className="border-olive/50 text-olive"
+                          >
+                            <TrendingUp className="h-3 w-3 mr-1" />
+                            ROI: +12%
+                          </Badge>
+                        </div>
+                      </CardContent>
+
+                      <CardFooter className="pt-0">
+                        <Button className="w-full bg-forest hover:bg-forest/90 text-cream gap-2 group-hover:bg-olive transition-colors">
+                          <Eye className="h-4 w-4" />
+                          Voir les détails
+                        </Button>
+                      </CardFooter>
+                    </Card>
+                  );
+                })}
               </div>
-            );
-          })}
+            </ScrollArea>
+          )}
         </div>
-
-        {/* Empty State */}
-        {filteredProjects.length === 0 && (
-          <div className="text-center py-12">
-            <div className="bg-sage/10 rounded-full w-24 h-24 flex items-center justify-center mx-auto mb-4">
-              <Filter className="h-12 w-12 text-sage" />
-            </div>
-            <h3 className="text-lg font-medium text-forest mb-2">
-              Aucun projet trouvé
-            </h3>
-            <p className="text-sage">
-              Essayez de changer les filtres ou revenez plus tard.
-            </p>
-          </div>
-        )}
       </div>
     </div>
   );
-};
-
-export default ProjectShowcase;
+}

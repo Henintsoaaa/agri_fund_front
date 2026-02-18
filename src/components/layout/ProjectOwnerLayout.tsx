@@ -1,75 +1,119 @@
-import { useAuth } from "@/features/auth/hooks/useAuth";
-import { Sprout, LogOut, MessageCircle, Bell, Settings } from "lucide-react";
-import { Outlet } from "react-router-dom";
+import { Outlet, useNavigate, useLocation } from "react-router-dom";
+import Navbar from "./Navbar";
+import {
+  LayoutDashboard,
+  FolderPlus,
+  Folders,
+  TrendingUp,
+  Users,
+  ImagePlus,
+  Bell,
+} from "lucide-react";
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Separator } from "@/components/ui/separator";
+import { Badge } from "@/components/ui/badge";
+
+const navItems = [
+  {
+    title: "Tableau de bord",
+    href: "/project-owner",
+    icon: LayoutDashboard,
+  },
+  {
+    title: "Mes Projets",
+    href: "/project-owner/projects",
+    icon: Folders,
+    badge: 5,
+  },
+  {
+    title: "Créer un Projet",
+    href: "/create-project",
+    icon: FolderPlus,
+  },
+
+  {
+    title: "Preuves",
+    href: "/project-owner/proofs",
+    icon: ImagePlus,
+  },
+  {
+    title: "Notifications",
+    href: "/project-owner/notifications",
+    icon: Bell,
+    badge: 3,
+  },
+];
 
 export default function ProjectOwnerLayout() {
-  const { logout, user } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
 
-  const handleLogout = () => {
-    logout();
-  };
   return (
-    <div className="w-full">
-      <header className="bg-forest shadow-lg w-full flex justify-center md:px-56 lg:px-96">
-        <div className="container">
-          <div className="flex items-center justify-between h-16">
-            <div className="flex items-center space-x-3">
-              <Sprout className="h-8 w-8 text-cream" />
-              <h1 className="text-xl font-bold text-cream">
-                AgriConnect Madagascar
-              </h1>
-              <span className="text-xs px-2 py-1 rounded-full bg-olive text-cream">
-                Porteur de Projet
-              </span>
-            </div>
+    <div className="h-screen flex flex-col bg-gradient-to-br from-cream via-sage/10 to-olive/10">
+      <Navbar title="AgriConnect" subtitle="Porteur de projet" />
 
-            <div className="flex items-center space-x-3">
-              <button className="p-2 text-sage hover:text-cream hover:bg-olive rounded-full transition-colors duration-200">
-                <MessageCircle className="h-5 w-5" />
-              </button>
-              <button className="p-2 text-sage hover:text-cream hover:bg-olive rounded-full transition-colors duration-200">
-                <Bell className="h-5 w-5" />
-              </button>
-              <div className="relative group">
-                <div className="h-8 w-8 bg-olive rounded-full flex items-center justify-center cursor-pointer">
-                  <span className="text-cream text-sm font-medium">
-                    {user?.name
-                      ?.split(" ")
-                      .map((n) => n[0])
-                      .join("")
-                      .toUpperCase() || "U"}
-                  </span>
-                </div>
+      <div className="flex flex-1 overflow-hidden">
+        {/* Sidebar */}
+        <aside className="hidden lg:flex lg:flex-col lg:w-64 h-full border-r border-sage/30 bg-cream/50 backdrop-blur-sm ">
+          <ScrollArea className="flex-1 px-3 py-6">
+            <nav className="space-y-1">
+              {navItems.map((item) => {
+                const Icon = item.icon;
+                const isActive = location.pathname === item.href;
 
-                <div className="absolute right-0 top-10 w-48 bg-white rounded-lg shadow-xl border border-sage/10 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
-                  <div className="p-3 border-b border-sage/10">
-                    <p className="font-medium text-forest">
-                      {user?.name || "Utilisateur"}
-                    </p>
-                    <p className="text-sm text-sage">
-                      {user?.email || "email@example.com"}
-                    </p>
-                  </div>
-                  <div className="py-2">
-                    <button className="w-full px-4 py-2 text-left text-sage hover:bg-sage/10 hover:text-olive transition-colors duration-200 flex items-center space-x-2">
-                      <Settings className="h-4 w-4" />
-                      <span>Paramètres</span>
-                    </button>
-                    <button
-                      onClick={handleLogout}
-                      className="w-full px-4 py-2 text-left text-sage hover:bg-sage/10 hover:text-olive transition-colors duration-200 flex items-center space-x-2"
-                    >
-                      <LogOut className="h-4 w-4" />
-                      <span>Se déconnecter</span>
-                    </button>
-                  </div>
-                </div>
-              </div>
+                return (
+                  <Button
+                    key={item.href}
+                    onClick={() => navigate(item.href)}
+                    variant={isActive ? "default" : "ghost"}
+                    className={cn(
+                      "w-full justify-start gap-3 mb-1 relative",
+                      isActive
+                        ? "bg-forest text-cream hover:bg-forest/90"
+                        : "text-forest hover:bg-olive/10",
+                    )}
+                  >
+                    <Icon className="h-5 w-5" />
+                    <span className="flex-1 text-left">{item.title}</span>
+                    {item.badge && (
+                      <Badge
+                        variant={isActive ? "secondary" : "default"}
+                        className={cn(
+                          "h-5 w-5 flex items-center justify-center p-0",
+                          isActive
+                            ? "bg-olive text-cream"
+                            : "bg-forest text-cream",
+                        )}
+                      >
+                        {item.badge}
+                      </Badge>
+                    )}
+                  </Button>
+                );
+              })}
+            </nav>
+          </ScrollArea>
+
+          <Separator className="bg-sage/30" />
+
+          <div className="p-4">
+            <div className="bg-olive/10 rounded-lg p-3 border border-olive/20">
+              <p className="text-xs font-semibold text-forest mb-1">Conseil</p>
+              <p className="text-xs text-forest/70">
+                Mettez à jour régulièrement vos preuves pour gagner la confiance
+                des investisseurs.
+              </p>
             </div>
           </div>
-        </div>
-      </header>
-      <Outlet />
+        </aside>
+
+        {/* Main Content */}
+        <main className="flex-1 overflow-y-auto">
+          <Outlet />
+        </main>
+      </div>
     </div>
   );
 }
