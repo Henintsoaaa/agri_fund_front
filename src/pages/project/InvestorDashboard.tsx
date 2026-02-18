@@ -1,53 +1,62 @@
-import {
-  ArrowRight,
-  DollarSign,
-  Leaf,
-  Star,
-  TrendingUp,
-  Users,
-} from "lucide-react";
+import { ArrowRight, DollarSign, Leaf, TrendingUp, Users } from "lucide-react";
+import InvestorProjectCard from "@/components/project/InvestorProjectCard";
+import { useProject } from "@/features/project/hooks/useProject";
+import type { Project } from "@/features/project/types/project.types";
+import { useAuthContext } from "@/features/auth/context/AuthContext";
 
 export default function InvestorDashboard() {
   const userType = "investor";
+  const { allProjects, isLoadingAllProjects, allProjectsError } = useProject();
+  const { user } = useAuthContext();
 
-  const recentProjects = [
-    {
-      id: 1,
-      title: "Riziculture Bio Antsirabe",
-      farmer: "Rakoto Andry",
-      location: "Antsirabe, Vakinankaratra",
-      funding: "€15,000",
-      progress: 75,
-      image:
-        "https://images.pexels.com/photos/1595104/pexels-photo-1595104.jpeg?auto=compress&cs=tinysrgb&w=300",
-      status: userType === "investor" ? "Investissement actif" : "En cours",
-      roi: userType === "investor" ? "23%" : undefined,
-    },
-    {
-      id: 2,
-      title: "Élevage de Zébus Amélioré",
-      farmer: "Rasoa Marie",
-      location: "Fianarantsoa, Haute Matsiatra",
-      funding: "€22,000",
-      progress: 60,
-      image:
-        "https://images.pexels.com/photos/422218/pexels-photo-422218.jpeg?auto=compress&cs=tinysrgb&w=300",
-      status: userType === "investor" ? "Opportunité" : "Recherche financement",
-      roi: userType === "investor" ? "18%" : undefined,
-    },
-    {
-      id: 3,
-      title: "Maraîchage Écologique",
-      farmer: "Hery Rajaona",
-      location: "Antananarivo, Analamanga",
-      funding: "€8,500",
-      progress: 90,
-      image:
-        "https://images.pexels.com/photos/1300972/pexels-photo-1300972.jpeg?auto=compress&cs=tinysrgb&w=300",
-      status: userType === "investor" ? "Presque financé" : "Dernière chance",
-      roi: userType === "investor" ? "25%" : undefined,
-    },
-  ];
+  console.log("Debug InvestorDashboard:", {
+    user,
+    userRole: user?.role,
+    allProjects,
+    isLoadingAllProjects,
+    allProjectsError,
+    projectsLength: allProjects?.length,
+  });
+
+  // Calculate project progress and funding from stages
+  const getProjectStats = (project: Project) => {
+    if (!project.stages || project.stages.length === 0) {
+      return { progress: 0, funding: "0", collected: "0" };
+    }
+
+    const totalTarget = project.stages.reduce(
+      (sum, stage) => sum + stage.targetAmount,
+      0,
+    );
+    const totalCollected = project.stages.reduce(
+      (sum, stage) => sum + stage.collectedAmount,
+      0,
+    );
+    const progress = totalTarget > 0 ? (totalCollected / totalTarget) * 100 : 0;
+
+    return {
+      progress: Math.round(progress),
+      funding: `€${totalTarget.toLocaleString()}`,
+      collected: `€${totalCollected.toLocaleString()}`,
+    };
+  };
+
+  // Get status label
+  const getStatusLabel = (project: Project) => {
+    const stats = getProjectStats(project);
+    if (stats.progress >= 90) return "Presque financé";
+    if (stats.progress >= 50) return "Opportunité";
+    if (stats.progress > 0) return "Investissement actif";
+    return "Nouveau projet";
+  };
+
+  // Calculate ROI (mocked for now - would need real investment data)
+  const getROI = (project: Project) => {
+    const stats = getProjectStats(project);
+    if (stats.progress > 70) return "20-25%";
+    if (stats.progress > 40) return "15-20%";
+    return "10-15%";
+  };
   const stats = [
     {
       label: "Projets investis",
@@ -128,64 +137,46 @@ export default function InvestorDashboard() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {recentProjects.map((project) => (
-              <div
-                key={project.id}
-                className="border border-sage/20 rounded-xl overflow-hidden hover:shadow-lg transition-shadow duration-200"
-              >
-                <img
-                  src={project.image}
-                  alt={project.title}
-                  className="w-full h-48 object-cover"
-                />
-                <div className="p-4">
-                  <div className="flex items-center justify-between mb-2">
-                    <div className="flex items-center space-x-1">
-                      {[...Array(5)].map((_, i) => (
-                        <Star
-                          key={i}
-                          className="h-4 w-4 fill-yellow-400 text-yellow-400"
-                        />
-                      ))}
-                    </div>
-                    {project.roi && (
-                      <span className="text-sm font-medium text-olive">
-                        ROI: {project.roi}
-                      </span>
-                    )}
-                  </div>
-                  <h4 className="font-semibold text-forest mb-1">
-                    {project.title}
-                  </h4>
-                  <p className="text-sm text-sage mb-2">
-                    Par ${project.farmer}
-                  </p>
-                  <p className="text-xs text-sage/80 mb-3">
-                    {project.location}
-                  </p>
-
-                  <div className="flex items-center justify-between mb-3">
-                    <span className="text-sm font-medium text-olive">
-                      Objectif: {project.funding}
-                    </span>
-                    <span className="text-sm font-medium text-forest">
-                      {project.progress}%
-                    </span>
-                  </div>
-
-                  <div className="w-full bg-sage/20 rounded-full h-2 mb-4">
-                    <div
-                      className="bg-olive h-2 rounded-full transition-all duration-300"
-                      style={{ width: `${project.progress}%` }}
-                    ></div>
-                  </div>
-
-                  <button className="w-full bg-forest text-cream py-2 px-4 rounded-lg hover:bg-olive transition-colors duration-200 font-medium">
-                    "Investir maintenant"
-                  </button>
-                </div>
+            {isLoadingAllProjects ? (
+              <div className="col-span-3 text-center py-8 text-sage">
+                Chargement des projets...
               </div>
-            ))}
+            ) : allProjectsError ? (
+              <div className="col-span-3 text-center py-8 text-red-500">
+                Erreur lors du chargement des projets
+              </div>
+            ) : allProjects && allProjects.length > 0 ? (
+              allProjects.slice(0, 6).map((project) => {
+                const stats = getProjectStats(project);
+                return (
+                  <InvestorProjectCard
+                    key={project.id}
+                    id={parseInt(project.id.slice(-6), 16) || 1}
+                    title={project.title}
+                    farmer="Propriétaire du projet"
+                    location={project.category || "Madagascar"}
+                    funding={stats.funding}
+                    progress={stats.progress}
+                    image={
+                      project.image ||
+                      "https://images.pexels.com/photos/1595104/pexels-photo-1595104.jpeg?auto=compress&cs=tinysrgb&w=300"
+                    }
+                    status={getStatusLabel(project)}
+                    roi={getROI(project)}
+                    userType={userType}
+                  />
+                );
+              })
+            ) : (
+              <div className="col-span-3 text-center py-8 text-sage">
+                Aucun projet disponible pour le moment
+                <br />
+                <small className="text-xs">
+                  (allProjects: {allProjects ? "existe" : "null/undefined"},
+                  length: {allProjects?.length || 0})
+                </small>
+              </div>
+            )}
           </div>
         </div>
 
