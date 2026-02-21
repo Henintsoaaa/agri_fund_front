@@ -1,225 +1,235 @@
-import { useState } from "react";
-import { Edit, Trash2 } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Progress } from "@/components/ui/progress";
 import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
-import EditProjectStageModal from "./EditProjectStageModal";
-import { useProject } from "@/features/project/hooks/useProject";
-import type { ProjectStage } from "@/features/project/types/project.types";
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Progress } from "@/components/ui/progress";
+import { Button } from "@/components/ui/button";
+import {
+  Target,
+  DollarSign,
+  TrendingUp,
+  Users,
+  Calendar,
+  Eye,
+  Edit,
+  Trash2,
+} from "lucide-react";
+import { Separator } from "@/components/ui/separator";
 
 interface ProjectStageCardProps {
-  stage: ProjectStage;
+  stage: {
+    id: string;
+    title: string;
+    description: string;
+    image?: string;
+    targetAmount: number;
+    collectedAmount: number;
+    stageOrder: number;
+    statut: string;
+    createdAt: string;
+  };
+  role?: "admin" | "owner" | "investor";
+  onInvest?: (stageId: string) => void;
+  onViewDetails?: (stageId: string) => void;
   onEdit?: (stageId: string) => void;
   onDelete?: (stageId: string) => void;
-  onViewDetails?: (stageId: string) => void;
 }
 
 export default function ProjectStageCard({
   stage,
+  role = "investor",
+  onInvest,
+  onViewDetails,
   onEdit,
   onDelete,
 }: ProjectStageCardProps) {
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const progress =
+    stage.targetAmount > 0
+      ? Math.round((stage.collectedAmount / stage.targetAmount) * 100)
+      : 0;
 
-  const {
-    updateProjectStage,
-    isUpdatingProjectStage,
-    deleteProjectStage,
-    isDeletingProjectStage,
-  } = useProject();
-
-  const handleEditClick = () => {
-    setIsEditModalOpen(true);
-    onEdit?.(stage.id);
-  };
-
-  const handleDeleteClick = () => {
-    setIsDeleteDialogOpen(true);
-  };
-
-  const handleUpdate = (
-    stageId: string,
-    data: { title: string; description: string },
-  ) => {
-    updateProjectStage(
-      { projectStageId: stageId, data },
-      {
-        onSuccess: () => {
-          setIsEditModalOpen(false);
-        },
-      },
-    );
-  };
-
-  const handleDeleteConfirm = () => {
-    deleteProjectStage(
-      { projectStageId: stage.id },
-      {
-        onSuccess: () => {
-          setIsDeleteDialogOpen(false);
-          onDelete?.(stage.id);
-        },
-      },
-    );
-  };
-
-  const progressPercentage = (stage.collectedAmount / stage.targetAmount) * 100;
-
-  const getStatusColor = (statut: string) => {
+  const getStatutColor = (statut: string) => {
     switch (statut) {
-      case "CLOSED":
-        return "bg-grey-100 text-green-800";
-      case "FUNDED":
-        return "bg-blue-100 text-blue-800";
       case "OPEN":
-        return "bg-orange-100 text-orange-800";
+        return "bg-olive text-cream";
+      case "FUNDED":
+        return "bg-forest text-cream";
+      case "CLOSED":
+        return "bg-sage text-cream";
       default:
-        return "bg-gray-100 text-gray-800";
+        return "bg-sage text-cream";
     }
   };
 
-  const getStatusLabel = (statut: string) => {
+  const getStatutLabel = (statut: string) => {
     switch (statut) {
-      case "CLOSED":
-        return "Fermee";
-      case "FUNDED":
-        return "Financée";
       case "OPEN":
-        return "Ouverte";
+        return "Ouvert";
+      case "FUNDED":
+        return "Financé";
+      case "CLOSED":
+        return "Fermé";
       default:
         return statut;
     }
   };
 
-  const getProgressColor = (statut: string) => {
-    switch (statut) {
-      case "CLOSED":
-        return "bg-green-500";
-      case "FUNDED":
-        return "bg-blue-500";
-      case "OPEN":
-        return "bg-olive";
-      default:
-        return "bg-gray-500";
-    }
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString("fr-FR", {
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+    });
   };
 
   return (
-    <Card className="border border-sage/10 hover:shadow-xl">
-      <CardContent className="p-6">
-        <div className="flex flex-col lg:flex-row gap-6">
-          {/* Stage Order Indicator */}
-          <div className="flex items-center justify-center">
-            <div className="w-12 h-12 rounded-full flex items-center justify-center bg-olive text-cream text-lg font-bold">
-              {stage.stageOrder}
+    <Card className="bg-cream border-sage/30 hover:shadow-lg transition-all duration-300 overflow-hidden group h-full">
+      {/* Image */}
+      <div className="relative h-44 overflow-hidden bg-gradient-to-br from-olive/20 to-sage/20">
+        <img
+          src={stage.image || "/placeholder-stage.jpg"}
+          alt={stage.title}
+          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+        />
+        <div className="absolute top-3 left-3 flex gap-2">
+          <Badge className="bg-forest/90 text-cream">
+            Étape {stage.stageOrder}
+          </Badge>
+          <Badge className={getStatutColor(stage.statut)}>
+            {getStatutLabel(stage.statut)}
+          </Badge>
+        </div>
+      </div>
+
+      <CardHeader>
+        <CardTitle className="text-forest line-clamp-1 text-lg">
+          {stage.title}
+        </CardTitle>
+        <CardDescription className="text-sage line-clamp-2 text-sm">
+          {stage.description}
+        </CardDescription>
+      </CardHeader>
+
+      <CardContent className="space-y-4">
+        {/* Funding Info */}
+        <div className="space-y-2">
+          <div className="flex justify-between items-center">
+            <div className="flex items-center gap-2">
+              <DollarSign className="h-4 w-4 text-olive" />
+              <span className="text-sm font-semibold text-forest">
+                {stage.collectedAmount.toLocaleString("fr-FR")} €
+              </span>
             </div>
+            <span className="text-sm text-sage">
+              / {stage.targetAmount.toLocaleString("fr-FR")} €
+            </span>
           </div>
-
-          <div className="flex-1">
-            <div className="flex flex-col sm:flex-row justify-between items-start mb-4">
-              <div className="flex-1">
-                <div className="flex items-center space-x-3 mb-2 flex-wrap">
-                  <h4 className="text-xl font-bold text-forest">
-                    {stage.title}
-                  </h4>
-                  <Badge className={getStatusColor(stage.statut)}>
-                    {getStatusLabel(stage.statut)}
-                  </Badge>
-                </div>
-                <p className="text-sage mb-4">{stage.description}</p>
-              </div>
-            </div>
-
-            {/* Progress */}
-            <div className="mb-4">
-              <div className="flex justify-between items-center mb-2">
-                <span className="text-sm font-medium text-forest">
-                  €{stage.collectedAmount.toLocaleString()} / €
-                  {stage.targetAmount.toLocaleString()}
-                </span>
-                <span className="text-sm font-medium text-olive">
-                  {Math.round(progressPercentage)}%
-                </span>
-              </div>
-              <Progress
-                value={progressPercentage}
-                className="h-3"
-                indicatorClassName={getProgressColor(stage.statut)}
-              />
-            </div>
-
-            {/* Actions */}
-            <div className="flex flex-wrap gap-3">
-              <Button
-                onClick={handleEditClick}
-                className="bg-forest text-cream hover:bg-olive"
-                size="sm"
-              >
-                <Edit className="h-4 w-4 mr-2" />
-                Modifier
-              </Button>
-              <Button
-                onClick={handleDeleteClick}
-                variant="outline"
-                className="border-red-300 text-red-600 hover:bg-red-50"
-                size="sm"
-              >
-                <Trash2 className="h-4 w-4 mr-2" />
-                Supprimer
-              </Button>
+          <Progress value={progress} className="h-2" />
+          <div className="flex justify-between items-center">
+            <span className="text-xs text-sage">{progress}% atteint</span>
+            <div className="flex items-center gap-1 text-xs text-sage">
+              <Users className="h-3 w-3" />
+              <span>0 investisseurs</span>
             </div>
           </div>
         </div>
+
+        <Separator className="bg-sage/30" />
+
+        {/* Additional Info */}
+        <div className="space-y-2">
+          <div className="flex items-center gap-2 text-xs text-sage">
+            <Target className="h-3 w-3 text-olive" />
+            <span>
+              Reste:{" "}
+              {(stage.targetAmount - stage.collectedAmount).toLocaleString(
+                "fr-FR",
+              )}{" "}
+              €
+            </span>
+          </div>
+          {stage.statut === "OPEN" && (
+            <div className="flex items-center gap-2 text-xs text-sage">
+              <TrendingUp className="h-3 w-3 text-olive" />
+              <span>ROI estimé: +12%</span>
+            </div>
+          )}
+          <div className="flex items-center gap-2 text-xs text-sage">
+            <Calendar className="h-3 w-3 text-olive" />
+            <span>Créé le {formatDate(stage.createdAt)}</span>
+          </div>
+        </div>
+
+        {/* Actions */}
+        <div className="flex gap-2 pt-2">
+          {role === "investor" ? (
+            <>
+              {onViewDetails && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => onViewDetails(stage.id)}
+                  className="flex-1 border-sage/30 hover:bg-olive/10"
+                >
+                  <Eye className="h-4 w-4 mr-2" />
+                  Détails
+                </Button>
+              )}
+              {onInvest && stage.statut === "OPEN" && (
+                <Button
+                  size="sm"
+                  onClick={() => onInvest(stage.id)}
+                  className="flex-1 bg-forest hover:bg-forest/90 text-cream"
+                >
+                  <DollarSign className="h-4 w-4 mr-2" />
+                  Investir
+                </Button>
+              )}
+            </>
+          ) : (
+            <>
+              {onViewDetails && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => onViewDetails(stage.id)}
+                  className="flex-1 border-sage/30 hover:bg-olive/10"
+                >
+                  <Eye className="h-4 w-4 mr-2" />
+                  Voir
+                </Button>
+              )}
+              {onEdit && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => onEdit(stage.id)}
+                  className="flex-1 border-sage/30 hover:bg-olive/10"
+                >
+                  <Edit className="h-4 w-4 mr-2" />
+                  Modifier
+                </Button>
+              )}
+              {onDelete && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => onDelete(stage.id)}
+                  className="flex-1 border-destructive/30 text-destructive hover:bg-destructive/10"
+                >
+                  <Trash2 className="h-4 w-4 mr-2" />
+                  Supprimer
+                </Button>
+              )}
+            </>
+          )}
+        </div>
       </CardContent>
-
-      {/* Edit Modal */}
-      <EditProjectStageModal
-        isOpen={isEditModalOpen}
-        onClose={() => setIsEditModalOpen(false)}
-        stage={stage}
-        onUpdate={handleUpdate}
-        isUpdating={isUpdatingProjectStage}
-      />
-
-      {/* Delete Confirmation Dialog */}
-      <AlertDialog
-        open={isDeleteDialogOpen}
-        onOpenChange={setIsDeleteDialogOpen}
-      >
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Êtes-vous sûr ?</AlertDialogTitle>
-            <AlertDialogDescription>
-              Cette action supprimera l'étape "{stage.title}". Cette action est
-              irréversible.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel disabled={isDeletingProjectStage}>
-              Annuler
-            </AlertDialogCancel>
-            <AlertDialogAction
-              onClick={handleDeleteConfirm}
-              disabled={isDeletingProjectStage}
-              className="bg-red-600 hover:bg-red-700"
-            >
-              {isDeletingProjectStage ? "Suppression..." : "Supprimer"}
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
     </Card>
   );
 }

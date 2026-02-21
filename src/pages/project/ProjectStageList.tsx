@@ -1,5 +1,6 @@
 import ProjectStageCard from "@/components/project/ProjectStageCard";
 import { useProject } from "@/features/project/hooks/useProject";
+import { useAuthContext } from "@/features/auth/context/AuthContext";
 import {
   ArrowLeftIcon,
   Plus,
@@ -22,6 +23,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 export default function ProjectStageList() {
   const { projectId } = useParams<{ projectId: string }>();
   const navigate = useNavigate();
+  const { user } = useAuthContext();
   const { useGetProjectById } = useProject();
   const { data: project, isLoading } = useGetProjectById(projectId || "");
 
@@ -30,6 +32,18 @@ export default function ProjectStageList() {
   const totalCollected = stages.reduce((sum, s) => sum + s.collectedAmount, 0);
   const totalTarget = stages.reduce((sum, s) => sum + s.targetAmount, 0);
   const completedStages = stages.filter((s) => s.statut === "CLOSED").length;
+
+  // Determine the correct return path based on user role
+  const getReturnPath = () => {
+    if (user?.role === "INVESTOR") {
+      return "/investor";
+    } else if (user?.role === "PROJECT_OWNER") {
+      return "/project-owner";
+    } else if (user?.role === "ADMIN") {
+      return "/admin-dashboard";
+    }
+    return "/";
+  };
 
   const handleEditStage = (stageId: string) => {
     // TODO: Implement edit functionality
@@ -53,7 +67,7 @@ export default function ProjectStageList() {
         <div className="flex flex-col gap-4">
           <Button
             variant="ghost"
-            onClick={() => navigate("/project-owner")}
+            onClick={() => navigate(getReturnPath())}
             className="w-fit text-sage hover:text-forest hover:bg-sage/10 gap-2"
           >
             <ArrowLeftIcon className="h-4 w-4" />
@@ -146,13 +160,24 @@ export default function ProjectStageList() {
               </CardHeader>
               <CardContent>
                 <ScrollArea className="h-[600px]">
-                  <div className="space-y-4 pr-4">
+                  <div className="space-y-4 pr-4 grid md:grid-cols-3 gap-4 sm:grid-cols-1">
                     {stages.map((stage) => (
                       <div key={stage.id}>
                         <ProjectStageCard
                           stage={stage}
-                          onEdit={handleEditStage}
-                          onDelete={handleDeleteStage}
+                          role={
+                            user?.role === "INVESTOR" ? "investor" : "owner"
+                          }
+                          onEdit={
+                            user?.role !== "INVESTOR"
+                              ? handleEditStage
+                              : undefined
+                          }
+                          onDelete={
+                            user?.role !== "INVESTOR"
+                              ? handleDeleteStage
+                              : undefined
+                          }
                           onViewDetails={handleViewDetails}
                         />
                       </div>

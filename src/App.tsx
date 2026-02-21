@@ -56,6 +56,10 @@ function App() {
               <Route element={<InvestorLayout />}>
                 <Route path="/investor" element={<InvestorDashboard />} />
                 <Route path="/project-show" element={<ProjectShowcase />} />
+                <Route
+                  path="/project-stage/:projectId"
+                  element={<ProjectStageList />}
+                />
               </Route>
             </Routes>
           </BrowserRouter>

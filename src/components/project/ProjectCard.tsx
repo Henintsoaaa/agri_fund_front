@@ -1,44 +1,84 @@
-import { Calendar, TrendingUp, Target, CheckCircle } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { useProject } from "@/features/project/hooks/useProject";
-import type { Project } from "@/features/project/types/project.types";
-import AdminProjectActions from "@/components/admin/AdminProjectActions";
+import { Progress } from "@/components/ui/progress";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import {
+  Eye,
+  Edit,
+  Trash2,
+  MoreVertical,
+  Target,
+  Users,
+  CheckCircle2,
+  XCircle,
+  Clock,
+} from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 interface ProjectCardProps {
-  project: Project;
-  onClick?: () => void;
-  showAdminActions?: boolean;
+  project: {
+    id: string;
+    title: string;
+    description: string;
+    image: string;
+    statut: string;
+    stages?: Array<{
+      targetAmount: number;
+      collectedAmount: number;
+      statut: string;
+    }>;
+  };
+  role?: "admin" | "owner" | "investor";
+  onEdit?: (id: string) => void;
+  onDelete?: (id: string) => void;
+  onActivate?: (id: string) => void;
+  onSuspend?: (id: string) => void;
 }
 
 export default function ProjectCard({
   project,
-  onClick,
-  showAdminActions = false,
+  role = "investor",
+  onEdit,
+  onDelete,
+  onActivate,
+  onSuspend,
 }: ProjectCardProps) {
-  console.log("ProjectCard props:", { project, showAdminActions });
+  const navigate = useNavigate();
 
-  const { useCountProjectStages } = useProject();
-  const { data: stagesCount } = useCountProjectStages(project.id);
-  const getStatusColor = (statut: string) => {
+  const getStatutColor = (statut: string) => {
     switch (statut) {
       case "ACTIVE":
-        return "bg-green-100 text-green-800";
+        return "bg-olive text-cream";
       case "DRAFT":
-        return "bg-yellow-100 text-yellow-800";
+        return "bg-sage text-cream";
       case "COMPLETED":
-        return "bg-blue-100 text-blue-800";
+        return "bg-forest text-cream";
       case "SUSPENDED":
-        return "bg-red-100 text-red-800";
+        return "bg-destructive text-cream";
       default:
-        return "bg-gray-100 text-gray-800";
+        return "bg-sage text-cream";
     }
   };
 
-  const getStatusLabel = (statut: string) => {
+  const getStatutLabel = (statut: string) => {
     switch (statut) {
       case "ACTIVE":
-        return "En cours";
+        return "Actif";
       case "DRAFT":
         return "Brouillon";
       case "COMPLETED":
@@ -46,96 +86,176 @@ export default function ProjectCard({
       case "SUSPENDED":
         return "Suspendu";
       default:
-        return "Inconnu";
+        return statut;
     }
   };
 
+  const totalTarget =
+    project.stages?.reduce((acc, stage) => acc + stage.targetAmount, 0) || 0;
+  const totalCollected =
+    project.stages?.reduce((acc, stage) => acc + stage.collectedAmount, 0) || 0;
+  const progress =
+    totalTarget > 0 ? Math.round((totalCollected / totalTarget) * 100) : 0;
+
+  const openStages =
+    project.stages?.filter((s) => s.statut === "OPEN").length || 0;
+  const fundedStages =
+    project.stages?.filter((s) => s.statut === "FUNDED").length || 0;
+
   return (
-    <Card
-      onClick={onClick}
-      className="border border-sage/10 hover:shadow-lg transition-shadow duration-200 cursor-pointer"
-    >
-      <CardContent className="p-6">
-        <div className="flex flex-col lg:flex-row gap-6">
-          {project.image && (
-            <img
-              src={project.image}
-              alt={project.title}
-              className="w-full lg:w-48 h-32 object-cover rounded-lg"
-            />
-          )}
+    <Card className="bg-cream border-sage/30 hover:shadow-xl transition-all duration-300 overflow-hidden group">
+      {/* Image */}
+      <div className="relative h-48 overflow-hidden bg-gradient-to-br from-olive/20 to-sage/20">
+        <img
+          src={project.image || "/placeholder-project.jpg"}
+          alt={project.title}
+          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+        />
+        <Badge
+          className={`absolute top-3 left-3 ${getStatutColor(project.statut)}`}
+        >
+          {getStatutLabel(project.statut)}
+        </Badge>
 
-          <div className="flex-1">
-            <div className="flex flex-col sm:flex-row justify-between items-start mb-4">
-              <div className="flex-1">
-                <h4 className="text-xl font-bold text-forest mb-2">
-                  {project.title}
-                </h4>
-                <p className="text-sage mb-2 line-clamp-2">
-                  {project.description}
-                </p>
-                <div className="flex items-center space-x-4 text-sm text-sage/80">
-                  <span className="flex items-center space-x-1">
-                    <Calendar className="h-4 w-4" />
-                    <span>
-                      {new Date(project.createdAt).toLocaleDateString("fr-FR")}
-                    </span>
-                  </span>
-                  {project.category && (
-                    <Badge variant="secondary" className="text-xs">
-                      {project.category}
-                    </Badge>
+        {/* Admin/Owner Actions */}
+        {(role === "admin" || role === "owner") && (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                size="icon"
+                variant="ghost"
+                className="absolute top-3 right-3 bg-cream/90 hover:bg-cream text-forest"
+              >
+                <MoreVertical className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="bg-cream">
+              <DropdownMenuLabel className="text-forest">
+                Actions
+              </DropdownMenuLabel>
+              <DropdownMenuSeparator className="bg-sage/30" />
+              <DropdownMenuItem
+                onClick={() => navigate(`/project-stage/${project.id}`)}
+                className="cursor-pointer hover:bg-olive/10"
+              >
+                <Eye className="mr-2 h-4 w-4 text-forest" />
+                <span className="text-forest">Voir détails</span>
+              </DropdownMenuItem>
+              {onEdit && (
+                <DropdownMenuItem
+                  onClick={() => onEdit(project.id)}
+                  className="cursor-pointer hover:bg-olive/10"
+                >
+                  <Edit className="mr-2 h-4 w-4 text-forest" />
+                  <span className="text-forest">Modifier</span>
+                </DropdownMenuItem>
+              )}
+              {role === "admin" && (
+                <>
+                  {project.statut === "DRAFT" && onActivate && (
+                    <DropdownMenuItem
+                      onClick={() => onActivate(project.id)}
+                      className="cursor-pointer hover:bg-olive/10"
+                    >
+                      <CheckCircle2 className="mr-2 h-4 w-4 text-olive" />
+                      <span className="text-olive">Activer</span>
+                    </DropdownMenuItem>
                   )}
-                </div>
-              </div>
+                  {project.statut === "ACTIVE" && onSuspend && (
+                    <DropdownMenuItem
+                      onClick={() => onSuspend(project.id)}
+                      className="cursor-pointer hover:bg-destructive/10"
+                    >
+                      <XCircle className="mr-2 h-4 w-4 text-destructive" />
+                      <span className="text-destructive">Suspendre</span>
+                    </DropdownMenuItem>
+                  )}
+                </>
+              )}
+              {onDelete && (
+                <>
+                  <DropdownMenuSeparator className="bg-sage/30" />
+                  <DropdownMenuItem
+                    onClick={() => onDelete(project.id)}
+                    className="cursor-pointer hover:bg-destructive/10"
+                  >
+                    <Trash2 className="mr-2 h-4 w-4 text-destructive" />
+                    <span className="text-destructive">Supprimer</span>
+                  </DropdownMenuItem>
+                </>
+              )}
+            </DropdownMenuContent>
+          </DropdownMenu>
+        )}
+      </div>
 
-              <div className="mt-4 sm:mt-0 flex items-center gap-2">
-                {showAdminActions === false ? (
-                  <Badge className={getStatusColor(project.statut)}>
-                    {getStatusLabel(project.statut)}
-                  </Badge>
-                ) : (
-                  <AdminProjectActions project={project} />
-                )}
-              </div>
-            </div>
+      <CardHeader>
+        <CardTitle className="text-forest line-clamp-1">
+          {project.title}
+        </CardTitle>
+        <CardDescription className="text-sage line-clamp-2">
+          {project.description}
+        </CardDescription>
+      </CardHeader>
 
-            {/* Stats */}
-            <div className="grid grid-cols-2 gap-3 mb-4">
-              <div className="flex items-center space-x-2 p-2 bg-forest/5 rounded-lg">
-                <div className="p-2 bg-forest/10 rounded">
-                  <Target className="h-4 w-4 text-forest" />
-                </div>
-                <div>
-                  <p className="text-sm font-bold text-forest">
-                    {stagesCount?.total || project.stages?.length || 0}
-                  </p>
-                  <p className="text-xs text-sage">Étapes</p>
-                </div>
-              </div>
-              <div className="flex items-center space-x-2 p-2 bg-green-50 rounded-lg">
-                <div className="p-2 bg-green-100 rounded">
-                  <CheckCircle className="h-4 w-4 text-green-600" />
-                </div>
-                <div>
-                  <p className="text-sm font-bold text-green-600">
-                    {stagesCount?.funded || 0}
-                  </p>
-                  <p className="text-xs text-sage">Terminées</p>
-                </div>
-              </div>
-            </div>
+      <CardContent className="space-y-4">
+        {/* Stages Summary */}
+        <div className="flex items-center gap-4 text-xs">
+          <div className="flex items-center gap-1">
+            <Target className="h-3 w-3 text-olive" />
+            <span className="text-forest">
+              {project.stages?.length || 0} étapes
+            </span>
+          </div>
+          {openStages > 0 && (
+            <Badge
+              variant="outline"
+              className="border-olive/50 text-olive text-xs"
+            >
+              <Clock className="h-3 w-3 mr-1" />
+              {openStages} ouvertes
+            </Badge>
+          )}
+          {fundedStages > 0 && (
+            <Badge
+              variant="outline"
+              className="border-sage/50 text-sage text-xs"
+            >
+              {fundedStages} financées
+            </Badge>
+          )}
+        </div>
 
-            {/* Action indicator */}
-            <div className="flex justify-end">
-              <span className="text-sm text-olive font-medium flex items-center space-x-1">
-                <span>Voir les étapes</span>
-                <TrendingUp className="h-4 w-4" />
-              </span>
+        {/* Progress */}
+        <div>
+          <div className="flex justify-between text-sm mb-2">
+            <span className="font-semibold text-forest">
+              {totalCollected.toLocaleString("fr-FR")} €
+            </span>
+            <span className="text-sage">
+              / {totalTarget.toLocaleString("fr-FR")} €
+            </span>
+          </div>
+          <Progress value={progress} className="h-2" />
+          <div className="flex justify-between items-center mt-1">
+            <span className="text-xs text-sage">{progress}% financé</span>
+            <div className="flex items-center gap-1 text-xs text-sage">
+              <Users className="h-3 w-3" />
+              <span>0 investisseurs</span>
             </div>
           </div>
         </div>
       </CardContent>
+
+      <CardFooter>
+        <Button
+          onClick={() => navigate(`/project-stage/${project.id}`)}
+          className="w-full bg-forest hover:bg-forest/90 text-cream group-hover:bg-olive transition-colors"
+        >
+          <Eye className="h-4 w-4 mr-2" />
+          Voir les détails
+        </Button>
+      </CardFooter>
     </Card>
   );
 }

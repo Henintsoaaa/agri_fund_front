@@ -18,6 +18,12 @@ export const getProjectByIdApi = (projectId: string) => {
   return api.get<Project>(PROJECT_ENDPOINTS.GET_PROJECT_BY_ID(projectId));
 };
 
+export const getPublicProjectByIdApi = (projectId: string) => {
+  return api.get<Project>(
+    PROJECT_ENDPOINTS.GET_PUBLIC_PROJECT_BY_ID(projectId),
+  );
+};
+
 export const updateProjectApi = (
   projectId: string,
   projectData: UpdateProjectPayload,

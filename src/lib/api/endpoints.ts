@@ -32,6 +32,8 @@ export const PROJECT_ENDPOINTS = {
   CREATE_PROJECT: "project/create",
   GET_MY_PROJECTS: "project/my-projects",
   GET_PROJECT_BY_ID: (projectId: string) => `project/${projectId}`,
+  GET_PUBLIC_PROJECT_BY_ID: (projectId: string) =>
+    `project/public/${projectId}`,
   UPDATE_PROJECT: (projectId: string) => `project/update/${projectId}`,
   DELETE_PROJECT: (projectId: string) => `project/delete/${projectId}`,
   SUSPEND_PROJECT: (projectId: string) => `project/suspend/${projectId}`,

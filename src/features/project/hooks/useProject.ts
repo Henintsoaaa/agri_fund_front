@@ -3,6 +3,7 @@ import {
   createProjectApi,
   getMyProjectsApi,
   getProjectByIdApi,
+  getPublicProjectByIdApi,
   updateProjectApi,
   deleteProjectApi,
   getAllProjectsApi,
@@ -77,12 +78,18 @@ export const useProject = () => {
   // Get project by ID
   const useGetProjectById = (projectId: string) => {
     return useQuery({
-      queryKey: ["project", projectId],
+      queryKey: ["project", projectId, user?.role],
       queryFn: async () => {
-        const response = await getProjectByIdApi(projectId);
-        return response.data;
+        // Use appropriate endpoint based on user role
+        if (user?.role === "INVESTOR") {
+          const response = await getPublicProjectByIdApi(projectId);
+          return response.data;
+        } else {
+          const response = await getProjectByIdApi(projectId);
+          return response.data;
+        }
       },
-      enabled: !!projectId,
+      enabled: !!projectId && !!user,
     });
   };
 
