@@ -103,7 +103,10 @@ export default function ProjectCard({
     project.stages?.filter((s) => s.statut === "FUNDED").length || 0;
 
   return (
-    <Card className="bg-cream border-sage/30 hover:shadow-xl transition-all duration-300 overflow-hidden group">
+    <Card
+      className="bg-cream border-sage/30 hover:shadow-xl transition-all duration-300 overflow-hidden group"
+      onClick={() => navigate(`/project-stage/${project.id}`)}
+    >
       {/* Image */}
       <div className="relative h-48 overflow-hidden bg-gradient-to-br from-olive/20 to-sage/20">
         <img
@@ -227,24 +230,27 @@ export default function ProjectCard({
         </div>
 
         {/* Progress */}
-        <div>
-          <div className="flex justify-between text-sm mb-2">
-            <span className="font-semibold text-forest">
-              {totalCollected.toLocaleString("fr-FR")} €
-            </span>
-            <span className="text-sage">
-              / {totalTarget.toLocaleString("fr-FR")} €
-            </span>
-          </div>
-          <Progress value={progress} className="h-2" />
-          <div className="flex justify-between items-center mt-1">
-            <span className="text-xs text-sage">{progress}% financé</span>
-            <div className="flex items-center gap-1 text-xs text-sage">
-              <Users className="h-3 w-3" />
-              <span>0 investisseurs</span>
+
+        {role !== "investor" && (
+          <div className="block">
+            <div className="flex justify-between text-sm mb-2">
+              <span className="font-semibold text-forest">
+                {totalCollected.toLocaleString("fr-FR")} €
+              </span>
+              <span className="text-sage">
+                / {totalTarget.toLocaleString("fr-FR")} €
+              </span>
+            </div>
+            <Progress value={progress} className="h-2" />
+            <div className="flex justify-between items-center mt-1">
+              <span className="text-xs text-sage">{progress}% financé</span>
+              <div className="flex items-center gap-1 text-xs text-sage">
+                <Users className="h-3 w-3" />
+                <span>0 investisseurs</span>
+              </div>
             </div>
           </div>
-        </div>
+        )}
       </CardContent>
 
       <CardFooter>
