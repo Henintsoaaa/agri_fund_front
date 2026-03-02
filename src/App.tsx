@@ -19,6 +19,8 @@ import ProjectOwnerLayout from "./components/layout/ProjectOwnerLayout";
 import { TooltipProvider } from "./components/ui/tooltip";
 import ProtectedRoute from "./components/layout/ProtectedRoute";
 import DynamicLayoutWrapper from "./components/layout/DynamicLayoutWrapper";
+import MyInvestmentsPage from "./pages/investment/MyInvestmentsPage";
+import ProjectInvestmentPage from "./pages/investment/ProjectInvestmentPage";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -88,6 +90,14 @@ function App() {
                 <Route element={<InvestorLayout />}>
                   <Route path="/investor" element={<InvestorDashboard />} />
                   <Route path="/project-show" element={<ProjectShowcase />} />
+                  <Route
+                    path="/my-investments"
+                    element={<MyInvestmentsPage />}
+                  />
+                  <Route
+                    path="/projects/:projectId/invest"
+                    element={<ProjectInvestmentPage />}
+                  />
                 </Route>
               </Route>
             </Routes>

@@ -51,3 +51,44 @@ export const PROJECT_ENDPOINTS = {
   GET_PROJECT_INVESTORS: (projectId: string) =>
     `project/investors/${projectId}`,
 };
+
+export const INVESTMENT_ENDPOINTS = {
+  CREATE_INVESTMENT: "investment",
+  CONFIRM_INVESTMENT: (investmentId: string) =>
+    `investment/${investmentId}/confirm`,
+  CANCEL_INVESTMENT: (investmentId: string) =>
+    `investment/${investmentId}/cancel`,
+  GET_INVESTOR_INVESTMENTS: (investorId: string) =>
+    `investment/investor/${investorId}`,
+  GET_STAGE_INVESTMENTS: (stageId: string) => `investment/stage/${stageId}`,
+  GET_ROI: (investorId: string) => `investment/roi/${investorId}`,
+  GET_INVESTMENT_STATS: (stageId: string) => `investment/stats/${stageId}`,
+  UPDATE_INVESTMENT_STATUS: (investmentId: string) =>
+    `investment/${investmentId}/status`,
+};
+
+export const TRANSACTION_ENDPOINTS = {
+  CREATE_TRANSACTION: "transaction",
+  UPDATE_TRANSACTION_STATUS: (transactionId: string) =>
+    `transaction/${transactionId}/status`,
+  GET_TRANSACTIONS_BY_INVESTMENT: (investmentId: string) =>
+    `transaction/investment/${investmentId}`,
+  GET_USER_TRANSACTIONS: (userId: string) => `transaction/user/${userId}`,
+  CREATE_REFUND: "transaction/refund",
+  GET_TOTAL_INVESTED: (userId: string) =>
+    `transaction/stats/invested/${userId}`,
+  GET_TOTAL_REFUNDED: (userId: string) =>
+    `transaction/stats/refunded/${userId}`,
+  GET_DIVIDENDS: (userId: string) => `transaction/stats/dividends/${userId}`,
+};
+
+export const PAYMENT_ENDPOINTS = {
+  PROCESS_PAYMENT: "payment/process",
+  REFUND_PAYMENT: (transactionId: string) => `payment/refund/${transactionId}`,
+  VERIFY_TRANSACTION: (providerTransactionId: string) =>
+    `payment/verify/${providerTransactionId}`,
+  GET_PAYMENT_STATUS: (transactionId: string) =>
+    `payment/status/${transactionId}`,
+  GET_PROJECT_INVESTORS: (projectId: string) =>
+    `project/investors/${projectId}`,
+};

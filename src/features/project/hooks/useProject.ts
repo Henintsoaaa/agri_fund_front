@@ -268,6 +268,7 @@ export const useProject = () => {
     allProjectsError,
     refetchAllProjects,
     useGetProjectById,
+    useProjectById: useGetProjectById, // Alias
     createProject: createProjectMutation.mutate,
     isCreatingProject: createProjectMutation.isPending,
     updateProject: updateProjectMutation.mutate,

@@ -44,7 +44,7 @@ interface ProjectStageCardProps {
 export default function ProjectStageCard({
   stage,
   role = "investor",
-  onInvest,
+  onInvest: _onInvest,
   onViewDetails,
   onEdit,
   onDelete,
