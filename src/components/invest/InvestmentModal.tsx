@@ -11,8 +11,11 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Separator } from "@/components/ui/separator";
-import { CreditCard, DollarSign, Wallet } from "lucide-react";
+import { CreditCard, DollarSign, Wallet, Loader2 } from "lucide-react";
 import { useState } from "react";
+import { useInvestment } from "@/features/investment/hooks/useInvestment";
+import { useAuthContext } from "@/features/auth/context/AuthContext";
+import { toast } from "sonner";
 
 interface InvestmentModalProps {
   isOpen: boolean;
@@ -21,29 +24,93 @@ interface InvestmentModalProps {
     id: string;
     title: string;
     targetAmount: number;
-    collectedAmount: number;
+    collectedAmount?: number;
+    currentAmount?: number;
   };
+  onSuccess?: () => void;
 }
 
 export default function InvestmentModal({
   isOpen,
   onClose,
   stage,
+  onSuccess,
 }: InvestmentModalProps) {
+  const { user } = useAuthContext();
+  const {
+    createInvestment,
+    isCreatingInvestment,
+    processPayment,
+    isProcessingPayment,
+  } = useInvestment();
   const [amount, setAmount] = useState("");
-  const [paymentMethod, setPaymentMethod] = useState("card");
+  const [paymentMethod, setPaymentMethod] = useState<
+    "STRIPE" | "PAYPAL" | "BANK_TRANSFER"
+  >("STRIPE");
 
-  const remainingAmount = stage.targetAmount - stage.collectedAmount;
+  const collectedAmount = stage.collectedAmount || stage.currentAmount || 0;
+  const remainingAmount = stage.targetAmount - collectedAmount;
 
-  const handleInvest = () => {
-    // Logique d'investissement à implémenter
-    console.log("Investissement:", {
-      amount,
-      paymentMethod,
-      stageId: stage.id,
-    });
-    onClose();
+  const handleInvest = async () => {
+    if (!user?.id) {
+      toast.error("Vous devez être connecté pour investir");
+      return;
+    }
+
+    const investmentAmount = parseFloat(amount);
+
+    if (isNaN(investmentAmount) || investmentAmount <= 0) {
+      toast.error("Veuillez entrer un montant valide");
+      return;
+    }
+
+    if (investmentAmount > remainingAmount) {
+      toast.error(
+        `Le montant ne peut pas dépasser ${remainingAmount.toLocaleString("fr-FR")} Ar`,
+      );
+      return;
+    }
+
+    try {
+      // Step 1: Create investment (PENDING status)
+      const investmentResponse = await createInvestment({
+        userId: user.id,
+        stageId: stage.id,
+        amount: investmentAmount,
+      });
+
+      // Step 2: Process payment
+      if (paymentMethod !== "BANK_TRANSFER") {
+        const paymentResponse = await processPayment({
+          investmentId: (investmentResponse as any).id,
+          amount: investmentAmount,
+          provider: paymentMethod,
+        });
+
+        // Step 3: Redirect to payment (Stripe/PayPal)
+        if (
+          paymentMethod === "STRIPE" &&
+          (paymentResponse as any).clientSecret
+        ) {
+          // Integrate Stripe Elements here
+          toast.info("Redirection vers le paiement Stripe...");
+          // window.location.href = stripeCheckoutUrl;
+        } else if (paymentMethod === "PAYPAL") {
+          toast.info("Redirection vers PayPal...");
+        }
+      } else {
+        toast.success("Investissement créé. En attente de virement bancaire.");
+      }
+
+      onSuccess?.();
+      onClose();
+    } catch (error: any) {
+      console.error("Error creating investment:", error);
+      // Error already handled by mutation
+    }
   };
+
+  const isProcessing = isCreatingInvestment || isProcessingPayment;
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -87,19 +154,24 @@ export default function InvestmentModal({
             <Label className="text-forest font-semibold">
               Mode de paiement
             </Label>
-            <RadioGroup value={paymentMethod} onValueChange={setPaymentMethod}>
-              {/* Card Payment */}
+            <RadioGroup
+              value={paymentMethod}
+              onValueChange={(val) => setPaymentMethod(val as any)}
+            >
+              {/* Stripe Payment */}
               <div className="flex items-center space-x-3 rounded-lg border border-sage/30 p-4 hover:bg-olive/5 cursor-pointer transition-colors">
-                <RadioGroupItem value="card" id="card" />
+                <RadioGroupItem value="STRIPE" id="stripe" />
                 <Label
-                  htmlFor="card"
+                  htmlFor="stripe"
                   className="flex items-center gap-3 cursor-pointer flex-1"
                 >
                   <div className="flex h-10 w-10 items-center justify-center rounded-full bg-forest/10">
                     <CreditCard className="h-5 w-5 text-forest" />
                   </div>
                   <div className="flex-1">
-                    <p className="font-medium text-forest">Carte bancaire</p>
+                    <p className="font-medium text-forest">
+                      Carte bancaire (Stripe)
+                    </p>
                     <p className="text-xs text-sage">
                       Visa, Mastercard, American Express
                     </p>
@@ -109,7 +181,7 @@ export default function InvestmentModal({
 
               {/* PayPal */}
               <div className="flex items-center space-x-3 rounded-lg border border-sage/30 p-4 hover:bg-olive/5 cursor-pointer transition-colors">
-                <RadioGroupItem value="paypal" id="paypal" />
+                <RadioGroupItem value="PAYPAL" id="paypal" />
                 <Label
                   htmlFor="paypal"
                   className="flex items-center gap-3 cursor-pointer flex-1"
@@ -130,18 +202,18 @@ export default function InvestmentModal({
 
               {/* Bank Transfer */}
               <div className="flex items-center space-x-3 rounded-lg border border-sage/30 p-4 hover:bg-olive/5 cursor-pointer transition-colors">
-                <RadioGroupItem value="transfer" id="transfer" />
+                <RadioGroupItem value="BANK_TRANSFER" id="bank" />
                 <Label
-                  htmlFor="transfer"
+                  htmlFor="bank"
                   className="flex items-center gap-3 cursor-pointer flex-1"
                 >
-                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-olive/10">
-                    <Wallet className="h-5 w-5 text-olive" />
+                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-forest/10">
+                    <Wallet className="h-5 w-5 text-forest" />
                   </div>
                   <div className="flex-1">
                     <p className="font-medium text-forest">Virement bancaire</p>
                     <p className="text-xs text-sage">
-                      Traitement sous 2-3 jours ouvrés
+                      Paiement par virement (délai 2-3 jours)
                     </p>
                   </div>
                 </Label>
@@ -164,18 +236,25 @@ export default function InvestmentModal({
             type="button"
             variant="outline"
             onClick={onClose}
-            className="border-sage/30 hover:bg-sage/10"
+            disabled={isProcessing}
+            className="border-sage/30 text-forest hover:bg-sage/5"
           >
             Annuler
           </Button>
           <Button
             type="button"
             onClick={handleInvest}
-            disabled={!amount || Number(amount) <= 0}
+            disabled={isProcessing || !amount || parseFloat(amount) <= 0}
             className="bg-forest hover:bg-forest/90 text-cream"
           >
-            <DollarSign className="h-4 w-4 mr-2" />
-            Confirmer l'investissement
+            {isProcessing ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Traitement...
+              </>
+            ) : (
+              "Confirmer l'investissement"
+            )}
           </Button>
         </DialogFooter>
       </DialogContent>

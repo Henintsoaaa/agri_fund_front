@@ -30,7 +30,6 @@ const navItems = [
     href: "/create-project",
     icon: FolderPlus,
   },
-
   {
     title: "Preuves",
     href: "/project-owner/proofs",
@@ -38,9 +37,8 @@ const navItems = [
   },
   {
     title: "Notifications",
-    href: "/project-owner/notifications",
+    href: "/notifications",
     icon: Bell,
-    badge: 3,
   },
 ];
 

@@ -50,9 +50,8 @@ const navItems = [
   },
   {
     title: "Notifications",
-    href: "/investor/notifications",
+    href: "/notifications",
     icon: Bell,
-    badge: 5,
   },
 ];
 
