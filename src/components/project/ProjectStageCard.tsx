@@ -19,6 +19,8 @@ import {
   Trash2,
 } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
+import { useState } from "react";
+import InvestmentModal from "../invest/InvestmentModal";
 
 interface ProjectStageCardProps {
   stage: {
@@ -47,10 +49,13 @@ export default function ProjectStageCard({
   onEdit,
   onDelete,
 }: ProjectStageCardProps) {
+  const [isInvestModalOpen, setIsInvestModalOpen] = useState(false);
+
   const progress =
     stage.targetAmount > 0
       ? Math.round((stage.collectedAmount / stage.targetAmount) * 100)
       : 0;
+  console.log(role);
 
   const getStatutColor = (statut: string) => {
     switch (statut) {
@@ -87,8 +92,14 @@ export default function ProjectStageCard({
     });
   };
 
+  // if stage.statut === "closed" we will freeze it for investors, only owner and admin can see the details and edit it
+  const isFrozen = stage.statut === "CLOSED" && role === "investor";
+  const isFunded = stage.statut === "FUNDED";
+
   return (
-    <Card className="bg-cream border-sage/30 hover:shadow-lg transition-all duration-300 overflow-hidden group h-full">
+    <Card
+      className={`bg-cream border-sage/30 hover:shadow-lg transition-all duration-300 overflow-hidden group h-full ${isFrozen ? "opacity-75" : ""}${isFunded ? " border-forest" : ""}`}
+    >
       {/* Image */}
       <div className="relative h-44 overflow-hidden bg-gradient-to-br from-olive/20 to-sage/20">
         <img
@@ -167,30 +178,15 @@ export default function ProjectStageCard({
 
         {/* Actions */}
         <div className="flex gap-2 pt-2">
-          {role === "investor" ? (
-            <>
-              {onViewDetails && (
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => onViewDetails(stage.id)}
-                  className="flex-1 border-sage/30 hover:bg-olive/10"
-                >
-                  <Eye className="h-4 w-4 mr-2" />
-                  Détails
-                </Button>
-              )}
-              {onInvest && stage.statut === "OPEN" && (
-                <Button
-                  size="sm"
-                  onClick={() => onInvest(stage.id)}
-                  className="flex-1 bg-forest hover:bg-forest/90 text-cream"
-                >
-                  <DollarSign className="h-4 w-4 mr-2" />
-                  Investir
-                </Button>
-              )}
-            </>
+          {stage.statut === "OPEN" ? (
+            <Button
+              size="sm"
+              onClick={() => setIsInvestModalOpen(true)}
+              className="flex-1 bg-forest hover:bg-forest/90 text-cream"
+            >
+              <DollarSign className="h-4 w-4 mr-2" />
+              Investir
+            </Button>
           ) : (
             <>
               {onViewDetails && (
@@ -230,6 +226,18 @@ export default function ProjectStageCard({
           )}
         </div>
       </CardContent>
+
+      {/* Investment Modal */}
+      <InvestmentModal
+        isOpen={isInvestModalOpen}
+        onClose={() => setIsInvestModalOpen(false)}
+        stage={{
+          id: stage.id,
+          title: stage.title,
+          targetAmount: stage.targetAmount,
+          collectedAmount: stage.collectedAmount,
+        }}
+      />
     </Card>
   );
 }

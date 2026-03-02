@@ -12,6 +12,7 @@ import { useAuth } from "@/features/auth/hooks/useAuth";
 import { Sprout, LogOut, User, Settings, Bell } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { useNavigate } from "react-router-dom";
+import { useAuthContext } from "@/features/auth/context/AuthContext";
 
 interface NavbarProps {
   title: string;
@@ -24,7 +25,8 @@ export default function Navbar({
   subtitle,
   showNotifications = true,
 }: NavbarProps) {
-  const { logout, user } = useAuth();
+  const { logout } = useAuth();
+  const { user } = useAuthContext();
   const navigate = useNavigate();
 
   const handleLogout = () => {

@@ -6,6 +6,7 @@ interface AuthContextType {
   user: AuthUser | null;
   setUser: (user: AuthUser | null) => void;
   isLoadingAuth: boolean;
+  refetchSession: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -15,27 +16,37 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [isLoadingAuth, setIsLoadingAuth] = useState(true);
 
   // Récupérer la session au chargement
-  useEffect(() => {
-    const fetchSession = async () => {
-      try {
-        const response = await api.get("/auth/session");
-        console.log("Session fetched:", response.data);
-        if (response.data?.user) {
-          setUser(response.data.user);
-        }
-      } catch (error) {
-        console.error("Failed to fetch session:", error);
-        // Si pas de session, on reste avec user = null
-      } finally {
-        setIsLoadingAuth(false);
+  const fetchSession = async () => {
+    try {
+      const response = await api.get("/auth/session");
+      console.log("Session fetched:", response.data);
+      if (response.data?.user) {
+        setUser(response.data.user);
+      } else {
+        setUser(null);
       }
-    };
+    } catch (error) {
+      console.error("Failed to fetch session:", error);
+      // Si pas de session, on reste avec user = null
+      setUser(null);
+    } finally {
+      setIsLoadingAuth(false);
+    }
+  };
 
+  useEffect(() => {
     fetchSession();
   }, []);
 
+  const refetchSession = async () => {
+    setIsLoadingAuth(true);
+    await fetchSession();
+  };
+
   return (
-    <AuthContext.Provider value={{ user, setUser, isLoadingAuth }}>
+    <AuthContext.Provider
+      value={{ user, setUser, isLoadingAuth, refetchSession }}
+    >
       {children}
     </AuthContext.Provider>
   );

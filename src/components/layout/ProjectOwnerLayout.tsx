@@ -4,8 +4,6 @@ import {
   LayoutDashboard,
   FolderPlus,
   Folders,
-  TrendingUp,
-  Users,
   ImagePlus,
   Bell,
 } from "lucide-react";

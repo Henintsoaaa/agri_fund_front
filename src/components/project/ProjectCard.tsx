@@ -35,7 +35,7 @@ interface ProjectCardProps {
     id: string;
     title: string;
     description: string;
-    image: string;
+    image?: string;
     statut: string;
     stages?: Array<{
       targetAmount: number;
@@ -103,10 +103,7 @@ export default function ProjectCard({
     project.stages?.filter((s) => s.statut === "FUNDED").length || 0;
 
   return (
-    <Card
-      className="bg-cream border-sage/30 hover:shadow-xl transition-all duration-300 overflow-hidden group"
-      onClick={() => navigate(`/project-stage/${project.id}`)}
-    >
+    <Card className="bg-cream border-sage/30  overflow-hidden group">
       {/* Image */}
       <div className="relative h-48 overflow-hidden bg-gradient-to-br from-olive/20 to-sage/20">
         <img
@@ -125,9 +122,14 @@ export default function ProjectCard({
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button
+                type="button"
                 size="icon"
                 variant="ghost"
                 className="absolute top-3 right-3 bg-cream/90 hover:bg-cream text-forest"
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                }}
               >
                 <MoreVertical className="h-4 w-4" />
               </Button>
@@ -138,7 +140,11 @@ export default function ProjectCard({
               </DropdownMenuLabel>
               <DropdownMenuSeparator className="bg-sage/30" />
               <DropdownMenuItem
-                onClick={() => navigate(`/project-stage/${project.id}`)}
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  navigate(`/project-stage/${project.id}`);
+                }}
                 className="cursor-pointer hover:bg-olive/10"
               >
                 <Eye className="mr-2 h-4 w-4 text-forest" />
@@ -146,7 +152,11 @@ export default function ProjectCard({
               </DropdownMenuItem>
               {onEdit && (
                 <DropdownMenuItem
-                  onClick={() => onEdit(project.id)}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    onEdit(project.id);
+                  }}
                   className="cursor-pointer hover:bg-olive/10"
                 >
                   <Edit className="mr-2 h-4 w-4 text-forest" />
@@ -157,7 +167,11 @@ export default function ProjectCard({
                 <>
                   {project.statut === "DRAFT" && onActivate && (
                     <DropdownMenuItem
-                      onClick={() => onActivate(project.id)}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        onActivate(project.id);
+                      }}
                       className="cursor-pointer hover:bg-olive/10"
                     >
                       <CheckCircle2 className="mr-2 h-4 w-4 text-olive" />
@@ -166,7 +180,11 @@ export default function ProjectCard({
                   )}
                   {project.statut === "ACTIVE" && onSuspend && (
                     <DropdownMenuItem
-                      onClick={() => onSuspend(project.id)}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        onSuspend(project.id);
+                      }}
                       className="cursor-pointer hover:bg-destructive/10"
                     >
                       <XCircle className="mr-2 h-4 w-4 text-destructive" />
@@ -179,7 +197,11 @@ export default function ProjectCard({
                 <>
                   <DropdownMenuSeparator className="bg-sage/30" />
                   <DropdownMenuItem
-                    onClick={() => onDelete(project.id)}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      onDelete(project.id);
+                    }}
                     className="cursor-pointer hover:bg-destructive/10"
                   >
                     <Trash2 className="mr-2 h-4 w-4 text-destructive" />
@@ -230,7 +252,6 @@ export default function ProjectCard({
         </div>
 
         {/* Progress */}
-
         {role !== "investor" && (
           <div className="block">
             <div className="flex justify-between text-sm mb-2">
@@ -255,7 +276,12 @@ export default function ProjectCard({
 
       <CardFooter>
         <Button
-          onClick={() => navigate(`/project-stage/${project.id}`)}
+          type="button"
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            navigate(`/project-stage/${project.id}`);
+          }}
           className="w-full bg-forest hover:bg-forest/90 text-cream group-hover:bg-olive transition-colors"
         >
           <Eye className="h-4 w-4 mr-2" />

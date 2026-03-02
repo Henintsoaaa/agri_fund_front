@@ -14,7 +14,7 @@ import type { LoginPayload } from "../types/auth.types";
 export const useAuth = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const { user, setUser } = useAuthContext();
+  const { user, setUser, refetchSession } = useAuthContext();
   const navigate = useNavigate();
 
   const login = async (payload: LoginPayload) => {
@@ -26,6 +26,9 @@ export const useAuth = () => {
       console.log("Login response:", loginResponse);
 
       setUser(loginResponse.data.user);
+
+      // Refetch session pour s'assurer que tout est synchronisé
+      await refetchSession();
 
       // Redirection selon le rôle de l'utilisateur
       if (loginResponse.data.user.role === "ADMIN") {
@@ -54,6 +57,10 @@ export const useAuth = () => {
       console.log("Register response:", registerResponse);
 
       setUser(registerResponse.data.user);
+
+      // Refetch session pour s'assurer que tout est synchronisé
+      await refetchSession();
+
       navigate("/");
     } catch (err: any) {
       console.error("Erreur d'inscription:", err);

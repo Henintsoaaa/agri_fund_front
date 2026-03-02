@@ -64,7 +64,7 @@ export default function ProjectShowcase() {
         </div>
 
         {/* Search and Filters */}
-        <Card className="bg-cream/50 border-sage/30">
+        <Card className="bg-cream/50 border-sage/30 h-full">
           <CardContent className="p-6">
             <div className="flex flex-col md:flex-row gap-4">
               <div className="flex-1 relative">

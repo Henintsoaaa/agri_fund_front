@@ -61,8 +61,8 @@ export default function ProjectStageList() {
   };
 
   return (
-    <div className="min-h-screen">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+    <div className="h-full">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8 h-full">
         {/* Header */}
         <div className="flex flex-col gap-4">
           <Button
@@ -93,7 +93,7 @@ export default function ProjectStageList() {
           <>
             {/* Summary Stats */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-              <Card className="bg-cream/50 border-sage/30 hover:shadow-lg transition-shadow">
+              <Card className="bg-cream/50 border-sage/30 hover:shadow-lg transition-shadow ">
                 <CardHeader className="flex flex-row items-center justify-between pb-2">
                   <CardTitle className="text-sm font-medium text-forest">
                     Étapes Terminées
@@ -110,7 +110,7 @@ export default function ProjectStageList() {
                 </CardContent>
               </Card>
 
-              <Card className="bg-cream/50 border-sage/30 hover:shadow-lg transition-shadow">
+              <Card className="bg-cream/50 border-sage/30 hover:shadow-lg transition-shadow ">
                 <CardHeader className="flex flex-row items-center justify-between pb-2">
                   <CardTitle className="text-sm font-medium text-forest">
                     Total Collecté
@@ -151,7 +151,7 @@ export default function ProjectStageList() {
             <Separator className="bg-sage/30" />
 
             {/* Stages List */}
-            <Card className="bg-cream/50 border-sage/30">
+            <Card className="bg-cream/50 border-sage/30 h-full py-3 h-full">
               <CardHeader>
                 <CardTitle className="text-forest">Étapes du projet</CardTitle>
                 <CardDescription className="text-sage">
@@ -160,7 +160,7 @@ export default function ProjectStageList() {
               </CardHeader>
               <CardContent>
                 <ScrollArea className="h-[600px]">
-                  <div className="space-y-4 pr-4 grid md:grid-cols-3 gap-4 sm:grid-cols-1">
+                  <div className="space-y-4 pr-4 grid md:grid-cols-3 gap-4 sm:grid-cols-1 h-full">
                     {stages.map((stage) => (
                       <div key={stage.id}>
                         <ProjectStageCard

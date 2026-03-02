@@ -17,8 +17,18 @@ import AdminLayout from "./components/layout/AdminLayout";
 import InvestorLayout from "./components/layout/InvestorLayout";
 import ProjectOwnerLayout from "./components/layout/ProjectOwnerLayout";
 import { TooltipProvider } from "./components/ui/tooltip";
+import ProtectedRoute from "./components/layout/ProtectedRoute";
+import DynamicLayoutWrapper from "./components/layout/DynamicLayoutWrapper";
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+      retry: 1,
+      staleTime: 5 * 60 * 1000, // 5 minutes
+    },
+  },
+});
 
 function App() {
   return (
@@ -37,29 +47,48 @@ function App() {
               />
               <Route path="/reset-password" element={<ResetPasswordPage />} />
 
-              <Route element={<AdminLayout />}>
-                <Route path="/admin-dashboard" element={<AdminDashboard />} />
+              {/* Shared route with dynamic layout - accessible by all authenticated roles */}
+              <Route
+                element={
+                  <ProtectedRoute
+                    allowedRoles={["ADMIN", "PROJECT_OWNER", "INVESTOR"]}
+                  />
+                }
+              >
+                <Route element={<DynamicLayoutWrapper />}>
+                  <Route
+                    path="/project-stage/:projectId"
+                    element={<ProjectStageList />}
+                  />
+                </Route>
               </Route>
 
-              <Route element={<ProjectOwnerLayout />}>
-                <Route
-                  path="/project-owner"
-                  element={<ProjectOwnerDashboard />}
-                />
-                <Route
-                  path="/project-stage/:projectId"
-                  element={<ProjectStageList />}
-                />
-                <Route path="/create-project" element={<CreateProject />} />
+              {/* Admin routes - protected */}
+              <Route element={<ProtectedRoute allowedRoles={["ADMIN"]} />}>
+                <Route element={<AdminLayout />}>
+                  <Route path="/admin-dashboard" element={<AdminDashboard />} />
+                </Route>
               </Route>
 
-              <Route element={<InvestorLayout />}>
-                <Route path="/investor" element={<InvestorDashboard />} />
-                <Route path="/project-show" element={<ProjectShowcase />} />
-                <Route
-                  path="/project-stage/:projectId"
-                  element={<ProjectStageList />}
-                />
+              {/* Project Owner routes - protected */}
+              <Route
+                element={<ProtectedRoute allowedRoles={["PROJECT_OWNER"]} />}
+              >
+                <Route element={<ProjectOwnerLayout />}>
+                  <Route
+                    path="/project-owner"
+                    element={<ProjectOwnerDashboard />}
+                  />
+                  <Route path="/create-project" element={<CreateProject />} />
+                </Route>
+              </Route>
+
+              {/* Investor routes - protected */}
+              <Route element={<ProtectedRoute allowedRoles={["INVESTOR"]} />}>
+                <Route element={<InvestorLayout />}>
+                  <Route path="/investor" element={<InvestorDashboard />} />
+                  <Route path="/project-show" element={<ProjectShowcase />} />
+                </Route>
               </Route>
             </Routes>
           </BrowserRouter>
