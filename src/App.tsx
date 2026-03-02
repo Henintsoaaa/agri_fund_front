@@ -21,6 +21,7 @@ import ProtectedRoute from "./components/layout/ProtectedRoute";
 import DynamicLayoutWrapper from "./components/layout/DynamicLayoutWrapper";
 import MyInvestmentsPage from "./pages/investment/MyInvestmentsPage";
 import ProjectInvestmentPage from "./pages/investment/ProjectInvestmentPage";
+import { NotificationsPage } from "./pages/NotificationsPage";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -61,6 +62,10 @@ function App() {
                   <Route
                     path="/project-stage/:projectId"
                     element={<ProjectStageList />}
+                  />
+                  <Route
+                    path="/notifications"
+                    element={<NotificationsPage />}
                   />
                 </Route>
               </Route>

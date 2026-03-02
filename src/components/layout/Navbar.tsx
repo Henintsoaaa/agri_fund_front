@@ -9,10 +9,11 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useAuth } from "@/features/auth/hooks/useAuth";
-import { Sprout, LogOut, User, Settings, Bell } from "lucide-react";
+import { Sprout, LogOut, User, Settings } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { useNavigate } from "react-router-dom";
 import { useAuthContext } from "@/features/auth/context/AuthContext";
+import { NotificationDropdown } from "@/components/notification/NotificationDropdown";
 
 interface NavbarProps {
   title: string;
@@ -77,21 +78,7 @@ export default function Navbar({
           {/* Actions utilisateur */}
           <div className="flex items-center gap-3">
             {/* Notifications */}
-            {showNotifications && (
-              <Button
-                variant="ghost"
-                size="icon"
-                className="text-cream hover:bg-olive/20 relative"
-              >
-                <Bell className="h-5 w-5" />
-                <Badge
-                  variant="destructive"
-                  className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0 text-xs"
-                >
-                  3
-                </Badge>
-              </Button>
-            )}
+            {showNotifications && <NotificationDropdown />}
 
             {/* Menu utilisateur */}
             <DropdownMenu>

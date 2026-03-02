@@ -7,6 +7,7 @@ import {
   BarChart3,
   Settings,
   FileText,
+  Bell,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -32,6 +33,12 @@ const navItems = [
     section: "projects",
     icon: FolderKanban,
     type: "section" as const,
+  },
+  {
+    title: "Notifications",
+    href: "/notifications",
+    icon: Bell,
+    type: "route" as const,
   },
   {
     title: "Statistiques",
