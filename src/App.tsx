@@ -74,6 +74,10 @@ function App() {
               <Route element={<ProtectedRoute allowedRoles={["ADMIN"]} />}>
                 <Route element={<AdminLayout />}>
                   <Route path="/admin-dashboard" element={<AdminDashboard />} />
+                  <Route
+                    path="/admin/projects/:projectId"
+                    element={<ProjectStageList />}
+                  />
                 </Route>
               </Route>
 

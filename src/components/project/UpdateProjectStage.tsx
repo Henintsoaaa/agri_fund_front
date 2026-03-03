@@ -133,7 +133,7 @@ export default function UpdateProjectStage({
             <div className="space-y-2">
               <h5 className="font-semibold text-forest">Montant collecté</h5>
               <p className="text-gray-700">
-                {stage.collectedAmount.toLocaleString()} Ar
+                {stage.currentAmount.toLocaleString()} Ar
               </p>
             </div>
 

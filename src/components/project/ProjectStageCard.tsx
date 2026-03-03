@@ -29,7 +29,7 @@ interface ProjectStageCardProps {
     description: string;
     image?: string;
     targetAmount: number;
-    collectedAmount: number;
+    currentAmount: number;
     stageOrder: number;
     statut: string;
     createdAt: string;
@@ -51,9 +51,11 @@ export default function ProjectStageCard({
 }: ProjectStageCardProps) {
   const [isInvestModalOpen, setIsInvestModalOpen] = useState(false);
 
+  console.log("STAGE", stage);
+
   const progress =
     stage.targetAmount > 0
-      ? Math.round((stage.collectedAmount / stage.targetAmount) * 100)
+      ? Math.round((stage.currentAmount / stage.targetAmount) * 100)
       : 0;
   console.log(role);
 
@@ -133,11 +135,11 @@ export default function ProjectStageCard({
             <div className="flex items-center gap-2">
               <DollarSign className="h-4 w-4 text-olive" />
               <span className="text-sm font-semibold text-forest">
-                {stage.collectedAmount.toLocaleString("fr-FR")} €
+                {stage.currentAmount.toLocaleString("fr-FR")} MGA
               </span>
             </div>
             <span className="text-sm text-sage">
-              / {stage.targetAmount.toLocaleString("fr-FR")} €
+              / {stage.targetAmount.toLocaleString("fr-FR")} MGA
             </span>
           </div>
           <Progress value={progress} className="h-2" />
@@ -158,10 +160,10 @@ export default function ProjectStageCard({
             <Target className="h-3 w-3 text-olive" />
             <span>
               Reste:{" "}
-              {(stage.targetAmount - stage.collectedAmount).toLocaleString(
+              {(stage.targetAmount - stage.currentAmount).toLocaleString(
                 "fr-FR",
               )}{" "}
-              €
+              MGA
             </span>
           </div>
           {stage.statut === "OPEN" && (
@@ -235,7 +237,7 @@ export default function ProjectStageCard({
           id: stage.id,
           title: stage.title,
           targetAmount: stage.targetAmount,
-          collectedAmount: stage.collectedAmount,
+          currentAmount: stage.currentAmount,
         }}
       />
     </Card>

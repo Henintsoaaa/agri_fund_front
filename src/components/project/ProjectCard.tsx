@@ -39,7 +39,7 @@ interface ProjectCardProps {
     statut: string;
     stages?: Array<{
       targetAmount: number;
-      collectedAmount: number;
+      currentAmount: number;
       statut: string;
     }>;
   };
@@ -93,7 +93,7 @@ export default function ProjectCard({
   const totalTarget =
     project.stages?.reduce((acc, stage) => acc + stage.targetAmount, 0) || 0;
   const totalCollected =
-    project.stages?.reduce((acc, stage) => acc + stage.collectedAmount, 0) || 0;
+    project.stages?.reduce((acc, stage) => acc + stage.currentAmount, 0) || 0;
   const progress =
     totalTarget > 0 ? Math.round((totalCollected / totalTarget) * 100) : 0;
 
@@ -256,10 +256,10 @@ export default function ProjectCard({
           <div className="block">
             <div className="flex justify-between text-sm mb-2">
               <span className="font-semibold text-forest">
-                {totalCollected.toLocaleString("fr-FR")} €
+                {totalCollected.toLocaleString("fr-FR")} MGA
               </span>
               <span className="text-sage">
-                / {totalTarget.toLocaleString("fr-FR")} €
+                / {totalTarget.toLocaleString("fr-FR")} MGA
               </span>
             </div>
             <Progress value={progress} className="h-2" />

@@ -116,7 +116,7 @@ export default function InvestorLayout() {
               <div className="space-y-1">
                 <div className="flex justify-between text-xs">
                   <span className="text-forest/70">Total investi</span>
-                  <span className="font-semibold text-forest">15 000 €</span>
+                  <span className="font-semibold text-forest">15 000 MGA</span>
                 </div>
                 <div className="flex justify-between text-xs">
                   <span className="text-forest/70">ROI moyen</span>

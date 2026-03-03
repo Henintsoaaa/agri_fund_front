@@ -75,14 +75,14 @@ export default function InvestmentModal({
       // Step 1: Create investment (PENDING status)
       const investmentResponse = await createInvestment({
         userId: user.id,
-        stageId: stage.id,
+        projectStageId: stage.id,
         amount: investmentAmount,
       });
 
       // Step 2: Process payment
       if (paymentMethod !== "BANK_TRANSFER") {
         const paymentResponse = await processPayment({
-          investmentId: (investmentResponse as any).id,
+          investmentId: (investmentResponse as any).data.id,
           amount: investmentAmount,
           provider: paymentMethod,
         });
@@ -143,7 +143,7 @@ export default function InvestmentModal({
             </div>
             <p className="text-xs text-sage">
               Montant restant à financer:{" "}
-              {remainingAmount.toLocaleString("fr-FR")} €
+              {remainingAmount.toLocaleString("fr-FR")} MGA
             </p>
           </div>
 

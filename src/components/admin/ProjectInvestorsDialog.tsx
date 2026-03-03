@@ -73,7 +73,7 @@ export default function ProjectInvestorsDialog({
                 <div>
                   <p className="text-sm text-sage">Total Investi</p>
                   <p className="text-2xl font-bold text-forest">
-                    €{totalInvested.toLocaleString()}
+                    MGA{totalInvested.toLocaleString()}
                   </p>
                 </div>
                 <DollarSign className="h-8 w-8 text-olive" />
@@ -87,7 +87,7 @@ export default function ProjectInvestorsDialog({
                 <div>
                   <p className="text-sm text-sage">Investissement Moyen</p>
                   <p className="text-2xl font-bold text-forest">
-                    €{averageInvestment.toLocaleString()}
+                    MGA{averageInvestment.toLocaleString()}
                   </p>
                 </div>
                 <TrendingUp className="h-8 w-8 text-olive" />
@@ -125,7 +125,7 @@ export default function ProjectInvestorsDialog({
                           </div>
                           <div className="text-right">
                             <p className="text-2xl font-bold text-olive">
-                              €{investor.totalInvested.toLocaleString()}
+                              MGA{investor.totalInvested.toLocaleString()}
                             </p>
                           </div>
                         </div>
@@ -163,7 +163,7 @@ export default function ProjectInvestorsDialog({
                                 </span>
                               </div>
                               <span className="font-medium text-forest">
-                                €{investment.amount.toLocaleString()}
+                                MGA{investment.amount.toLocaleString()}
                               </span>
                             </div>
                           ))}

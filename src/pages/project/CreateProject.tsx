@@ -290,7 +290,7 @@ export default function CreateProject() {
                         htmlFor={`stage-amount-${index}`}
                         className="text-forest font-semibold"
                       >
-                        Montant cible (€) *
+                        Montant cible (MGA) *
                       </Label>
                       <Input
                         id={`stage-amount-${index}`}

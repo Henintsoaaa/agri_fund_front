@@ -77,7 +77,7 @@ export default function ModernHomePage() {
   ];
 
   const stats = [
-    { value: "458K€", label: "Fonds levés", icon: Target },
+    { value: "458KMGA", label: "Fonds levés", icon: Target },
     { value: "342", label: "Investisseurs actifs", icon: Users },
     { value: "+12%", label: "ROI moyen", icon: TrendingUp },
     { value: "76%", label: "Taux de succès", icon: CheckCircle2 },

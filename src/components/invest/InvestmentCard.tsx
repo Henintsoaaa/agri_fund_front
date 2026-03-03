@@ -47,7 +47,7 @@ export default function InvestmentCard({
         <div className="flex justify-between items-center text-sm">
           <span className="text-sage">Investi:</span>
           <span className="font-semibold text-forest">
-            {amountInvested.toLocaleString("fr-FR")} €
+            {amountInvested.toLocaleString("fr-FR")} MGA
           </span>
         </div>
         <div className="flex justify-between items-center text-sm mt-1">

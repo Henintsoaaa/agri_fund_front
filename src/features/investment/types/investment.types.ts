@@ -9,7 +9,7 @@ export type TransactionStatus = "PENDING" | "SUCCESS" | "FAILED";
 export interface Investment {
   id: string;
   userId: string;
-  stageId: string;
+  projectStageId: string;
   amount: number;
   status: InvestmentStatus;
   createdAt: string;
@@ -40,7 +40,7 @@ export interface Transaction {
 
 export interface CreateInvestmentPayload {
   userId: string;
-  stageId: string;
+  projectStageId: string;
   amount: number;
 }
 

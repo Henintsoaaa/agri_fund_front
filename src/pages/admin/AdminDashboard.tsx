@@ -143,10 +143,10 @@ export default function AdminDashboard() {
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-bold text-forest">
-                {globalStats.totalFunding.toLocaleString("fr-FR")} €
+                {globalStats.totalFunding.toLocaleString("fr-FR")} MGA
               </div>
               <p className="text-xs text-sage mt-2">
-                {globalStats.totalInvestments.toLocaleString("fr-FR")} €
+                {globalStats.totalInvestments.toLocaleString("fr-FR")} MGA
                 collectés
               </p>
             </CardContent>

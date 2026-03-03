@@ -119,7 +119,7 @@ export default function ProjectStageList() {
                 </CardHeader>
                 <CardContent>
                   <div className="text-3xl font-bold text-olive">
-                    {totalCollected.toLocaleString("fr-FR")} €
+                    {totalCollected.toLocaleString("fr-FR")} MGA
                   </div>
                   <p className="text-xs text-sage mt-2">
                     {totalTarget > 0
@@ -139,7 +139,7 @@ export default function ProjectStageList() {
                 </CardHeader>
                 <CardContent>
                   <div className="text-3xl font-bold text-forest">
-                    {totalTarget.toLocaleString("fr-FR")} €
+                    {totalTarget.toLocaleString("fr-FR")} MGA
                   </div>
                   <p className="text-xs text-sage mt-2">
                     Toutes étapes confondues

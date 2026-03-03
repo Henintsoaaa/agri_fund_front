@@ -73,7 +73,7 @@ export default function InvestorDashboard() {
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-bold text-forest">
-                {stats.totalInvested.toLocaleString("fr-FR")} €
+                {stats.totalInvested.toLocaleString("fr-FR")} MGA
               </div>
               <p className="text-xs text-sage mt-2">
                 {stats.activeInvestments} investissements actifs
@@ -90,14 +90,14 @@ export default function InvestorDashboard() {
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-bold text-olive">
-                {stats.portfolioValue.toLocaleString("fr-FR")} €
+                {stats.portfolioValue.toLocaleString("fr-FR")} MGA
               </div>
               <div className="flex items-center gap-1 mt-2">
                 <Badge className="bg-olive/20 text-olive border-olive/30">
                   +{gainPercentage}%
                 </Badge>
                 <span className="text-xs text-sage">
-                  +{stats.gain.toLocaleString("fr-FR")} €
+                  +{stats.gain.toLocaleString("fr-FR")} MGA
                 </span>
               </div>
             </CardContent>

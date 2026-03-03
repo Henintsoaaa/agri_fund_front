@@ -7,7 +7,7 @@ export interface ProjectStage {
   title: string;
   description: string;
   targetAmount: number;
-  collectedAmount: number;
+  currentAmount: number;
   stageOrder: number;
   statut: ProjectStageStatut;
   isDeleted: boolean;

@@ -128,7 +128,7 @@ export default function ProjectShowcase() {
                 <TrendingUp className="h-6 w-6 text-forest" />
               </div>
               <div>
-                <p className="text-2xl font-bold text-forest">458K €</p>
+                <p className="text-2xl font-bold text-forest">458K MGA</p>
                 <p className="text-sm text-sage">Fonds levés</p>
               </div>
             </CardContent>
@@ -220,10 +220,10 @@ export default function ProjectShowcase() {
                         <div>
                           <div className="flex justify-between text-sm mb-2">
                             <span className="font-semibold text-forest">
-                              {totalCollected.toLocaleString("fr-FR")} €
+                              {totalCollected.toLocaleString("fr-FR")} MGA
                             </span>
                             <span className="text-sage">
-                              / {totalTarget.toLocaleString("fr-FR")} €
+                              / {totalTarget.toLocaleString("fr-FR")} MGA
                             </span>
                           </div>
                           <Progress value={progress} className="h-2" />

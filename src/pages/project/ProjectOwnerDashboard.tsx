@@ -152,7 +152,7 @@ export default function ProjectOwnerDashboard() {
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-bold text-forest">
-                {stats.totalFunding.toLocaleString("fr-FR")} €
+                {stats.totalFunding.toLocaleString("fr-FR")} MGA
               </div>
               <p className="text-xs text-sage mt-2">Sur tous les projets</p>
             </CardContent>
@@ -167,7 +167,7 @@ export default function ProjectOwnerDashboard() {
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-bold text-olive">
-                {stats.totalCollected.toLocaleString("fr-FR")} €
+                {stats.totalCollected.toLocaleString("fr-FR")} MGA
               </div>
               <div className="mt-2">
                 <Progress value={progressPercentage} className="h-2" />
@@ -301,10 +301,11 @@ export default function ProjectOwnerDashboard() {
                             <div className="flex justify-between text-sm mb-2">
                               <span className="text-forest font-semibold">
                                 {projectTotalCollected.toLocaleString("fr-FR")}{" "}
-                                €
+                                MGA
                               </span>
                               <span className="text-sage">
-                                / {projectTotalTarget.toLocaleString("fr-FR")} €
+                                / {projectTotalTarget.toLocaleString("fr-FR")}{" "}
+                                MGA
                               </span>
                             </div>
                             <Progress value={projectProgress} className="h-2" />
