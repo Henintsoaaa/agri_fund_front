@@ -78,7 +78,7 @@ export default function UpdateProjectStage({
       {activeStages.map((stage) => (
         <Card
           key={stage.id}
-          className="border-2 border-olive/20 bg-gradient-to-br from-white to-sage/5 shadow-md hover:shadow-lg transition-all duration-200"
+          className="border-2 border-olive/20 bg-linear-to-br from-white to-sage/5 shadow-md hover:shadow-lg transition-all duration-200"
         >
           <CardContent className="p-5 lg:p-6 space-y-4">
             <div className="flex justify-between items-center pb-3 border-b border-sage/20">

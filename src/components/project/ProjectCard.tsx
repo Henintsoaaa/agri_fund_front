@@ -105,7 +105,7 @@ export default function ProjectCard({
   return (
     <Card className="bg-cream border-sage/30  overflow-hidden group">
       {/* Image */}
-      <div className="relative h-48 overflow-hidden bg-gradient-to-br from-olive/20 to-sage/20">
+      <div className="relative h-48 overflow-hidden bg-linear-to-br from-olive/20 to-sage/20">
         <img
           src={project.image || "/placeholder-project.jpg"}
           alt={project.title}

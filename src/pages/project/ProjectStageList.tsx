@@ -29,7 +29,7 @@ export default function ProjectStageList() {
 
   const stages = project?.stages || [];
 
-  const totalCollected = stages.reduce((sum, s) => sum + s.collectedAmount, 0);
+  const totalCollected = stages.reduce((sum, s) => sum + s.currentAmount, 0);
   const totalTarget = stages.reduce((sum, s) => sum + s.targetAmount, 0);
   const completedStages = stages.filter((s) => s.statut === "CLOSED").length;
 
@@ -151,7 +151,7 @@ export default function ProjectStageList() {
             <Separator className="bg-sage/30" />
 
             {/* Stages List */}
-            <Card className="bg-cream/50 border-sage/30 h-full py-3 h-full">
+            <Card className="bg-cream/50 border-sage/30 h-full py-3">
               <CardHeader>
                 <CardTitle className="text-forest">Étapes du projet</CardTitle>
                 <CardDescription className="text-sage">
@@ -159,7 +159,7 @@ export default function ProjectStageList() {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <ScrollArea className="h-[600px]">
+                <ScrollArea className="h-150">
                   <div className="space-y-4 pr-4 grid md:grid-cols-3 gap-4 sm:grid-cols-1 h-full">
                     {stages.map((stage) => (
                       <div key={stage.id}>

@@ -103,7 +103,7 @@ export default function ProjectStageCard({
       className={`bg-cream border-sage/30 hover:shadow-lg transition-all duration-300 overflow-hidden group h-full ${isFrozen ? "opacity-75" : ""}${isFunded ? " border-forest" : ""}`}
     >
       {/* Image */}
-      <div className="relative h-44 overflow-hidden bg-gradient-to-br from-olive/20 to-sage/20">
+      <div className="relative h-44 overflow-hidden bg-linear-to-br from-olive/20 to-sage/20">
         <img
           src={stage.image || "/placeholder-stage.jpg"}
           alt={stage.title}

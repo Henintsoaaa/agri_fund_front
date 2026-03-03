@@ -1,4 +1,14 @@
-import { Bell, Check, CheckCheck, Loader2 } from "lucide-react";
+import {
+  Bell,
+  CheckCheck,
+  CircleCheck,
+  DollarSign,
+  Hourglass,
+  Loader2,
+  Mailbox,
+  PartyPopper,
+  X,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -46,12 +56,13 @@ export const NotificationDropdown = () => {
   };
 
   const getNotificationIcon = (type: string) => {
-    if (type.includes("SUCCESS") || type.includes("CONFIRMED")) return "✅";
-    if (type.includes("FAILED") || type.includes("CANCELLED")) return "❌";
-    if (type.includes("FUNDED")) return "🎉";
-    if (type.includes("DIVIDEND")) return "💰";
-    if (type.includes("PENDING")) return "⏳";
-    return "📬";
+    if (type.includes("SUCCESS") || type.includes("CONFIRMED"))
+      return <CircleCheck />;
+    if (type.includes("FAILED") || type.includes("CANCELLED")) return <X />;
+    if (type.includes("FUNDED")) return <PartyPopper />;
+    if (type.includes("DIVIDEND")) return <DollarSign />;
+    if (type.includes("PENDING")) return <Hourglass />;
+    return <Mailbox />;
   };
 
   return (
@@ -103,7 +114,7 @@ export const NotificationDropdown = () => {
             Aucune notification
           </div>
         ) : (
-          <ScrollArea className="h-[400px]">
+          <ScrollArea className="h-100">
             {recentNotifications.map((notification) => (
               <DropdownMenuItem
                 key={notification.id}

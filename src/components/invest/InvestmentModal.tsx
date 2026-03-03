@@ -114,7 +114,7 @@ export default function InvestmentModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[500px] bg-cream">
+      <DialogContent className="sm:max-w-125 bg-cream">
         <DialogHeader>
           <DialogTitle className="text-2xl text-forest">
             Investir dans ce projet

@@ -86,7 +86,7 @@ export default function ProjectOwnerDashboard() {
       myProjects?.reduce(
         (acc, p) =>
           acc +
-          (p.stages?.reduce((s, stage) => s + stage.collectedAmount, 0) || 0),
+          (p.stages?.reduce((s, stage) => s + stage.currentAmount, 0) || 0),
         0,
       ) || 0,
   };
@@ -223,7 +223,7 @@ export default function ProjectOwnerDashboard() {
                 </Button>
               </div>
             ) : (
-              <ScrollArea className="h-[600px]">
+              <ScrollArea className="h-150">
                 <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6 pr-4">
                   {myProjects.map((project) => {
                     const projectTotalTarget =
@@ -233,7 +233,7 @@ export default function ProjectOwnerDashboard() {
                       ) || 0;
                     const projectTotalCollected =
                       project.stages?.reduce(
-                        (acc, stage) => acc + stage.collectedAmount,
+                        (acc, stage) => acc + stage.currentAmount,
                         0,
                       ) || 0;
                     const projectProgress =
@@ -249,7 +249,7 @@ export default function ProjectOwnerDashboard() {
                         className="bg-cream border-sage/30 hover:shadow-lg transition-shadow overflow-hidden group"
                       >
                         {/* Project Image */}
-                        <div className="relative h-48 overflow-hidden bg-gradient-to-br from-olive/20 to-sage/20">
+                        <div className="relative h-48 overflow-hidden bg-linear-to-br from-olive/20 to-sage/20">
                           {project.image ? (
                             <img
                               src={project.image}
