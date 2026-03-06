@@ -4,8 +4,8 @@ import {
   CircleCheck,
   DollarSign,
   Hourglass,
+  Leaf,
   Loader2,
-  Mailbox,
   PartyPopper,
   X,
 } from "lucide-react";
@@ -49,7 +49,7 @@ export const NotificationDropdown = () => {
 
     // Navigate based on notification type
     if (notification.projectId) {
-      navigate(`/project/${notification.projectId}`);
+      navigate(`/project-stage/${notification.projectId}`);
     } else if (notification.investmentId) {
       navigate(`/investments`);
     }
@@ -62,7 +62,7 @@ export const NotificationDropdown = () => {
     if (type.includes("FUNDED")) return <PartyPopper />;
     if (type.includes("DIVIDEND")) return <DollarSign />;
     if (type.includes("PENDING")) return <Hourglass />;
-    return <Mailbox />;
+    return <Leaf />;
   };
 
   return (
@@ -125,7 +125,7 @@ export const NotificationDropdown = () => {
                 onClick={() => handleNotificationClick(notification)}
               >
                 <div className="flex items-start gap-3 w-full">
-                  <div className="text-lg mt-0.5">
+                  <div className="text-lg mt-1.5">
                     {getNotificationIcon(notification.type)}
                   </div>
                   <div className="flex-1 space-y-1">
