@@ -111,7 +111,7 @@ export default function AdminLayout() {
   };
 
   return (
-    <div className="h-screen flex flex-col bg-gradient-to-br from-cream via-sage/10 to-olive/10">
+    <div className="h-screen flex flex-col bg-linear-to-br from-cream via-sage/10 to-olive/10">
       <Navbar title="AgriConnect" subtitle="Administration" />
 
       <div className="flex flex-1 overflow-hidden">

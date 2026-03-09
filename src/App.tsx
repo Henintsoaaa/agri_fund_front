@@ -22,6 +22,13 @@ import DynamicLayoutWrapper from "./components/layout/DynamicLayoutWrapper";
 import MyInvestmentsPage from "./pages/investment/MyInvestmentsPage";
 import ProjectInvestmentPage from "./pages/investment/ProjectInvestmentPage";
 import { NotificationsPage } from "./pages/NotificationsPage";
+import FavoritesPage from "./pages/investor/FavoritesPage";
+import HistoryPage from "./pages/investor/HistoryPage";
+import StatsPage from "./pages/investor/StatsPage";
+import ProofsPage from "./pages/project-owner/ProofsPage";
+import AdminStatsPage from "./pages/admin/AdminStatsPage";
+import AdminReportsPage from "./pages/admin/AdminReportsPage";
+import AdminSettingsPage from "./pages/admin/AdminSettingsPage";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -78,6 +85,12 @@ function App() {
                     path="/admin/projects/:projectId"
                     element={<ProjectStageList />}
                   />
+                  <Route path="/admin/stats" element={<AdminStatsPage />} />
+                  <Route path="/admin/reports" element={<AdminReportsPage />} />
+                  <Route
+                    path="/admin/settings"
+                    element={<AdminSettingsPage />}
+                  />
                 </Route>
               </Route>
 
@@ -91,6 +104,10 @@ function App() {
                     element={<ProjectOwnerDashboard />}
                   />
                   <Route path="/create-project" element={<CreateProject />} />
+                  <Route
+                    path="/project-owner/proofs"
+                    element={<ProofsPage />}
+                  />
                 </Route>
               </Route>
 
@@ -100,9 +117,15 @@ function App() {
                   <Route path="/investor" element={<InvestorDashboard />} />
                   <Route path="/project-show" element={<ProjectShowcase />} />
                   <Route
-                    path="/my-investments"
+                    path="/investor/investments"
                     element={<MyInvestmentsPage />}
                   />
+                  <Route
+                    path="/investor/favorites"
+                    element={<FavoritesPage />}
+                  />
+                  <Route path="/investor/history" element={<HistoryPage />} />
+                  <Route path="/investor/stats" element={<StatsPage />} />
                   <Route
                     path="/projects/:projectId/invest"
                     element={<ProjectInvestmentPage />}

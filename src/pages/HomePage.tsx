@@ -84,7 +84,7 @@ export default function ModernHomePage() {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-cream via-sage/10 to-olive/10">
+    <div className="min-h-screen bg-linear-to-br from-cream via-sage/10 to-olive/10">
       {/* Navigation */}
       <nav className="bg-forest/95 backdrop-blur-sm text-cream shadow-lg sticky top-0 z-50">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -177,9 +177,9 @@ export default function ModernHomePage() {
 
           {/* Hero Image */}
           <div className="relative">
-            <div className="absolute inset-0 bg-gradient-to-r from-olive/20 to-sage/20 rounded-3xl blur-3xl"></div>
+            <div className="absolute inset-0 bg-linear-to-r from-olive/20 to-sage/20 rounded-3xl blur-3xl"></div>
             <Card className="relative bg-cream/50 border-sage/30 backdrop-blur-sm overflow-hidden">
-              <div className="h-[500px] bg-gradient-to-br from-olive/30 to-sage/30 flex items-center justify-center">
+              <div className="h-125 bg-linear-to-br from-olive/30 to-sage/30 flex items-center justify-center">
                 <div className="text-center space-y-4 p-8">
                   <div className="bg-forest/10 rounded-full p-8 inline-block">
                     <Sprout className="h-32 w-32 text-olive" />
@@ -259,7 +259,7 @@ export default function ModernHomePage() {
       </section>
 
       {/* How it works */}
-      <section className="bg-gradient-to-br from-sage/20 to-olive/20 py-20">
+      <section className="bg-linear-to-br from-sage/20 to-olive/20 py-20">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <Badge className="bg-olive/20 text-olive border-olive/30 mb-4">
@@ -301,7 +301,7 @@ export default function ModernHomePage() {
 
       {/* CTA Section */}
       <section className="container mx-auto px-4 sm:px-6 lg:px-8 py-20">
-        <Card className="bg-gradient-to-r from-forest to-olive border-0 text-cream overflow-hidden relative">
+        <Card className="bg-linear-to-r from-forest to-olive border-0 text-cream overflow-hidden relative">
           <div className="absolute inset-0 bg-[url('/pattern.svg')] opacity-10"></div>
           <CardContent className="p-12 relative">
             <div className="max-w-3xl mx-auto text-center space-y-6">
