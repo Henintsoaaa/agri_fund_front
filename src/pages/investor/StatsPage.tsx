@@ -16,7 +16,7 @@ export default function StatsPage() {
 
       {/* Key Metrics */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        <Card>
+        <Card className=" bg-cream/50 border-sage/30">
           <CardHeader className="pb-3">
             <CardTitle className="text-sm font-medium text-forest/70 flex items-center gap-2">
               <DollarSign className="h-4 w-4" />
@@ -32,7 +32,7 @@ export default function StatsPage() {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className=" bg-cream/50 border-sage/30">
           <CardHeader className="pb-3">
             <CardTitle className="text-sm font-medium text-forest/70 flex items-center gap-2">
               <TrendingUp className="h-4 w-4" />
@@ -45,7 +45,7 @@ export default function StatsPage() {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className=" bg-cream/50 border-sage/30">
           <CardHeader className="pb-3">
             <CardTitle className="text-sm font-medium text-forest/70 flex items-center gap-2">
               <PieChart className="h-4 w-4" />
@@ -60,7 +60,7 @@ export default function StatsPage() {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className=" bg-cream/50 border-sage/30">
           <CardHeader className="pb-3">
             <CardTitle className="text-sm font-medium text-forest/70 flex items-center gap-2">
               <DollarSign className="h-4 w-4" />

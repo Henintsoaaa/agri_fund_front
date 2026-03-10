@@ -134,7 +134,7 @@ export const NotificationsPage = () => {
             <div className="flex items-center justify-between">
               <div className="space-y-1">
                 <CardTitle className="flex items-center gap-2 text-forest">
-                  <Bell className="h-5 w-5 text-olive" />
+                  {/* <Bell className="h-5 w-5 text-olive" /> */}
                   Toutes les notifications
                 </CardTitle>
                 <CardDescription className="text-sage">

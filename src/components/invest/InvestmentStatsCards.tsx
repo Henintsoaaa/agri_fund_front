@@ -25,9 +25,9 @@ export function InvestmentStatsCards({
 }: InvestmentStatsCardsProps) {
   if (isLoading) {
     return (
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 bg-cream/50">
         {[1, 2, 3, 4].map((i) => (
-          <Card key={i} className="bg-cream/50 border-sage/30">
+          <Card key={i} className="">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <Skeleton className="h-4 w-24" />
               <Skeleton className="h-4 w-4 rounded-full" />
@@ -53,7 +53,7 @@ export function InvestmentStatsCards({
   return (
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
       {/* Total Investi */}
-      <Card>
+      <Card className="bg-cream/50 border-sage/30">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-sm font-medium">Total Investi</CardTitle>
           <DollarSign className="h-4 w-4 text-blue-600" />
@@ -69,7 +69,7 @@ export function InvestmentStatsCards({
       </Card>
 
       {/* Investissement Actif */}
-      <Card>
+      <Card className="bg-cream/50 border-sage/30">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-sm font-medium">
             Investissement Actif
@@ -87,7 +87,7 @@ export function InvestmentStatsCards({
       </Card>
 
       {/* Dividendes */}
-      <Card>
+      <Card className="bg-cream/50 border-sage/30">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-sm font-medium">
             Dividendes Reçus
@@ -105,7 +105,7 @@ export function InvestmentStatsCards({
       </Card>
 
       {/* ROI */}
-      <Card>
+      <Card className="bg-cream/50 border-sage/30">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-sm font-medium">ROI</CardTitle>
           {roiPercentage >= 0 ? (

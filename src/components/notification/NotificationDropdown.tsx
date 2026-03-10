@@ -73,7 +73,7 @@ export const NotificationDropdown = () => {
           size="icon"
           className="relative hover:bg-olive/10"
         >
-          <Bell className="h-5 w-5 text-forest" />
+          <Bell className="h-5 w-5 text-sage " />
           {unreadCount > 0 && (
             <Badge className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0 text-xs bg-olive text-cream border-0">
               {unreadCount > 9 ? "9+" : unreadCount}

@@ -96,7 +96,7 @@ export default function AdminReportsPage() {
           </h2>
 
           {reports.map((report) => (
-            <Card key={report.id}>
+            <Card key={report.id} className="bg-cream/50 border-sage/30">
               <CardContent className="py-4">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-4">

@@ -108,7 +108,7 @@ export default function AdminSettingsPage() {
           </Card>
 
           {/* Security */}
-          <Card>
+          <Card className="bg-cream/50 border-sage/30">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Shield className="h-5 w-5" />
@@ -150,7 +150,7 @@ export default function AdminSettingsPage() {
           </Card>
 
           {/* Database */}
-          <Card>
+          <Card className="bg-cream/50 border-sage/30">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Database className="h-5 w-5" />
@@ -179,7 +179,7 @@ export default function AdminSettingsPage() {
 
           {/* Save Button */}
           <div className="flex justify-end">
-            <Button size="lg">
+            <Button size="lg" className="bg-forest">
               <Settings className="h-4 w-4 mr-2" />
               Enregistrer les modifications
             </Button>

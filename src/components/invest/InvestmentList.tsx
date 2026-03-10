@@ -73,7 +73,7 @@ export function InvestmentList({
 
   if (!investments || investments.length === 0) {
     return (
-      <Card>
+      <Card className="bg-cream/50 border-sage/30">
         <CardContent className="flex flex-col items-center justify-center py-12">
           <AlertCircle className="h-12 w-12 text-muted-foreground mb-4" />
           <p className="text-lg font-medium text-muted-foreground">
@@ -96,7 +96,7 @@ export function InvestmentList({
         return (
           <Card
             key={investment.id}
-            className="hover:shadow-md transition-shadow"
+            className="hover:shadow-md transition-shadow bg-cream/50 border-sage/30"
           >
             <CardHeader>
               <div className="flex items-start justify-between">

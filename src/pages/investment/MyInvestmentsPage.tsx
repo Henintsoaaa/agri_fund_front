@@ -92,8 +92,8 @@ export default function MyInvestmentsPage() {
       />
 
       {/* Investments List */}
-      <Tabs defaultValue="all" className="w-full">
-        <TabsList className="grid w-full grid-cols-5">
+      <Tabs defaultValue="all" className="w-full ">
+        <TabsList className="grid w-full grid-cols-5 bg-cream/50 border-sage/30">
           <TabsTrigger value="all">
             Tous ({myInvestments?.length || 0})
           </TabsTrigger>
@@ -152,7 +152,7 @@ export default function MyInvestmentsPage() {
       </Tabs>
 
       {/* Transactions History */}
-      <Card>
+      <Card className="bg-cream/50 border-sage/30">
         <CardHeader>
           <CardTitle>Historique des Transactions</CardTitle>
           <CardDescription>

@@ -85,7 +85,7 @@ export default function AdminStatsPage() {
 
         {/* Charts */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-          <Card>
+          <Card className="bg-cream/50 border-sage/30">
             <CardHeader>
               <CardTitle>Croissance des Utilisateurs</CardTitle>
             </CardHeader>
@@ -96,7 +96,7 @@ export default function AdminStatsPage() {
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="bg-cream/50 border-sage/30">
             <CardHeader>
               <CardTitle>Volume d'Investissements</CardTitle>
             </CardHeader>
@@ -108,7 +108,7 @@ export default function AdminStatsPage() {
           </Card>
         </div>
 
-        <Card>
+        <Card className="bg-cream/50 border-sage/30">
           <CardHeader>
             <CardTitle>Répartition des Projets par Catégorie</CardTitle>
           </CardHeader>
