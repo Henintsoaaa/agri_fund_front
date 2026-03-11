@@ -26,6 +26,7 @@ import FavoritesPage from "./pages/investor/FavoritesPage";
 import HistoryPage from "./pages/investor/HistoryPage";
 import StatsPage from "./pages/investor/StatsPage";
 import ProofsPage from "./pages/project-owner/ProofsPage";
+import MyProjectsPage from "./pages/project-owner/MyProjectsPage";
 import AdminStatsPage from "./pages/admin/AdminStatsPage";
 import AdminReportsPage from "./pages/admin/AdminReportsPage";
 import AdminSettingsPage from "./pages/admin/AdminSettingsPage";
@@ -103,7 +104,14 @@ function App() {
                     path="/project-owner"
                     element={<ProjectOwnerDashboard />}
                   />
-                  <Route path="/create-project" element={<CreateProject />} />
+                  <Route
+                    path="/project-owner/projects"
+                    element={<MyProjectsPage />}
+                  />
+                  <Route
+                    path="/project-owner/create-project"
+                    element={<CreateProject />}
+                  />
                   <Route
                     path="/project-owner/proofs"
                     element={<ProofsPage />}

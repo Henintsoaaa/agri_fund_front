@@ -21,6 +21,7 @@ import { Badge } from "@/components/ui/badge";
 import UserTable from "@/components/admin/UserTable";
 import CreateUserDialog from "@/components/admin/CreateUserDialog";
 import ProjectCard from "@/components/project/ProjectCard";
+import AdminProofsSection from "@/components/admin/AdminProofsSection";
 import { Separator } from "@/components/ui/separator";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useQueryState } from "nuqs";
@@ -219,6 +220,13 @@ export default function AdminDashboard() {
               <FolderKanban className="h-4 w-4 mr-2" />
               Projets
             </TabsTrigger>
+            <TabsTrigger
+              value="proofs"
+              className="data-[state=active]:bg-forest data-[state=active]:text-cream"
+            >
+              <Activity className="h-4 w-4 mr-2" />
+              Preuves
+            </TabsTrigger>
           </TabsList>
 
           {/* Users Tab */}
@@ -309,6 +317,11 @@ export default function AdminDashboard() {
                 </Tabs>
               </CardContent>
             </Card>
+          </TabsContent>
+
+          {/* Proofs Tab */}
+          <TabsContent value="proofs" className="space-y-4" id="proofs">
+            <AdminProofsSection />
           </TabsContent>
         </Tabs>
       </div>

@@ -20,6 +20,8 @@ export default function CreateProject() {
   const navigate = useNavigate();
   const { createProject, isCreatingProject } = useProject();
 
+  console.log("CreateProject rendered");
+
   const [formData, setFormData] = useState({
     title: "",
     description: "",
@@ -90,7 +92,7 @@ export default function CreateProject() {
   };
 
   return (
-    <div className="h-full">
+    <div className="h-full bg-gradient-to-br from-cream via-sage/10 to-olive/10">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
         {/* Header */}
         <div className="flex flex-col gap-4">

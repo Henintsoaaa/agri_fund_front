@@ -17,10 +17,13 @@ import {
   Eye,
   Edit,
   Trash2,
+  FileText,
 } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { useState } from "react";
 import InvestmentModal from "../invest/InvestmentModal";
+import StageProofsGallery from "../proofs/StageProofsGallery";
+import { useProofs } from "@/features/proofs/hooks/useProofs";
 
 interface ProjectStageCardProps {
   stage: {
@@ -50,6 +53,12 @@ export default function ProjectStageCard({
   onDelete,
 }: ProjectStageCardProps) {
   const [isInvestModalOpen, setIsInvestModalOpen] = useState(false);
+  const [showProofs, setShowProofs] = useState(false);
+
+  const { useStageProofs } = useProofs();
+  const { data: stageProofs, isLoading: isLoadingProofs } = useStageProofs(
+    stage.id,
+  );
 
   console.log("STAGE", stage);
 
@@ -177,6 +186,36 @@ export default function ProjectStageCard({
             <span>Créé le {formatDate(stage.createdAt)}</span>
           </div>
         </div>
+
+        {/* Proofs Section - only for FUNDED or CLOSED stages */}
+        {(stage.statut === "FUNDED" || stage.statut === "CLOSED") && (
+          <>
+            <Separator className="bg-sage/30" />
+            <div className="space-y-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setShowProofs(!showProofs)}
+                className="w-full border-sage/30 hover:bg-olive/10"
+              >
+                <FileText className="h-4 w-4 mr-2" />
+                {showProofs ? "Masquer" : "Voir"} les preuves (
+                {stageProofs?.length || 0})
+              </Button>
+
+              {showProofs && (
+                <div className="mt-4">
+                  <StageProofsGallery
+                    stageId={stage.id}
+                    stageTitle={stage.title}
+                    proofs={stageProofs || []}
+                    isLoading={isLoadingProofs}
+                  />
+                </div>
+              )}
+            </div>
+          </>
+        )}
 
         {/* Actions */}
         <div className="flex gap-2 pt-2">

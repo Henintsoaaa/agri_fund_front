@@ -53,7 +53,7 @@ export default function ProjectInvestorsDialog({
 
         {/* Statistiques générales */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-          <Card className="bg-gradient-to-br from-olive/10 to-sage/10">
+          <Card className="bg-linear-to-br from-olive/10 to-sage/10">
             <CardContent className="pt-6">
               <div className="flex items-center justify-between">
                 <div>
@@ -67,7 +67,7 @@ export default function ProjectInvestorsDialog({
             </CardContent>
           </Card>
 
-          <Card className="bg-gradient-to-br from-olive/10 to-sage/10">
+          <Card className="bg-linear-to-br from-olive/10 to-sage/10">
             <CardContent className="pt-6">
               <div className="flex items-center justify-between">
                 <div>
@@ -81,7 +81,7 @@ export default function ProjectInvestorsDialog({
             </CardContent>
           </Card>
 
-          <Card className="bg-gradient-to-br from-olive/10 to-sage/10">
+          <Card className="bg-linear-to-br from-olive/10 to-sage/10">
             <CardContent className="pt-6">
               <div className="flex items-center justify-between">
                 <div>
@@ -97,7 +97,7 @@ export default function ProjectInvestorsDialog({
         </div>
 
         {/* Liste des investisseurs */}
-        <ScrollArea className="h-[400px] pr-4">
+        <ScrollArea className="h-100 pr-4">
           {isLoading ? (
             <div className="flex items-center justify-center py-12">
               <Loader2 className="h-8 w-8 animate-spin text-olive" />

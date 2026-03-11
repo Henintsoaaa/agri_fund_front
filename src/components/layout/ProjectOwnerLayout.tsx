@@ -27,7 +27,7 @@ const navItems = [
   },
   {
     title: "Créer un Projet",
-    href: "/create-project",
+    href: "/project-owner/create-project",
     icon: FolderPlus,
   },
   {
