@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useInvestment } from "@/features/investment/hooks/useInvestment";
 import { useAuthContext } from "@/features/auth/context/AuthContext";
-import { InvestmentList } from "@/components/invest/InvestmentList";
 import { InvestmentStatsCards } from "@/components/invest/InvestmentStatsCards";
 import {
   Card,
@@ -10,7 +9,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { RefreshCw } from "lucide-react";
 
@@ -26,8 +24,6 @@ export default function MyInvestmentsPage() {
     myTransactionStats,
     isLoadingMyStats,
     useROI,
-    cancelInvestment,
-    isCancellingInvestment,
   } = useInvestment();
 
   const { data: roi, isLoading: isLoadingROI } = useROI(user?.id);
@@ -40,24 +36,7 @@ export default function MyInvestmentsPage() {
     setIsRefreshing(false);
   };
 
-  const handleCancelInvestment = async (investmentId: string) => {
-    try {
-      await cancelInvestment(investmentId);
-      refetchMyInvestments();
-    } catch (error) {
-      console.error("Error cancelling investment:", error);
-    }
-  };
-
-  // Filter investments by status
-  const pendingInvestments =
-    myInvestments?.filter((inv) => inv.status === "PENDING") || [];
-  const confirmedInvestments =
-    myInvestments?.filter((inv) => inv.status === "CONFIRMED") || [];
-  const cancelledInvestments =
-    myInvestments?.filter((inv) => inv.status === "CANCELLED") || [];
-  const refundedInvestments =
-    myInvestments?.filter((inv) => inv.status === "REFUNDED") || [];
+  console.log("myInvestment", myInvestments);
 
   return (
     <div className="container mx-auto py-8 space-y-6">
@@ -91,65 +70,56 @@ export default function MyInvestmentsPage() {
         isLoading={isLoadingMyStats || isLoadingROI}
       />
 
-      {/* Investments List */}
-      <Tabs defaultValue="all" className="w-full ">
-        <TabsList className="grid w-full grid-cols-5 bg-cream/50 border-sage/30">
-          <TabsTrigger value="all">
-            Tous ({myInvestments?.length || 0})
-          </TabsTrigger>
-          <TabsTrigger value="pending">
-            En attente ({pendingInvestments.length})
-          </TabsTrigger>
-          <TabsTrigger value="confirmed">
-            Confirmés ({confirmedInvestments.length})
-          </TabsTrigger>
-          <TabsTrigger value="cancelled">
-            Annulés ({cancelledInvestments.length})
-          </TabsTrigger>
-          <TabsTrigger value="refunded">
-            Remboursés ({refundedInvestments.length})
-          </TabsTrigger>
-        </TabsList>
-
-        <TabsContent value="all" className="mt-6">
-          <InvestmentList
-            investments={myInvestments || []}
-            isLoading={isLoadingMyInvestments}
-            onCancel={handleCancelInvestment}
-            isCancelling={isCancellingInvestment}
-          />
-        </TabsContent>
-
-        <TabsContent value="pending" className="mt-6">
-          <InvestmentList
-            investments={pendingInvestments}
-            isLoading={isLoadingMyInvestments}
-            onCancel={handleCancelInvestment}
-            isCancelling={isCancellingInvestment}
-          />
-        </TabsContent>
-
-        <TabsContent value="confirmed" className="mt-6">
-          <InvestmentList
-            investments={confirmedInvestments}
-            isLoading={isLoadingMyInvestments}
-          />
-        </TabsContent>
-
-        <TabsContent value="cancelled" className="mt-6">
-          <InvestmentList
-            investments={cancelledInvestments}
-            isLoading={isLoadingMyInvestments}
-          />
-        </TabsContent>
-
-        <TabsContent value="refunded" className="mt-6">
-          <InvestmentList
-            investments={refundedInvestments}
-            isLoading={isLoadingMyInvestments}
-          />
-        </TabsContent>
-      </Tabs>
+      {/* Investmenets history */}
+      <Card className="bg-cream/50 border-sage/30">
+        <CardHeader>
+          <CardTitle>Historique de mes Investissements</CardTitle>
+          <CardDescription>
+            Détails de tous vos investissements passés
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          {isLoadingMyInvestments ? (
+            <p className="text-center text-muted-foreground py-8">
+              Chargement...
+            </p>
+          ) : myInvestments && myInvestments.length > 0 ? (
+            <div className="space-y-4">
+              {myInvestments.map((investment) => (
+                <div
+                  key={investment.id}
+                  className="flex items-center justify-between p-4 border rounded-lg"
+                >
+                  <div>
+                    <p className="font-medium">
+                      {investment.projectStage?.project?.title ||
+                        "Projet inconnu"}{" "}
+                      -{" "}
+                    </p>
+                    <p className="text-sm text-muted-foreground">
+                      {new Date(investment.createdAt).toLocaleDateString(
+                        "fr-FR",
+                      )}
+                    </p>
+                  </div>
+                  <div className="text-right">
+                    <p className="font-bold">
+                      {investment.amount.toLocaleString("fr-FR")} Ar
+                    </p>
+                    <p className="text-sm text-muted-foreground">
+                      {investment.status}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <p className="text-center text-muted-foreground py-8">
+              Vous n'avez pas encore investi dans un projet
+            </p>
+          )}
+        </CardContent>
+      </Card>
 
       {/* Transactions History */}
       <Card className="bg-cream/50 border-sage/30">
@@ -174,9 +144,9 @@ export default function MyInvestmentsPage() {
                   <div>
                     <p className="font-medium">{transaction.type}</p>
                     <p className="text-sm text-muted-foreground">
-                      {new Date(transaction.createdAt).toLocaleDateString(
-                        "fr-FR",
-                      )}
+                      {new Date(
+                        transaction.createdAt || transaction.transactionDate,
+                      ).toLocaleDateString("fr-FR")}
                     </p>
                   </div>
                   <div className="text-right">

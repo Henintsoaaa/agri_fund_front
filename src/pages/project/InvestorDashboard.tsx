@@ -1,5 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { useProject } from "@/features/project/hooks/useProject";
+import { useInvestment } from "@/features/investment/hooks/useInvestment";
 import {
   Card,
   CardContent,
@@ -16,23 +17,38 @@ import InvestmentCard from "@/components/invest/InvestmentCard";
 
 export default function InvestorDashboard() {
   const { allProjects: publicProjects } = useProject();
+  const { myInvestments, isLoadingMyInvestments, myTransactionStats } =
+    useInvestment();
   const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     // Projects are automatically fetched by useQuery
   }, []);
 
-  // Mock investment statistics (à remplacer par de vraies données)
-  const stats = {
-    totalInvested: 15000,
-    activeInvestments: 8,
-    avgROI: 12.5,
-    portfolioValue: 16875,
-    gain: 1875,
-    favoriteProjects: 3,
-  };
+  // Calculate real investment statistics
+  const stats = useMemo(() => {
+    const totalInvested = myTransactionStats?.totalInvested || 0;
+    const totalRefunded = myTransactionStats?.totalRefunded || 0;
+    const totalDividends = myTransactionStats?.totalDividends || 0;
+    const activeInvestments =
+      myInvestments?.filter((inv) => inv.status === "CONFIRMED").length || 0;
+    const portfolioValue = totalInvested - totalRefunded + totalDividends;
+    const gain = portfolioValue - totalInvested;
 
-  const gainPercentage = ((stats.gain / stats.totalInvested) * 100).toFixed(1);
+    return {
+      totalInvested,
+      activeInvestments,
+      avgROI: totalInvested > 0 ? (gain / totalInvested) * 100 : 0,
+      portfolioValue,
+      gain,
+      favoriteProjects: 0, // TODO: implement favorites feature
+    };
+  }, [myInvestments, myTransactionStats]);
+
+  const gainPercentage =
+    stats.gain !== 0
+      ? ((stats.gain / stats.totalInvested) * 100).toFixed(1)
+      : "0.0";
 
   // Filter projects based on search
   const filteredProjects = publicProjects?.filter((project) =>
@@ -43,8 +59,7 @@ export default function InvestorDashboard() {
   const enhancedProjects = filteredProjects?.map((project) => ({
     ...project,
     totalCollected:
-      project.stages?.reduce((acc, stage) => acc + stage.collectedAmount, 0) ||
-      0,
+      project.stages?.reduce((acc, stage) => acc + stage.currentAmount, 0) || 0,
     totalTarget:
       project.stages?.reduce((acc, stage) => acc + stage.targetAmount, 0) || 0,
   }));
@@ -198,22 +213,51 @@ export default function InvestorDashboard() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="h-fit">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pr-4">
-                {/* Mock investment data */}
-                {[1, 2, 3, 4].map((i) => (
-                  <InvestmentCard
-                    key={i}
-                    projectName={`Projet Agricole #${i}`}
-                    stage={i}
-                    amountInvested={2000}
-                    roi={10 + i * 2}
-                    progress={65 + i * 5}
-                    status="active"
-                  />
-                ))}
+            {isLoadingMyInvestments ? (
+              <div className="text-center py-8 text-sage">
+                Chargement de vos investissements...
               </div>
-            </div>
+            ) : myInvestments && myInvestments.length > 0 ? (
+              <div className="h-fit">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pr-4">
+                  {myInvestments.map((investment) => {
+                    const stage = investment.projectStage;
+                    const project = stage?.project;
+                    const progress = stage
+                      ? (stage.currentAmount / stage.targetAmount) * 100
+                      : 0;
+                    const roi = 0; // TODO: Calculate actual ROI when dividend data is available
+
+                    return (
+                      <InvestmentCard
+                        key={investment.id}
+                        projectName={project?.title || "Projet"}
+                        stage={stage?.stageOrder || 1}
+                        amountInvested={investment.amount}
+                        roi={roi}
+                        progress={progress}
+                        status={
+                          investment.status === "CONFIRMED"
+                            ? "active"
+                            : investment.status === "PENDING"
+                              ? "pending"
+                              : "completed"
+                        }
+                      />
+                    );
+                  })}
+                </div>
+              </div>
+            ) : (
+              <div className="text-center py-12">
+                <p className="text-sage text-lg">
+                  Vous n'avez pas encore d'investissements
+                </p>
+                <p className="text-sage text-sm mt-2">
+                  Découvrez les projets disponibles ci-dessus pour commencer
+                </p>
+              </div>
+            )}
           </CardContent>
         </Card>
       </div>

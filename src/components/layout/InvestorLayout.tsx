@@ -1,14 +1,6 @@
 import { Outlet, useNavigate, useLocation } from "react-router-dom";
 import Navbar from "./Navbar";
-import {
-  LayoutDashboard,
-  Search,
-  TrendingUp,
-  Wallet,
-  Heart,
-  History,
-  Bell,
-} from "lucide-react";
+import { LayoutDashboard, Search, Wallet, Bell } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -32,22 +24,7 @@ const navItems = [
     icon: Wallet,
     badge: 8,
   },
-  {
-    title: "Projets Favoris",
-    href: "/investor/favorites",
-    icon: Heart,
-    badge: 3,
-  },
-  {
-    title: "Historique",
-    href: "/investor/history",
-    icon: History,
-  },
-  {
-    title: "Statistiques",
-    href: "/investor/stats",
-    icon: TrendingUp,
-  },
+
   {
     title: "Notifications",
     href: "/notifications",
@@ -60,7 +37,7 @@ export default function InvestorLayout() {
   const location = useLocation();
 
   return (
-    <div className="h-screen flex flex-col bg-gradient-to-br from-cream via-sage/10 to-olive/10">
+    <div className="h-screen flex flex-col bg-linear-to-br from-cream via-sage/10 to-olive/10">
       <Navbar title="AgriConnect" subtitle="Espace Investisseur" />
 
       <div className="flex flex-1 overflow-hidden">

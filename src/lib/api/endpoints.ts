@@ -68,13 +68,9 @@ export const INVESTMENT_ENDPOINTS = {
 };
 
 export const TRANSACTION_ENDPOINTS = {
-  CREATE_TRANSACTION: "transaction",
-  UPDATE_TRANSACTION_STATUS: (transactionId: string) =>
-    `transaction/${transactionId}/status`,
   GET_TRANSACTIONS_BY_INVESTMENT: (investmentId: string) =>
     `transaction/investment/${investmentId}`,
   GET_USER_TRANSACTIONS: (userId: string) => `transaction/user/${userId}`,
-  CREATE_REFUND: "transaction/refund",
   GET_TOTAL_INVESTED: (userId: string) =>
     `transaction/stats/invested/${userId}`,
   GET_TOTAL_REFUNDED: (userId: string) =>

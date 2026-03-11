@@ -12,30 +12,47 @@ export interface Investment {
   projectStageId: string;
   amount: number;
   status: InvestmentStatus;
+  investmentDate: string;
   createdAt: string;
-  updatedAt: string;
+  updatedAt?: string;
   user?: {
     id: string;
     name: string;
     email: string;
   };
-  stage?: {
+  projectStage?: {
     id: string;
     title: string;
+    description: string;
+    image: string;
     projectId: string;
+    stageOrder: number;
+    statut: string;
+    currentAmount: number;
+    targetAmount: number;
+    isDeleted: boolean;
+    createdAt: string;
+    updatedAt: string;
+    project?: {
+      id: string;
+      title: string;
+      image: string;
+    };
   };
+  transaction?: Transaction[];
 }
 
 export interface Transaction {
   id: string;
-  investmentId: string;
+  investmentId?: string;
   amount: number;
-  type: TransactionType;
+  type?: TransactionType;
   status: TransactionStatus;
   provider: string;
   providerTransactionId?: string;
-  createdAt: string;
-  updatedAt: string;
+  transactionDate: string;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface CreateInvestmentPayload {
