@@ -14,7 +14,6 @@ import {
   TrendingUp,
   Users,
   Calendar,
-  Eye,
   Edit,
   Trash2,
   FileText,
@@ -25,6 +24,7 @@ import InvestmentModal from "../invest/InvestmentModal";
 import StageProofsGallery from "../proofs/StageProofsGallery";
 import { useProofs } from "@/features/proofs/hooks/useProofs";
 import CreatProofModal from "./CreatProofModal";
+import { getImageUrl } from "@/lib/utils/image";
 
 interface ProjectStageCardProps {
   projectId: string;
@@ -42,8 +42,8 @@ interface ProjectStageCardProps {
   role?: "admin" | "owner" | "investor";
   onInvest?: (stageId: string) => void;
   onViewDetails?: (stageId: string) => void;
-  onEdit?: (stageId: string) => void;
-  onDelete?: (stageId: string) => void;
+  onEdit?: () => void;
+  onDelete?: () => void;
 }
 
 export default function ProjectStageCard({
@@ -51,7 +51,6 @@ export default function ProjectStageCard({
   stage,
   role = "investor",
   onInvest: _onInvest,
-  onViewDetails,
   onEdit,
   onDelete,
 }: ProjectStageCardProps) {
@@ -117,7 +116,9 @@ export default function ProjectStageCard({
       {/* Image */}
       <div className="relative h-44 overflow-hidden bg-linear-to-br from-olive/20 to-sage/20">
         <img
-          src={stage.image || "/placeholder-stage.jpg"}
+          src={
+            stage.image ? getImageUrl(stage.image) : "/placeholder-stage.jpg"
+          }
           alt={stage.title}
           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
         />
@@ -238,22 +239,11 @@ export default function ProjectStageCard({
             </Button>
           ) : (
             <>
-              {onViewDetails && (
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => onViewDetails(stage.id)}
-                  className="flex-1 border-sage/30 hover:bg-olive/10"
-                >
-                  <Eye className="h-4 w-4 mr-2" />
-                  Voir
-                </Button>
-              )}
               {onEdit && (
                 <Button
                   variant="outline"
                   size="sm"
-                  onClick={() => onEdit(stage.id)}
+                  onClick={onEdit}
                   className="flex-1 border-sage/30 hover:bg-olive/10"
                 >
                   <Edit className="h-4 w-4 mr-2" />
@@ -264,7 +254,7 @@ export default function ProjectStageCard({
                 <Button
                   variant="outline"
                   size="sm"
-                  onClick={() => onDelete(stage.id)}
+                  onClick={onDelete}
                   className="flex-1 border-destructive/30 text-destructive hover:bg-destructive/10"
                 >
                   <Trash2 className="h-4 w-4 mr-2" />

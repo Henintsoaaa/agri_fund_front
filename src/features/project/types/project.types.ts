@@ -10,6 +10,7 @@ export interface ProjectStage {
   currentAmount: number;
   stageOrder: number;
   statut: ProjectStageStatut;
+  image?: string;
   isDeleted: boolean;
   createdAt: string;
   updatedAt: string;

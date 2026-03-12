@@ -275,7 +275,7 @@ export const useProject = () => {
     isUpdatingProject: updateProjectMutation.isPending,
     deleteProject: deleteProjectMutation.mutate,
     isDeletingProject: deleteProjectMutation.isPending,
-    updateProjectStage: updateProjectStage.mutate,
+    updateProjectStage: updateProjectStage.mutateAsync,
     isUpdatingProjectStage: updateProjectStage.isPending,
     deleteProjectStage: deleteProjectStageMutation.mutate,
     isDeletingProjectStage: deleteProjectStageMutation.isPending,

@@ -7,6 +7,7 @@ import {
   Target,
   TrendingUp,
   CheckCircle2,
+  Trash2,
 } from "lucide-react";
 import { useParams, useNavigate } from "react-router-dom";
 import {
@@ -19,12 +20,28 @@ import {
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { useState } from "react";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { EditProjectStageDialog } from "@/components/project/EditProjectStageDialog";
+import type { ProjectStage } from "@/features/project/types/project.types";
 
 export default function ProjectStageList() {
   const { projectId } = useParams<{ projectId: string }>();
   const navigate = useNavigate();
   const { user } = useAuthContext();
-  const { useGetProjectById } = useProject();
+  const {
+    useGetProjectById,
+    deleteProjectStage,
+    updateProjectStage,
+    isUpdatingProjectStage,
+  } = useProject();
   const { data: project, isLoading } = useGetProjectById(projectId || "");
 
   const stages = project?.stages || [];
@@ -32,6 +49,14 @@ export default function ProjectStageList() {
   const totalCollected = stages.reduce((sum, s) => sum + s.currentAmount, 0);
   const totalTarget = stages.reduce((sum, s) => sum + s.targetAmount, 0);
   const completedStages = stages.filter((s) => s.statut === "CLOSED").length;
+
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [stageToDelete, setStageToDelete] = useState<{
+    id: string;
+    title: string;
+  } | null>(null);
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const [stageToEdit, setStageToEdit] = useState<ProjectStage | null>(null);
 
   // Determine the correct return path based on user role
   const getReturnPath = () => {
@@ -45,18 +70,38 @@ export default function ProjectStageList() {
     return "/";
   };
 
-  const handleEditStage = (stageId: string) => {
-    // TODO: Implement edit functionality
-    console.log("Edit stage:", stageId);
+  const handleEditStage = (stage: ProjectStage) => {
+    setStageToEdit(stage);
+    setEditDialogOpen(true);
   };
 
-  const handleDeleteStage = (stageId: string) => {
-    // TODO: Implement delete functionality
-    console.log("Delete stage:", stageId);
+  const handleDeleteStage = (stage: ProjectStage) => {
+    setStageToDelete({ id: stage.id, title: stage.title });
+    setDeleteDialogOpen(true);
+  };
+
+  const confirmDeleteStage = () => {
+    if (stageToDelete) {
+      deleteProjectStage({ projectStageId: stageToDelete.id });
+      setDeleteDialogOpen(false);
+      setStageToDelete(null);
+    }
+  };
+
+  const handleSaveEdit = async (data: {
+    title: string;
+    description: string;
+    targetAmount: number;
+    image?: string;
+  }) => {
+    if (stageToEdit) {
+      await updateProjectStage({ projectStageId: stageToEdit.id, data });
+      setEditDialogOpen(false);
+      setStageToEdit(null);
+    }
   };
 
   const handleViewDetails = (stageId: string) => {
-    // TODO: Implement view details functionality
     console.log("View details:", stageId);
   };
 
@@ -171,15 +216,15 @@ export default function ProjectStageList() {
                           }
                           onEdit={
                             user?.role !== "INVESTOR"
-                              ? handleEditStage
+                              ? () => handleEditStage(stage as ProjectStage)
                               : undefined
                           }
                           onDelete={
                             user?.role !== "INVESTOR"
-                              ? handleDeleteStage
+                              ? () => handleDeleteStage(stage as ProjectStage)
                               : undefined
                           }
-                          onViewDetails={handleViewDetails}
+                          onViewDetails={() => handleViewDetails(stage.id)}
                         />
                       </div>
                     ))}
@@ -204,6 +249,49 @@ export default function ProjectStageList() {
               </Button>
             </CardContent>
           </Card>
+        )}
+
+        {/* Delete Confirmation Dialog */}
+        <Dialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+          <DialogContent className="sm:max-w-md">
+            <DialogHeader>
+              <DialogTitle className="text-forest">
+                Confirmer la suppression
+              </DialogTitle>
+              <DialogDescription className="text-sage">
+                Êtes-vous sûr de vouloir supprimer l'étape "
+                {stageToDelete?.title}" ? Cette action est irréversible.
+              </DialogDescription>
+            </DialogHeader>
+            <DialogFooter className="gap-2">
+              <Button
+                variant="outline"
+                onClick={() => setDeleteDialogOpen(false)}
+                className="border-sage/50 text-sage hover:bg-sage/10"
+              >
+                Annuler
+              </Button>
+              <Button
+                variant="destructive"
+                onClick={confirmDeleteStage}
+                className="bg-destructive hover:bg-destructive/90"
+              >
+                <Trash2 className="h-4 w-4 mr-2" />
+                Supprimer
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+
+        {/* Edit Stage Dialog */}
+        {stageToEdit && (
+          <EditProjectStageDialog
+            open={editDialogOpen}
+            onOpenChange={setEditDialogOpen}
+            stage={stageToEdit}
+            onSave={handleSaveEdit}
+            isLoading={isUpdatingProjectStage}
+          />
         )}
       </div>
     </div>
