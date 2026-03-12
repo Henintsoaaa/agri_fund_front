@@ -1,7 +1,15 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useProject } from "@/features/project/hooks/useProject";
-import { ArrowLeftIcon, Plus, Trash2 } from "lucide-react";
+import { uploadProjectImageApi } from "@/features/project/api/project.api";
+import {
+  ArrowLeftIcon,
+  Plus,
+  Trash2,
+  Upload,
+  X,
+  Image as ImageIcon,
+} from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -14,13 +22,24 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { toast } from "sonner";
 import type { CreateProjectStagePayload } from "@/features/project/types/project.types";
+import { ScrollArea } from "@/components/ui/scroll-area";
+
+interface StageWithFile extends Omit<CreateProjectStagePayload, "image"> {
+  image: string;
+  imageFile: File | null;
+}
 
 export default function CreateProject() {
   const navigate = useNavigate();
   const { createProject, isCreatingProject } = useProject();
-
-  console.log("CreateProject rendered");
+  const [isUploading, setIsUploading] = useState(false);
+  const [isDraggingProject, setIsDraggingProject] = useState(false);
+  const [draggingStageIndex, setDraggingStageIndex] = useState<number | null>(
+    null,
+  );
+  const projectImageInputRef = useRef<HTMLInputElement>(null);
 
   const [formData, setFormData] = useState({
     title: "",
@@ -30,15 +49,115 @@ export default function CreateProject() {
     statut: "DRAFT" as "DRAFT" | "ACTIVE" | "COMPLETED" | "SUSPENDED",
   });
 
-  const [stages, setStages] = useState<CreateProjectStagePayload[]>([
+  const [projectImageFile, setProjectImageFile] = useState<File | null>(null);
+
+  const [stages, setStages] = useState<StageWithFile[]>([
     {
       title: "",
       description: "",
       targetAmount: 0,
       stageOrder: 1,
       image: "",
+      imageFile: null,
     },
   ]);
+
+  const handleProjectImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      validateAndSetProjectImage(file);
+    }
+  };
+
+  const validateAndSetProjectImage = (file: File) => {
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error("L'image ne doit pas dépasser 5MB");
+      return;
+    }
+    const allowedTypes = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
+    if (!allowedTypes.includes(file.type)) {
+      toast.error("Format non supporté. Utilisez JPG, PNG ou WEBP");
+      return;
+    }
+    setProjectImageFile(file);
+  };
+
+  const handleProjectDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDraggingProject(true);
+  };
+
+  const handleProjectDragLeave = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDraggingProject(false);
+  };
+
+  const handleProjectDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDraggingProject(false);
+
+    const file = e.dataTransfer.files?.[0];
+    if (file) {
+      validateAndSetProjectImage(file);
+    }
+  };
+
+  const handleStageImageChange = (index: number, file: File | null) => {
+    if (file) {
+      validateAndSetStageImage(index, file);
+    } else {
+      const newStages = [...stages];
+      newStages[index] = {
+        ...newStages[index],
+        imageFile: null,
+      };
+      setStages(newStages);
+    }
+  };
+
+  const validateAndSetStageImage = (index: number, file: File) => {
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error("L'image ne doit pas dépasser 5MB");
+      return;
+    }
+    const allowedTypes = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
+    if (!allowedTypes.includes(file.type)) {
+      toast.error("Format non supporté. Utilisez JPG, PNG ou WEBP");
+      return;
+    }
+    const newStages = [...stages];
+    newStages[index] = {
+      ...newStages[index],
+      imageFile: file,
+    };
+    setStages(newStages);
+  };
+
+  const handleStageDragOver = (e: React.DragEvent, index: number) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setDraggingStageIndex(index);
+  };
+
+  const handleStageDragLeave = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setDraggingStageIndex(null);
+  };
+
+  const handleStageDrop = (e: React.DragEvent, index: number) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setDraggingStageIndex(null);
+
+    const file = e.dataTransfer.files?.[0];
+    if (file) {
+      validateAndSetStageImage(index, file);
+    }
+  };
 
   const handleAddStage = () => {
     setStages([
@@ -49,6 +168,7 @@ export default function CreateProject() {
         targetAmount: 0,
         stageOrder: stages.length + 1,
         image: "",
+        imageFile: null,
       },
     ]);
   };
@@ -65,7 +185,7 @@ export default function CreateProject() {
 
   const handleStageChange = (
     index: number,
-    field: keyof CreateProjectStagePayload,
+    field: keyof Omit<StageWithFile, "imageFile">,
     value: string | number,
   ) => {
     const newStages = [...stages];
@@ -76,24 +196,78 @@ export default function CreateProject() {
     setStages(newStages);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const projectData = {
-      ...formData,
-      stages,
-    };
+    // Validation
+    if (!projectImageFile) {
+      toast.error("Veuillez sélectionner une image pour le projet");
+      return;
+    }
 
-    createProject(projectData, {
-      onSuccess: () => {
-        navigate("/project-owner");
-      },
-    });
+    for (let i = 0; i < stages.length; i++) {
+      if (!stages[i].imageFile) {
+        toast.error(`Veuillez sélectionner une image pour l'étape ${i + 1}`);
+        return;
+      }
+    }
+
+    setIsUploading(true);
+
+    try {
+      // Step 1: Upload project image
+      const projectImageResponse =
+        await uploadProjectImageApi(projectImageFile);
+      const projectImagePath = projectImageResponse.data.path;
+
+      // Step 2: Upload all stage images
+      const stageImagesPromises = stages.map((stage) =>
+        stage.imageFile
+          ? uploadProjectImageApi(stage.imageFile)
+          : Promise.resolve(null),
+      );
+      const stageImagesResponses = await Promise.all(stageImagesPromises);
+
+      // Step 3: Prepare project data with uploaded image paths
+      const stagesData: CreateProjectStagePayload[] = stages.map(
+        (stage, index) => ({
+          title: stage.title,
+          description: stage.description,
+          targetAmount: stage.targetAmount,
+          stageOrder: stage.stageOrder,
+          image: stageImagesResponses[index]?.data.path || "",
+        }),
+      );
+
+      const projectData = {
+        title: formData.title,
+        description: formData.description,
+        image: projectImagePath,
+        statut: formData.statut,
+        stages: stagesData,
+      };
+
+      // Step 4: Create project
+      createProject(projectData, {
+        onSuccess: () => {
+          setIsUploading(false);
+          navigate("/project-owner");
+        },
+        onError: () => {
+          setIsUploading(false);
+        },
+      });
+    } catch (error: any) {
+      setIsUploading(false);
+      toast.error(
+        error.response?.data?.message || "Erreur lors de l'upload des images",
+      );
+    }
   };
 
   return (
-    <div className="h-full bg-gradient-to-br from-cream via-sage/10 to-olive/10">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+    <div className=" bg-linear-to-br from-cream via-sage/10 to-olive/10">
+      <ScrollArea className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
         {/* Header */}
         <div className="flex flex-col gap-4">
           <Button
@@ -162,18 +336,97 @@ export default function CreateProject() {
 
               <div className="space-y-2">
                 <Label htmlFor="image" className="text-forest font-semibold">
-                  URL de l'image *
+                  Image du projet *
                 </Label>
-                <Input
-                  id="image"
-                  value={formData.image}
-                  onChange={(e) =>
-                    setFormData({ ...formData, image: e.target.value })
-                  }
-                  placeholder="https://example.com/image.jpg"
-                  className="border-sage/30 focus:border-forest"
-                  required
-                />
+                <div
+                  className={`relative border-2 border-dashed rounded-lg p-6 transition-colors ${
+                    isDraggingProject
+                      ? "border-forest bg-olive/10"
+                      : "border-sage/30 hover:border-sage/50"
+                  }`}
+                  onDragOver={handleProjectDragOver}
+                  onDragLeave={handleProjectDragLeave}
+                  onDrop={handleProjectDrop}
+                >
+                  <input
+                    ref={projectImageInputRef}
+                    id="image"
+                    type="file"
+                    accept="image/*"
+                    onChange={handleProjectImageChange}
+                    className="hidden"
+                  />
+
+                  {projectImageFile ? (
+                    <div className="space-y-3">
+                      <div className="flex items-center gap-3 p-3 bg-sage/10 rounded-md">
+                        <ImageIcon className="h-8 w-8 text-olive shrink-0" />
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-medium text-forest truncate">
+                            {projectImageFile.name}
+                          </p>
+                          <p className="text-xs text-sage">
+                            {(projectImageFile.size / 1024).toFixed(1)} KB
+                          </p>
+                        </div>
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => {
+                            setProjectImageFile(null);
+                            if (projectImageInputRef.current) {
+                              projectImageInputRef.current.value = "";
+                            }
+                          }}
+                          className="h-8 w-8 p-0 shrink-0"
+                        >
+                          <X className="h-4 w-4" />
+                        </Button>
+                      </div>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        onClick={() => projectImageInputRef.current?.click()}
+                        className="w-full border-sage/30 hover:bg-olive/10"
+                        size="sm"
+                      >
+                        <Upload className="h-4 w-4 mr-2" />
+                        Changer l'image
+                      </Button>
+                    </div>
+                  ) : (
+                    <div className="text-center space-y-3">
+                      <div className="flex justify-center">
+                        <div className="p-4 bg-sage/10 rounded-full">
+                          <Upload className="h-8 w-8 text-olive" />
+                        </div>
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium text-forest">
+                          Glissez-déposez une image ici
+                        </p>
+                        <p className="text-xs text-sage mt-1">
+                          ou cliquez pour parcourir
+                        </p>
+                      </div>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        onClick={() => projectImageInputRef.current?.click()}
+                        className="border-sage/30 hover:bg-olive/10"
+                        size="sm"
+                      >
+                        <Upload className="h-4 w-4 mr-2" />
+                        Sélectionner une image
+                      </Button>
+                    </div>
+                  )}
+
+                  <p className="text-xs text-sage text-center mt-3">
+                    Formats acceptés: JPG, PNG, WEBP (max 5MB)
+                  </p>
+                </div>
               </div>
 
               <div className="space-y-2">
@@ -318,18 +571,104 @@ export default function CreateProject() {
                         htmlFor={`stage-image-${index}`}
                         className="text-forest font-semibold"
                       >
-                        URL de l'image *
+                        Image de l'étape *
                       </Label>
-                      <Input
-                        id={`stage-image-${index}`}
-                        value={stage.image}
-                        onChange={(e) =>
-                          handleStageChange(index, "image", e.target.value)
-                        }
-                        placeholder="https://example.com/stage-image.jpg"
-                        className="border-sage/30 focus:border-forest"
-                        required
-                      />
+                      <div
+                        className={`relative border-2 border-dashed rounded-lg p-4 transition-colors ${
+                          draggingStageIndex === index
+                            ? "border-forest bg-olive/10"
+                            : "border-sage/30 hover:border-sage/50"
+                        }`}
+                        onDragOver={(e) => handleStageDragOver(e, index)}
+                        onDragLeave={handleStageDragLeave}
+                        onDrop={(e) => handleStageDrop(e, index)}
+                      >
+                        <input
+                          id={`stage-image-${index}`}
+                          type="file"
+                          accept="image/*"
+                          onChange={(e) => {
+                            const file = e.target.files?.[0];
+                            if (file) {
+                              handleStageImageChange(index, file);
+                            }
+                          }}
+                          className="hidden"
+                        />
+
+                        {stage.imageFile ? (
+                          <div className="space-y-2">
+                            <div className="flex items-center gap-2 p-2 bg-sage/10 rounded-md">
+                              <ImageIcon className="h-6 w-6 text-olive shrink-0" />
+                              <div className="flex-1 min-w-0">
+                                <p className="text-xs font-medium text-forest truncate">
+                                  {stage.imageFile.name}
+                                </p>
+                                <p className="text-xs text-sage">
+                                  {(stage.imageFile.size / 1024).toFixed(1)} KB
+                                </p>
+                              </div>
+                              <Button
+                                type="button"
+                                variant="ghost"
+                                size="sm"
+                                onClick={() =>
+                                  handleStageImageChange(index, null)
+                                }
+                                className="h-6 w-6 p-0 shrink-0"
+                              >
+                                <X className="h-3 w-3" />
+                              </Button>
+                            </div>
+                            <Button
+                              type="button"
+                              variant="outline"
+                              onClick={() =>
+                                document
+                                  .getElementById(`stage-image-${index}`)
+                                  ?.click()
+                              }
+                              className="w-full border-sage/30 hover:bg-olive/10"
+                              size="sm"
+                            >
+                              <Upload className="h-3 w-3 mr-2" />
+                              Changer
+                            </Button>
+                          </div>
+                        ) : (
+                          <div className="text-center space-y-2">
+                            <div className="flex justify-center">
+                              <Upload className="h-6 w-6 text-olive" />
+                            </div>
+                            <div>
+                              <p className="text-xs font-medium text-forest">
+                                Glissez-déposez ici
+                              </p>
+                              <p className="text-xs text-sage">
+                                ou cliquez pour parcourir
+                              </p>
+                            </div>
+                            <Button
+                              type="button"
+                              variant="outline"
+                              onClick={() =>
+                                document
+                                  .getElementById(`stage-image-${index}`)
+                                  ?.click()
+                              }
+                              className="w-full border-sage/30 hover:bg-olive/10"
+                              size="sm"
+                            >
+                              <Upload className="h-3 w-3 mr-2" />
+                              Sélectionner
+                            </Button>
+                          </div>
+                        )}
+
+                        <p className="text-xs text-sage text-center mt-2">
+                          JPG, PNG, WEBP (max 5MB)
+                        </p>
+                      </div>
                     </div>
                   </CardContent>
                 </Card>
@@ -350,12 +689,12 @@ export default function CreateProject() {
             <Button
               type="submit"
               className="bg-forest text-cream hover:bg-forest/90"
-              disabled={isCreatingProject}
+              disabled={isCreatingProject || isUploading}
             >
-              {isCreatingProject ? (
+              {isCreatingProject || isUploading ? (
                 <>
                   <div className="h-4 w-4 mr-2 animate-spin rounded-full border-2 border-cream/20 border-t-cream"></div>
-                  Création en cours...
+                  {isUploading ? "Upload en cours..." : "Création en cours..."}
                 </>
               ) : (
                 <>
@@ -366,7 +705,7 @@ export default function CreateProject() {
             </Button>
           </div>
         </form>
-      </div>
+      </ScrollArea>
     </div>
   );
 }

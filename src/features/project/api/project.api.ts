@@ -6,6 +6,25 @@ import type {
   Project,
 } from "../types/project.types";
 
+/**
+ * Upload a project image and return the path
+ */
+export const uploadProjectImageApi = async (file: File) => {
+  const formData = new FormData();
+  formData.append("file", file);
+
+  return api.post<{
+    filename: string;
+    path: string;
+    originalName: string;
+    size: number;
+  }>(PROJECT_ENDPOINTS.UPLOAD_IMAGE, formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+};
+
 export const createProjectApi = (projectData: CreateProjectPayload) => {
   return api.post<Project>(PROJECT_ENDPOINTS.CREATE_PROJECT, projectData);
 };

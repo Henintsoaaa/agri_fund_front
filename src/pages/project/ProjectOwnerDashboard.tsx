@@ -29,6 +29,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { getImageUrl } from "@/lib/utils/image";
 
 export default function ProjectOwnerDashboard() {
   const { myProjects, isLoadingMyProjects, refetchMyProjects } = useProject();
@@ -252,7 +253,7 @@ export default function ProjectOwnerDashboard() {
                         <div className="relative h-48 overflow-hidden bg-linear-to-br from-olive/20 to-sage/20">
                           {project.image ? (
                             <img
-                              src={project.image}
+                              src={getImageUrl(project.image)}
                               alt={project.title}
                               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                             />

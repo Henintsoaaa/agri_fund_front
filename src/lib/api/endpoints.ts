@@ -30,6 +30,7 @@ export const ADMIN_USER_ENDPOINTS = {
 
 export const PROJECT_ENDPOINTS = {
   CREATE_PROJECT: "project/create",
+  UPLOAD_IMAGE: "upload/project-image",
   GET_MY_PROJECTS: "project/my-projects",
   GET_PROJECT_BY_ID: (projectId: string) => `project/${projectId}`,
   GET_PUBLIC_PROJECT_BY_ID: (projectId: string) =>

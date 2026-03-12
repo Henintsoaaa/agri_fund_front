@@ -17,7 +17,7 @@ export default function ProjectStageDetailPage() {
 
   if (isLoadingProject || isLoadingStages) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-cream via-sage/5 to-olive/10 flex items-center justify-center">
+      <div className="min-h-screen bg-linear-to-br from-cream via-sage/5 to-olive/10 flex items-center justify-center">
         <div className="text-center">
           <div className="inline-block h-12 w-12 animate-spin rounded-full border-4 border-sage/20 border-t-forest mb-4"></div>
           <p className="text-sage font-medium">Chargement...</p>
@@ -28,7 +28,7 @@ export default function ProjectStageDetailPage() {
 
   if (!project) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-cream via-sage/5 to-olive/10 flex items-center justify-center">
+      <div className="min-h-screen bg-linear-to-br from-cream via-sage/5 to-olive/10 flex items-center justify-center">
         <Card className="max-w-md">
           <CardContent className="p-8 text-center">
             <h2 className="text-2xl font-bold text-forest mb-4">
@@ -45,7 +45,7 @@ export default function ProjectStageDetailPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-cream via-sage/5 to-olive/10">
+    <div className="min-h-screen bg-linear-to-br from-cream via-sage/5 to-olive/10">
       <div className="container mx-auto px-4 py-8 space-y-6">
         {/* Header */}
         <div className="flex items-center justify-between">
@@ -60,7 +60,7 @@ export default function ProjectStageDetailPage() {
         </div>
 
         {/* Project Info */}
-        <Card className="bg-gradient-to-br from-forest via-forest/95 to-olive border-none shadow-xl">
+        <Card className="bg-linear-to-br from-forest via-forest/95 to-olive border-none shadow-xl">
           <CardContent className="p-8 text-cream">
             <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
               <div>

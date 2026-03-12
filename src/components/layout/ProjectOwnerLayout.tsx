@@ -1,12 +1,6 @@
 import { Outlet, useNavigate, useLocation } from "react-router-dom";
 import Navbar from "./Navbar";
-import {
-  LayoutDashboard,
-  FolderPlus,
-  Folders,
-  ImagePlus,
-  Bell,
-} from "lucide-react";
+import { LayoutDashboard, FolderPlus, Folders, Bell } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";

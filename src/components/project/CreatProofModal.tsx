@@ -108,7 +108,7 @@ export default function CreatProofModal({
             Ajouter des preuves
           </Button>
         </DialogTrigger>
-        <DialogContent className="sm:max-w-[525px]">
+        <DialogContent className="sm:max-w-131.25">
           <DialogHeader>
             <DialogTitle className="text-forest">
               Ajouter une preuve
@@ -141,7 +141,7 @@ export default function CreatProofModal({
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 disabled={isUploadingProof}
-                className="min-h-[100px]"
+                className="min-h-25"
               />
             </div>
 
