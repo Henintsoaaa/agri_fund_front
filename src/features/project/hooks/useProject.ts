@@ -271,7 +271,7 @@ export const useProject = () => {
     useProjectById: useGetProjectById, // Alias
     createProject: createProjectMutation.mutate,
     isCreatingProject: createProjectMutation.isPending,
-    updateProject: updateProjectMutation.mutate,
+    updateProject: updateProjectMutation.mutateAsync,
     isUpdatingProject: updateProjectMutation.isPending,
     deleteProject: deleteProjectMutation.mutate,
     isDeletingProject: deleteProjectMutation.isPending,

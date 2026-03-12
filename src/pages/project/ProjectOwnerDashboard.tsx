@@ -38,16 +38,26 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { EditProjectDialog } from "../../components/project/EditProjectDialog";
+import type { Project } from "@/features/project/types/project.types";
 
 export default function ProjectOwnerDashboard() {
-  const { myProjects, isLoadingMyProjects, refetchMyProjects, deleteProject } =
-    useProject();
+  const {
+    myProjects,
+    isLoadingMyProjects,
+    refetchMyProjects,
+    deleteProject,
+    updateProject,
+    isUpdatingProject,
+  } = useProject();
   const navigate = useNavigate();
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [projectToDelete, setProjectToDelete] = useState<{
     id: string;
     title: string;
   } | null>(null);
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const [projectToEdit, setProjectToEdit] = useState<Project | null>(null);
 
   useEffect(() => {
     refetchMyProjects();
@@ -121,6 +131,23 @@ export default function ProjectOwnerDashboard() {
       deleteProject(projectToDelete.id);
       setDeleteDialogOpen(false);
       setProjectToDelete(null);
+    }
+  };
+
+  const handleEditProject = (project: Project) => {
+    setProjectToEdit(project);
+    setEditDialogOpen(true);
+  };
+
+  const handleSaveEdit = async (data: {
+    title: string;
+    description: string;
+    image?: string;
+  }) => {
+    if (projectToEdit) {
+      await updateProject({ projectId: projectToEdit.id, data });
+      setEditDialogOpen(false);
+      setProjectToEdit(null);
     }
   };
 
@@ -370,6 +397,7 @@ export default function ProjectOwnerDashboard() {
                                   size="sm"
                                   variant="outline"
                                   className="flex-1 border-olive/50 hover:bg-olive/10"
+                                  onClick={() => handleEditProject(project)}
                                 >
                                   <Edit className="h-4 w-4" />
                                 </Button>
@@ -441,6 +469,17 @@ export default function ProjectOwnerDashboard() {
             </DialogFooter>
           </DialogContent>
         </Dialog>
+
+        {/* Edit Project Dialog */}
+        {projectToEdit && (
+          <EditProjectDialog
+            open={editDialogOpen}
+            onOpenChange={setEditDialogOpen}
+            project={projectToEdit}
+            onSave={handleSaveEdit}
+            isLoading={isUpdatingProject}
+          />
+        )}
       </div>
     </div>
   );
