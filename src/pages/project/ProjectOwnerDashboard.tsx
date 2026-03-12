@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useProject } from "@/features/project/hooks/useProject";
 import { useNavigate } from "react-router-dom";
 import {
@@ -30,10 +30,24 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { getImageUrl } from "@/lib/utils/image";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 export default function ProjectOwnerDashboard() {
-  const { myProjects, isLoadingMyProjects, refetchMyProjects } = useProject();
+  const { myProjects, isLoadingMyProjects, refetchMyProjects, deleteProject } =
+    useProject();
   const navigate = useNavigate();
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [projectToDelete, setProjectToDelete] = useState<{
+    id: string;
+    title: string;
+  } | null>(null);
 
   useEffect(() => {
     refetchMyProjects();
@@ -96,6 +110,19 @@ export default function ProjectOwnerDashboard() {
     stats.totalFunding > 0
       ? Math.round((stats.totalCollected / stats.totalFunding) * 100)
       : 0;
+
+  const handleDeleteProject = (projectId: string, projectTitle: string) => {
+    setProjectToDelete({ id: projectId, title: projectTitle });
+    setDeleteDialogOpen(true);
+  };
+
+  const confirmDeleteProject = () => {
+    if (projectToDelete) {
+      deleteProject(projectToDelete.id);
+      setDeleteDialogOpen(false);
+      setProjectToDelete(null);
+    }
+  };
 
   return (
     <div className="min-h-screen">
@@ -358,6 +385,12 @@ export default function ProjectOwnerDashboard() {
                                   size="sm"
                                   variant="outline"
                                   className="flex-1 border-destructive/50 hover:bg-destructive/10"
+                                  onClick={() =>
+                                    handleDeleteProject(
+                                      project.id,
+                                      project.title,
+                                    )
+                                  }
                                 >
                                   <Trash2 className="h-4 w-4 text-destructive" />
                                 </Button>
@@ -376,6 +409,38 @@ export default function ProjectOwnerDashboard() {
             )}
           </CardContent>
         </Card>
+
+        {/* Delete Confirmation Dialog */}
+        <Dialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+          <DialogContent className="sm:max-w-md">
+            <DialogHeader>
+              <DialogTitle className="text-forest">
+                Confirmer la suppression
+              </DialogTitle>
+              <DialogDescription className="text-sage">
+                Êtes-vous sûr de vouloir supprimer le projet "
+                {projectToDelete?.title}" ? Cette action est irréversible.
+              </DialogDescription>
+            </DialogHeader>
+            <DialogFooter className="gap-2">
+              <Button
+                variant="outline"
+                onClick={() => setDeleteDialogOpen(false)}
+                className="border-sage/50 text-sage hover:bg-sage/10"
+              >
+                Annuler
+              </Button>
+              <Button
+                variant="destructive"
+                onClick={confirmDeleteProject}
+                className="bg-destructive hover:bg-destructive/90"
+              >
+                <Trash2 className="h-4 w-4 mr-2" />
+                Supprimer
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       </div>
     </div>
   );
