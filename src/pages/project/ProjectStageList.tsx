@@ -48,7 +48,7 @@ export default function ProjectStageList() {
 
   const totalCollected = stages.reduce((sum, s) => sum + s.currentAmount, 0);
   const totalTarget = stages.reduce((sum, s) => sum + s.targetAmount, 0);
-  const completedStages = stages.filter((s) => s.statut === "CLOSED").length;
+  const completedStages = stages.filter((s) => s.statut === "FUNDED").length;
 
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [stageToDelete, setStageToDelete] = useState<{

@@ -17,6 +17,7 @@ import {
   Edit,
   Trash2,
   FileText,
+  CheckCircle2,
 } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { useState } from "react";
@@ -77,7 +78,7 @@ export default function ProjectStageCard({
       case "FUNDED":
         return "bg-forest text-cream";
       case "CLOSED":
-        return "bg-sage text-cream";
+        return "bg-gray-400 text-cream";
       default:
         return "bg-sage text-cream";
     }
@@ -90,7 +91,7 @@ export default function ProjectStageCard({
       case "FUNDED":
         return "Financé";
       case "CLOSED":
-        return "Fermé";
+        return "Verrouillé";
       default:
         return statut;
     }
@@ -105,13 +106,18 @@ export default function ProjectStageCard({
     });
   };
 
-  // if stage.statut === "closed" we will freeze it for investors, only owner and admin can see the details and edit it
-  const isFrozen = stage.statut === "CLOSED" && role === "investor";
+  // CLOSED stages are locked (waiting for previous stage to be funded)
+  const isClosed = stage.statut === "CLOSED";
   const isFunded = stage.statut === "FUNDED";
+  const isOpen = stage.statut === "OPEN";
 
   return (
     <Card
-      className={`bg-cream border-sage/30 hover:shadow-lg transition-all duration-300 overflow-hidden group h-full ${isFrozen ? "opacity-75" : ""}${isFunded ? " border-forest" : ""}`}
+      className={`bg-cream transition-all duration-300 overflow-hidden group h-full ${
+        isClosed && role === "investor"
+          ? "opacity-60 border-gray-300 cursor-not-allowed"
+          : "border-sage/30 hover:shadow-lg"
+      }${isFunded ? " border-forest border-2" : ""}${isOpen ? " border-olive" : ""}`}
     >
       {/* Image */}
       <div className="relative h-44 overflow-hidden bg-linear-to-br from-olive/20 to-sage/20">
@@ -191,13 +197,13 @@ export default function ProjectStageCard({
           </div>
         </div>
 
-        {/* Todo  */}
+        {/* Add Proof Button - Owner only */}
         {role === "owner" && (
           <CreatProofModal projectId={projectId} stageId={stage.id} />
         )}
 
-        {/* Proofs Section - only for FUNDED or CLOSED stages */}
-        {(stage.statut === "FUNDED" || stage.statut === "CLOSED") && (
+        {/* Proofs Section - Always visible (investors can track progress) */}
+        {stageProofs && stageProofs.length > 0 && (
           <>
             <Separator className="bg-sage/30" />
             <div className="space-y-2">
@@ -228,16 +234,37 @@ export default function ProjectStageCard({
 
         {/* Actions */}
         <div className="flex gap-2 pt-2">
-          {stage.statut === "OPEN" && role === "investor" ? (
-            <Button
-              size="sm"
-              onClick={() => setIsInvestModalOpen(true)}
-              className="flex-1 bg-forest hover:bg-forest/90 text-cream"
-            >
-              <DollarSign className="h-4 w-4 mr-2" />
-              Investir
-            </Button>
+          {role === "investor" ? (
+            // Investor view
+            stage.statut === "OPEN" ? (
+              <Button
+                size="sm"
+                onClick={() => setIsInvestModalOpen(true)}
+                className="flex-1 bg-forest hover:bg-forest/90 text-cream"
+              >
+                <DollarSign className="h-4 w-4 mr-2" />
+                Investir
+              </Button>
+            ) : stage.statut === "CLOSED" ? (
+              <Button
+                size="sm"
+                disabled
+                className="flex-1 bg-gray-300 text-gray-500 cursor-not-allowed"
+              >
+                Verrouillé
+              </Button>
+            ) : (
+              <Button
+                size="sm"
+                disabled
+                className="flex-1 bg-forest/70 text-cream cursor-not-allowed"
+              >
+                <CheckCircle2 className="h-4 w-4 mr-2" />
+                Financé
+              </Button>
+            )
           ) : (
+            // Owner/Admin view
             <>
               {onEdit && (
                 <Button
