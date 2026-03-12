@@ -100,6 +100,7 @@ export default function ProjectStageDetailPage() {
                 {stages.map((stage: any) => (
                   <ProjectStageCard
                     key={stage.id}
+                    projectId={project.id}
                     stage={stage}
                     onViewDetails={(stageId: string) =>
                       navigate(`/stage/${stageId}`)

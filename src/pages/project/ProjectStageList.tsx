@@ -164,6 +164,7 @@ export default function ProjectStageList() {
                     {stages.map((stage) => (
                       <div key={stage.id}>
                         <ProjectStageCard
+                          projectId={projectId || ""}
                           stage={stage}
                           role={
                             user?.role === "INVESTOR" ? "investor" : "owner"

@@ -88,3 +88,14 @@ export const PAYMENT_ENDPOINTS = {
   GET_PROJECT_INVESTORS: (projectId: string) =>
     `project/investors/${projectId}`,
 };
+
+export const PROOF_ENDPOINTS = {
+  UPLOAD_PROOF: "upload/proof",
+  CREATE_PROOF: "proofs/upload",
+  GET_MY_PROOFS: "proofs/my-proofs",
+  GET_STAGE_PROOFS: (stageId: string) => `proofs/stage/${stageId}`,
+  GET_PROJECT_PROOFS: (projectId: string) => `proofs/project/${projectId}`,
+  GET_PENDING_PROOFS: "proofs/pending",
+  APPROVE_PROOF: (proofId: string) => `proofs/${proofId}/approve`,
+  REJECT_PROOF: (proofId: string) => `proofs/${proofId}/reject`,
+};

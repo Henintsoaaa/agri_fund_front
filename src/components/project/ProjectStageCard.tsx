@@ -24,8 +24,10 @@ import { useState } from "react";
 import InvestmentModal from "../invest/InvestmentModal";
 import StageProofsGallery from "../proofs/StageProofsGallery";
 import { useProofs } from "@/features/proofs/hooks/useProofs";
+import CreatProofModal from "./CreatProofModal";
 
 interface ProjectStageCardProps {
+  projectId: string;
   stage: {
     id: string;
     title: string;
@@ -45,6 +47,7 @@ interface ProjectStageCardProps {
 }
 
 export default function ProjectStageCard({
+  projectId,
   stage,
   role = "investor",
   onInvest: _onInvest,
@@ -187,6 +190,11 @@ export default function ProjectStageCard({
           </div>
         </div>
 
+        {/* Todo  */}
+        {role === "owner" && (
+          <CreatProofModal projectId={projectId} stageId={stage.id} />
+        )}
+
         {/* Proofs Section - only for FUNDED or CLOSED stages */}
         {(stage.statut === "FUNDED" || stage.statut === "CLOSED") && (
           <>
@@ -219,7 +227,7 @@ export default function ProjectStageCard({
 
         {/* Actions */}
         <div className="flex gap-2 pt-2">
-          {stage.statut === "OPEN" ? (
+          {stage.statut === "OPEN" && role === "investor" ? (
             <Button
               size="sm"
               onClick={() => setIsInvestModalOpen(true)}

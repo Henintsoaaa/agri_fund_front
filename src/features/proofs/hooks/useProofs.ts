@@ -77,6 +77,8 @@ export const useProofs = () => {
     onSuccess: () => {
       toast.success("Preuve uploadée avec succès");
       queryClient.invalidateQueries({ queryKey: ["my-proofs"] });
+      queryClient.invalidateQueries({ queryKey: ["stage-proofs"] });
+      queryClient.invalidateQueries({ queryKey: ["project-proofs"] });
     },
     onError: (error: any) => {
       toast.error(error.response?.data?.message || "Erreur lors de l'upload");
