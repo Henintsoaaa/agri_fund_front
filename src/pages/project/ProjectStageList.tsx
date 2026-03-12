@@ -206,28 +206,47 @@ export default function ProjectStageList() {
               <CardContent>
                 <ScrollArea className="h-150">
                   <div className="space-y-4 pr-4 grid md:grid-cols-3 gap-4 sm:grid-cols-1 h-full">
-                    {stages.map((stage) => (
-                      <div key={stage.id}>
-                        <ProjectStageCard
-                          projectId={projectId || ""}
-                          stage={stage}
-                          role={
-                            user?.role === "INVESTOR" ? "investor" : "owner"
+                    {stages.map((stage) => {
+                      const isLocked =
+                        user?.role !== "PROJECT_OWNER" &&
+                        stage.statut === "CLOSED";
+                      return (
+                        <div
+                          key={stage.id}
+                          className={
+                            isLocked
+                              ? "relative pointer-events-none select-none opacity-60 grayscale-80 cursor-not-allowed"
+                              : ""
                           }
-                          onEdit={
-                            user?.role !== "INVESTOR"
-                              ? () => handleEditStage(stage as ProjectStage)
-                              : undefined
-                          }
-                          onDelete={
-                            user?.role !== "INVESTOR"
-                              ? () => handleDeleteStage(stage as ProjectStage)
-                              : undefined
-                          }
-                          onViewDetails={() => handleViewDetails(stage.id)}
-                        />
-                      </div>
-                    ))}
+                        >
+                          <ProjectStageCard
+                            projectId={projectId || ""}
+                            stage={stage}
+                            role={
+                              user?.role === "INVESTOR"
+                                ? "investor"
+                                : user?.role === "ADMIN"
+                                  ? "admin"
+                                  : "owner"
+                            }
+                            onEdit={
+                              user?.role !== "INVESTOR"
+                                ? () => handleEditStage(stage as ProjectStage)
+                                : undefined
+                            }
+                            onDelete={
+                              user?.role !== "INVESTOR"
+                                ? () => handleDeleteStage(stage as ProjectStage)
+                                : undefined
+                            }
+                            onViewDetails={() => handleViewDetails(stage.id)}
+                          />
+                          {isLocked && (
+                            <div className="absolute inset-0 bg-gray-900/10 backdrop-blur-[0.5px]" />
+                          )}
+                        </div>
+                      );
+                    })}
                   </div>
                 </ScrollArea>
               </CardContent>
@@ -243,10 +262,21 @@ export default function ProjectStageList() {
               <p className="text-sage mb-4">
                 Ce projet n'a pas encore d'étapes de financement.
               </p>
-              <Button className="bg-forest text-cream hover:bg-forest/90">
-                <Plus className="h-4 w-4 mr-2" />
-                Ajouter des étapes
-              </Button>
+              {user?.role === "PROJECT_OWNER" && (
+                <Button
+                  onClick={() => navigate("/project-owner/create-project")}
+                  className="bg-forest text-cream hover:bg-forest/90"
+                >
+                  <Plus className="h-4 w-4 mr-2" />
+                  Créer un nouveau projet avec étapes
+                </Button>
+              )}
+              {user?.role === "INVESTOR" && (
+                <p className="text-sm text-sage italic">
+                  Le porteur de projet n'a pas encore défini d'étapes de
+                  financement.
+                </p>
+              )}
             </CardContent>
           </Card>
         )}

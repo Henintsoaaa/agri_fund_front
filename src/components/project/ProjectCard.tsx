@@ -29,6 +29,7 @@ import {
   Clock,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { getImageUrl } from "@/lib/utils/image";
 
 interface ProjectCardProps {
   project: {
@@ -59,6 +60,14 @@ export default function ProjectCard({
   onSuspend,
 }: ProjectCardProps) {
   const navigate = useNavigate();
+
+  // Get correct route based on role
+  const getProjectStageRoute = (projectId: string) => {
+    if (role === "admin") {
+      return `/admin/projects/${projectId}`;
+    }
+    return `/project-stage/${projectId}`;
+  };
 
   const getStatutColor = (statut: string) => {
     switch (statut) {
@@ -107,7 +116,11 @@ export default function ProjectCard({
       {/* Image */}
       <div className="relative h-48 overflow-hidden bg-linear-to-br from-olive/20 to-sage/20">
         <img
-          src={project.image || "/placeholder-project.jpg"}
+          src={
+            project.image
+              ? getImageUrl(project.image)
+              : "/placeholder-project.jpg"
+          }
           alt={project.title}
           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
         />
@@ -143,7 +156,7 @@ export default function ProjectCard({
                 onClick={(e) => {
                   e.preventDefault();
                   e.stopPropagation();
-                  navigate(`/project-stage/${project.id}`);
+                  navigate(getProjectStageRoute(project.id));
                 }}
                 className="cursor-pointer hover:bg-olive/10"
               >
@@ -280,7 +293,7 @@ export default function ProjectCard({
           onClick={(e) => {
             e.preventDefault();
             e.stopPropagation();
-            navigate(`/project-stage/${project.id}`);
+            navigate(getProjectStageRoute(project.id));
           }}
           className="w-full bg-forest hover:bg-forest/90 text-cream group-hover:bg-olive transition-colors"
         >

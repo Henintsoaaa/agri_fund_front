@@ -263,7 +263,7 @@ export default function ProjectStageCard({
                 Financé
               </Button>
             )
-          ) : (
+          ) : role === "owner" ? (
             // Owner/Admin view
             <>
               {onEdit && (
@@ -289,7 +289,7 @@ export default function ProjectStageCard({
                 </Button>
               )}
             </>
-          )}
+          ) : null}
         </div>
       </CardContent>
 
