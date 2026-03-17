@@ -2,10 +2,12 @@ import { api } from "@/lib/api/axios";
 import type { Proof, UploadProofPayload } from "../types/proof.types";
 
 const PROOFS_ENDPOINTS = {
-  UPLOAD: "upload/proof",
-  CREATE: "proofs/upload",
+  UPLOAD: "proofs/upload",
   MY_PROOFS: "proofs/my-proofs",
   STAGE_PROOFS: (stageId: string) => `proofs/stage/${stageId}`,
+  MY_STAGE_PROOFS: (stageId: string) => `proofs/my-stage-proofs/${stageId}`,
+  ADMIN_STAGE_PROOFS: (stageId: string) =>
+    `proofs/admin-stage-proofs/${stageId}`,
   PROJECT_PROOFS: (projectId: string) => `proofs/project/${projectId}`,
   PENDING_PROOFS: "proofs/pending",
   APPROVE: (id: string) => `proofs/${id}/approve`,
@@ -14,59 +16,26 @@ const PROOFS_ENDPOINTS = {
 };
 
 /**
- * Step 1: Upload file to get the path
+ * Upload file and create proof record in single request
  */
-const uploadFileApi = async (file: File) => {
+export const uploadProofApi = async (payload: UploadProofPayload) => {
   const formData = new FormData();
-  formData.append("file", file);
+  formData.append("file", payload.file);
+  formData.append("projectId", payload.projectId);
+  formData.append("title", payload.title);
 
-  return api.post<{
-    filename: string;
-    path: string;
-    originalName: string;
-    size: number;
-  }>(PROOFS_ENDPOINTS.UPLOAD, formData, {
+  if (payload.projectStageId) {
+    formData.append("projectStageId", payload.projectStageId);
+  }
+
+  if (payload.description) {
+    formData.append("description", payload.description);
+  }
+
+  return api.post<Proof>(PROOFS_ENDPOINTS.UPLOAD, formData, {
     headers: {
       "Content-Type": "multipart/form-data",
     },
-  });
-};
-
-/**
- * Step 2: Create proof record with file path
- */
-const createProofApi = (data: {
-  projectId: string;
-  projectStageId?: string;
-  title: string;
-  description?: string;
-  fileUrl: string;
-  fileType: string;
-}) => {
-  return api.post<Proof>(PROOFS_ENDPOINTS.CREATE, data);
-};
-
-/**
- * Combined: Upload file and create proof record
- */
-export const uploadProofApi = async (payload: UploadProofPayload) => {
-  // Step 1: Upload the file
-  const uploadResponse = await uploadFileApi(payload.file);
-  const fileUrl = uploadResponse.data.path;
-
-  // Determine file type
-  const fileType = payload.file.type.startsWith("image/")
-    ? "image"
-    : "document";
-
-  // Step 2: Create proof record
-  return createProofApi({
-    projectId: payload.projectId,
-    projectStageId: payload.projectStageId,
-    title: payload.title,
-    description: payload.description,
-    fileUrl,
-    fileType,
   });
 };
 
@@ -76,6 +45,14 @@ export const getMyProofsApi = () => {
 
 export const getStageProofsApi = (stageId: string) => {
   return api.get<Proof[]>(PROOFS_ENDPOINTS.STAGE_PROOFS(stageId));
+};
+
+export const getMyStageProofsApi = (stageId: string) => {
+  return api.get<Proof[]>(PROOFS_ENDPOINTS.MY_STAGE_PROOFS(stageId));
+};
+
+export const getAdminStageProofsApi = (stageId: string) => {
+  return api.get<Proof[]>(PROOFS_ENDPOINTS.ADMIN_STAGE_PROOFS(stageId));
 };
 
 export const getProjectProofsApi = (projectId: string) => {

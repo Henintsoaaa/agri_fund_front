@@ -4,6 +4,8 @@ import {
   uploadProofApi,
   getMyProofsApi,
   getStageProofsApi,
+  getMyStageProofsApi,
+  getAdminStageProofsApi,
   getProjectProofsApi,
   getPendingProofsApi,
   approveProofApi,
@@ -36,6 +38,34 @@ export const useProofs = () => {
       queryFn: async () => {
         if (!stageId) return [];
         const response = await getStageProofsApi(stageId);
+        return response.data;
+      },
+      enabled: !!stageId,
+      staleTime: 1000 * 60 * 5,
+    });
+  };
+
+  // Get stage proofs (owner - includes pending)
+  const useMyStageProofs = (stageId?: string) => {
+    return useQuery({
+      queryKey: ["my-stage-proofs", stageId],
+      queryFn: async () => {
+        if (!stageId) return [];
+        const response = await getMyStageProofsApi(stageId);
+        return response.data;
+      },
+      enabled: !!stageId,
+      staleTime: 1000 * 60 * 5,
+    });
+  };
+
+  // Get stage proofs (admin - includes all)
+  const useAdminStageProofs = (stageId?: string) => {
+    return useQuery({
+      queryKey: ["admin-stage-proofs", stageId],
+      queryFn: async () => {
+        if (!stageId) return [];
+        const response = await getAdminStageProofsApi(stageId);
         return response.data;
       },
       enabled: !!stageId,
@@ -78,6 +108,8 @@ export const useProofs = () => {
       toast.success("Preuve uploadée avec succès");
       queryClient.invalidateQueries({ queryKey: ["my-proofs"] });
       queryClient.invalidateQueries({ queryKey: ["stage-proofs"] });
+      queryClient.invalidateQueries({ queryKey: ["my-stage-proofs"] });
+      queryClient.invalidateQueries({ queryKey: ["admin-stage-proofs"] });
       queryClient.invalidateQueries({ queryKey: ["project-proofs"] });
     },
     onError: (error: any) => {
@@ -92,6 +124,8 @@ export const useProofs = () => {
       toast.success("Preuve approuvée");
       queryClient.invalidateQueries({ queryKey: ["pending-proofs"] });
       queryClient.invalidateQueries({ queryKey: ["stage-proofs"] });
+      queryClient.invalidateQueries({ queryKey: ["my-stage-proofs"] });
+      queryClient.invalidateQueries({ queryKey: ["admin-stage-proofs"] });
       queryClient.invalidateQueries({ queryKey: ["project-proofs"] });
     },
     onError: (error: any) => {
@@ -107,6 +141,8 @@ export const useProofs = () => {
     onSuccess: () => {
       toast.success("Preuve rejetée");
       queryClient.invalidateQueries({ queryKey: ["pending-proofs"] });
+      queryClient.invalidateQueries({ queryKey: ["my-stage-proofs"] });
+      queryClient.invalidateQueries({ queryKey: ["admin-stage-proofs"] });
     },
     onError: (error: any) => {
       toast.error(error.response?.data?.message || "Erreur lors du rejet");
@@ -119,6 +155,8 @@ export const useProofs = () => {
     onSuccess: () => {
       toast.success("Preuve supprimée");
       queryClient.invalidateQueries({ queryKey: ["my-proofs"] });
+      queryClient.invalidateQueries({ queryKey: ["my-stage-proofs"] });
+      queryClient.invalidateQueries({ queryKey: ["admin-stage-proofs"] });
     },
     onError: (error: any) => {
       toast.error(
@@ -133,6 +171,8 @@ export const useProofs = () => {
     isLoadingMyProofs,
     refetchMyProofs,
     useStageProofs,
+    useMyStageProofs,
+    useAdminStageProofs,
     useProjectProofs,
     pendingProofs,
     isLoadingPendingProofs,

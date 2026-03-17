@@ -58,10 +58,18 @@ export default function ProjectStageCard({
   const [isInvestModalOpen, setIsInvestModalOpen] = useState(false);
   const [showProofs, setShowProofs] = useState(false);
 
-  const { useStageProofs } = useProofs();
-  const { data: stageProofs, isLoading: isLoadingProofs } = useStageProofs(
-    stage.id,
-  );
+  const { useStageProofs, useMyStageProofs, useAdminStageProofs } = useProofs();
+
+  // Select appropriate hook based on role
+  const { data: stageProofs, isLoading: isLoadingProofs } =
+    role === "owner"
+      ? useMyStageProofs(stage.id) // Owner: see all proofs (including pending)
+      : role === "admin"
+        ? useAdminStageProofs(stage.id) // Admin: see all proofs for moderation
+        : useStageProofs(stage.id); // Investor: see only approved proofs
+
+  // on va lister les preuves de chaque étape pour que les investisseurs puissent suivre l'avancement du projet et voir les preuves des étapes précédentes (même si elles ne sont pas encore financées) - ça peut les rassurer et les encourager à investir dans les étapes suivantes
+  console.log("STAGE PROOFS", stageProofs);
 
   console.log("STAGE", stage);
 
@@ -70,6 +78,8 @@ export default function ProjectStageCard({
       ? Math.round((stage.currentAmount / stage.targetAmount) * 100)
       : 0;
   console.log(role);
+
+  console.log("length proof", stageProofs?.length);
 
   const getStatutColor = (statut: string) => {
     switch (statut) {
@@ -198,7 +208,7 @@ export default function ProjectStageCard({
         </div>
 
         {/* Add Proof Button - Owner and Admin */}
-        {(role === "owner" || role === "admin") && (
+        {role === "owner" && (
           <CreatProofModal projectId={projectId} stageId={stage.id} />
         )}
 
