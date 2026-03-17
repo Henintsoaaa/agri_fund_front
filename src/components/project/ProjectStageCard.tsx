@@ -197,12 +197,12 @@ export default function ProjectStageCard({
           </div>
         </div>
 
-        {/* Add Proof Button - Owner only */}
-        {role === "owner" && (
+        {/* Add Proof Button - Owner and Admin */}
+        {(role === "owner" || role === "admin") && (
           <CreatProofModal projectId={projectId} stageId={stage.id} />
         )}
 
-        {/* Proofs Section - Always visible (investors can track progress) */}
+        {/* Proofs Section - Always visible for all roles (investors and admins can track progress) */}
         {stageProofs && stageProofs.length > 0 && (
           <>
             <Separator className="bg-sage/30" />

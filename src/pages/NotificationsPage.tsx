@@ -31,16 +31,39 @@ import {
   PartyPopper,
   User,
   X,
+  FileText,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useNavigate } from "react-router-dom";
+import { useAuthContext } from "@/features/auth/context/AuthContext";
+import ProjectApprovalModal from "@/components/admin/ProjectApprovalModal";
+import ProofApprovalModal from "@/components/admin/ProofApprovalModal";
+import { useProofs } from "@/features/proofs/hooks/useProofs";
 
 export const NotificationsPage = () => {
   const navigate = useNavigate();
+  const { user } = useAuthContext();
   const [filter, setFilter] = useState<"all" | "unread">("all");
   const { data: notifications = [], isLoading } = useNotifications();
   const markAsRead = useMarkAsRead();
   const markAllAsRead = useMarkAllAsRead();
+
+  // State for modals
+  const [projectApprovalModal, setProjectApprovalModal] = useState<{
+    open: boolean;
+    projectId: string | null;
+  }>({ open: false, projectId: null });
+
+  const [proofApprovalModal, setProofApprovalModal] = useState<{
+    open: boolean;
+    proofId: string | null;
+  }>({ open: false, proofId: null });
+
+  // Get proof details for modal
+  const { pendingProofs } = useProofs();
+  const selectedProof = pendingProofs?.find(
+    (p) => p.id === proofApprovalModal.proofId,
+  );
 
   const filteredNotifications =
     filter === "unread"
@@ -53,6 +76,25 @@ export const NotificationsPage = () => {
     // Mark as read if unread
     if (notification.status === "UNREAD") {
       markAsRead.mutate(notification.id);
+    }
+
+    // Admin actions based on notification type
+    if (user?.role === "ADMIN") {
+      if (notification.type === "PROJECT_CREATED" && notification.projectId) {
+        // Open project approval modal
+        setProjectApprovalModal({
+          open: true,
+          projectId: notification.projectId,
+        });
+        return;
+      }
+
+      if (notification.type === "PROOF_CREATED") {
+        // Extract proof ID from notification content or use a new notification field
+        // For now, navigate to proofs section
+        navigate("/admin-dashboard?section=proofs");
+        return;
+      }
     }
 
     // Navigate based on notification type
@@ -70,6 +112,7 @@ export const NotificationsPage = () => {
     if (type.includes("FUNDED")) return <PartyPopper />;
     if (type.includes("DIVIDEND")) return <DollarSign />;
     if (type.includes("PENDING")) return <Clock />;
+    if (type.includes("PROOF")) return <FileText />;
     if (type.includes("USER")) return <User />;
     if (type.includes("PROJECT")) return <Folder />;
     if (type.includes("INVESTMENT")) return <Briefcase />;
@@ -248,6 +291,28 @@ export const NotificationsPage = () => {
           </CardContent>
         </Card>
       </div>
+
+      {/* Project Approval Modal */}
+      {projectApprovalModal.projectId && (
+        <ProjectApprovalModal
+          open={projectApprovalModal.open}
+          onOpenChange={(open) =>
+            setProjectApprovalModal({ open, projectId: null })
+          }
+          projectId={projectApprovalModal.projectId}
+        />
+      )}
+
+      {/* Proof Approval Modal */}
+      {proofApprovalModal.proofId && selectedProof && (
+        <ProofApprovalModal
+          open={proofApprovalModal.open}
+          onOpenChange={(open) =>
+            setProofApprovalModal({ open, proofId: null })
+          }
+          proof={selectedProof}
+        />
+      )}
     </div>
   );
 };

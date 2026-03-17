@@ -1,13 +1,29 @@
-import { CheckCircle, XCircle, FileText, Image, Clock } from "lucide-react";
+import { useState } from "react";
+import {
+  CheckCircle,
+  XCircle,
+  FileText,
+  Image,
+  Clock,
+  Eye,
+} from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useProofs } from "@/features/proofs/hooks/useProofs";
 import type { Proof } from "@/features/proofs/types/proof.types";
+import ProofApprovalModal from "./ProofApprovalModal";
 
 export default function AdminProofsSection() {
   const { pendingProofs, isLoadingPendingProofs, approveProof, rejectProof } =
     useProofs();
+  const [selectedProof, setSelectedProof] = useState<Proof | null>(null);
+  const [modalOpen, setModalOpen] = useState(false);
+
+  const handleViewProof = (proof: Proof) => {
+    setSelectedProof(proof);
+    setModalOpen(true);
+  };
 
   const handleApprove = async (id: string) => {
     if (confirm("Êtes-vous sûr de vouloir approuver cette preuve ?")) {
@@ -142,6 +158,15 @@ export default function AdminProofsSection() {
                     <div className="flex gap-2">
                       <Button
                         size="sm"
+                        onClick={() => handleViewProof(proof)}
+                        variant="outline"
+                        className="border-olive/30 hover:bg-olive/10"
+                      >
+                        <Eye className="h-4 w-4 mr-1" />
+                        Voir les détails
+                      </Button>
+                      <Button
+                        size="sm"
                         onClick={() => handleApprove(proof.id)}
                         className="bg-green-500 hover:bg-green-600"
                       >
@@ -174,6 +199,15 @@ export default function AdminProofsSection() {
           ))}
         </div>
       </CardContent>
+
+      {/* Proof Approval Modal */}
+      {selectedProof && (
+        <ProofApprovalModal
+          open={modalOpen}
+          onOpenChange={setModalOpen}
+          proof={selectedProof}
+        />
+      )}
     </Card>
   );
 }
