@@ -41,7 +41,7 @@ export default function ProofCard({
   return (
     <Card className="hover:shadow-lg transition-shadow">
       <CardContent className="p-4">
-        <div className="flex gap-4">
+        <div className="flex flex-col gap-4">
           {/* File Preview */}
           <div className="w-20 h-20 rounded-lg overflow-hidden bg-sage/10 flex items-center justify-center shrink-0">
             {proof.fileType === "image" ? (
@@ -60,17 +60,11 @@ export default function ProofCard({
 
           {/* Content */}
           <div className="flex-1 min-w-0">
-            <div className="flex items-start justify-between gap-2 mb-2">
-              <div className="flex-1 min-w-0">
-                <h3 className="font-semibold text-forest truncate">
-                  {proof.title}
-                </h3>
-                {proof.description && (
-                  <p className="text-sm text-sage line-clamp-2 mt-1">
-                    {proof.description}
-                  </p>
-                )}
-              </div>
+            {/* Header with title and status */}
+            <div className="flex items-start justify-between gap-2 mb-1">
+              <h3 className="font-semibold text-forest truncate flex-1">
+                {proof.title}
+              </h3>
               <Badge
                 className={`${statusConfig[proof.status].color} text-white flex items-center gap-1 shrink-0`}
               >
@@ -79,17 +73,40 @@ export default function ProofCard({
               </Badge>
             </div>
 
-            {proof.projectStage && (
-              <p className="text-xs text-sage mb-2">
-                Étape {proof.projectStage.stageOrder}:{" "}
-                {proof.projectStage.title}
+            {/* Description */}
+            {proof.description && (
+              <p className="text-sm text-sage line-clamp-2 mb-2">
+                {proof.description}
               </p>
             )}
 
-            <p className="text-xs text-sage">
-              Uploadé le{" "}
-              {new Date(proof.uploadedAt).toLocaleDateString("fr-FR")}
-            </p>
+            {/* Metadata */}
+            <div className="flex flex-col gap-1 text-xs text-sage mt-2">
+              {proof.projectStage && (
+                <p>
+                  Étape {proof.projectStage.stageOrder}:{" "}
+                  {proof.projectStage.title}
+                </p>
+              )}
+              <p>
+                Uploadé le{" "}
+                {new Date(proof.uploadedAt).toLocaleDateString("fr-FR", {
+                  day: "numeric",
+                  month: "long",
+                  year: "numeric",
+                })}
+              </p>
+              {proof.approvedAt && proof.status === "APPROVED" && (
+                <p className="text-green-600">
+                  Approuvé le{" "}
+                  {new Date(proof.approvedAt).toLocaleDateString("fr-FR", {
+                    day: "numeric",
+                    month: "long",
+                    year: "numeric",
+                  })}
+                </p>
+              )}
+            </div>
 
             {/* Actions */}
             {showActions && (
