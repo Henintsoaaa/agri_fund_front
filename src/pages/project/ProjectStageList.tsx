@@ -101,9 +101,7 @@ export default function ProjectStageList() {
     }
   };
 
-  const handleViewDetails = (stageId: string) => {
-    console.log("View details:", stageId);
-  };
+  const handleViewDetails = (stageId: string) => {};
 
   return (
     <div className="h-full">

@@ -103,8 +103,6 @@ export default function AdminLayout() {
     }
     // For dashboard route, only active if no section is selected
     if (item.href === "/admin-dashboard") {
-      console.log("section0", section);
-
       return location.pathname === item.href && section === null;
     }
     return location.pathname === item.href;

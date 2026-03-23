@@ -26,7 +26,6 @@ import { useAuthContext } from "@/features/auth/context/AuthContext";
 export const useProject = () => {
   const queryClient = useQueryClient();
   const { user } = useAuthContext();
-  console.log("USER:", user);
 
   // Get my projects
   const {
@@ -54,22 +53,18 @@ export const useProject = () => {
   } = useQuery({
     queryKey: ["all-projects", user?.role],
     queryFn: async () => {
-      console.log("useProject queryFn - user role:", user?.role);
       if (user?.role === "ADMIN") {
         const response = await getAllProjectsApi();
-        console.log("Admin projects:", response.data);
         return response.data;
       } else if (user?.role === "INVESTOR") {
         // For investors, use public projects
         const response = await getPublicProjectsApi();
-        console.log("Public projects for investor:", response.data);
         return response.data;
       } else if (user?.role === "PROJECT_OWNER") {
         const response = await getMyProjectsApi();
         return response.data;
       }
       // Return empty array if no role matches
-      console.log("No role match, returning empty array");
       return [];
     },
     enabled: !!user, // Only run when user is available

@@ -23,7 +23,6 @@ export const useAuth = () => {
 
     try {
       const loginResponse = await loginApi(payload);
-      console.log("Login response:", loginResponse);
 
       setUser(loginResponse.data.user);
 
@@ -54,7 +53,6 @@ export const useAuth = () => {
 
     try {
       const registerResponse = await registerApi(payload);
-      console.log("Register response:", registerResponse);
 
       setUser(registerResponse.data.user);
 

@@ -68,19 +68,10 @@ export default function ProjectStageCard({
         ? useAdminStageProofs(stage.id) // Admin: see all proofs for moderation
         : useStageProofs(stage.id); // Investor: see only approved proofs
 
-  // on va lister les preuves de chaque étape pour que les investisseurs puissent suivre l'avancement du projet et voir les preuves des étapes précédentes (même si elles ne sont pas encore financées) - ça peut les rassurer et les encourager à investir dans les étapes suivantes
-  console.log("STAGE PROOFS", stageProofs);
-
-  console.log("STAGE", stage);
-
   const progress =
     stage.targetAmount > 0
       ? Math.round((stage.currentAmount / stage.targetAmount) * 100)
       : 0;
-  console.log(role);
-
-  console.log("length proof", stageProofs?.length);
-
   const getStatutColor = (statut: string) => {
     switch (statut) {
       case "OPEN":

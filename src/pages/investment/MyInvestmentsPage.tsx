@@ -36,8 +36,6 @@ export default function MyInvestmentsPage() {
     setIsRefreshing(false);
   };
 
-  console.log("myInvestment", myInvestments);
-
   return (
     <div className="container mx-auto py-8 space-y-6">
       {/* Header */}

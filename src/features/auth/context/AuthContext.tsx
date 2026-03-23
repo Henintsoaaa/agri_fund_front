@@ -19,7 +19,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const fetchSession = async () => {
     try {
       const response = await api.get("/auth/session");
-      console.log("Session fetched:", response.data);
       if (response.data?.user) {
         setUser(response.data.user);
       } else {
