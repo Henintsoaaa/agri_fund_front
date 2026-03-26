@@ -114,6 +114,7 @@ export default function AdminLayout() {
 
       <div className="flex flex-1 overflow-hidden">
         {/* Sidebar */}
+
         <aside className="hidden lg:flex lg:flex-col lg:w-64 border-r border-sage/30 bg-cream/50 backdrop-blur-sm h-full">
           <ScrollArea className="flex-1 px-3 py-6">
             <nav className="space-y-1">
