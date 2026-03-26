@@ -15,6 +15,19 @@ export interface AdminStats {
   totalVolume: number;
   successRate: number;
   fundedProjects: number;
+  userGrowth: {
+    month: string;
+    newUsers: number;
+    totalUsers: number;
+  }[];
+  investmentVolumeByMonth: {
+    month: string;
+    amount: number;
+  }[];
+  projectDistribution: {
+    label: string;
+    value: number;
+  }[];
 }
 
 export function useInvestorStats() {
