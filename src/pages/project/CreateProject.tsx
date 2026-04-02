@@ -10,7 +10,13 @@ import {
   X,
   Image as ImageIcon,
 } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -309,7 +315,7 @@ export default function CreateProject() {
                     setFormData({ ...formData, title: e.target.value })
                   }
                   placeholder="Ex: Riziculture Bio Antsirabe"
-                  className="border-sage/30 focus:border-forest"
+                  className="border-sage/30 text-forest placeholder:text-sage focus:border-olive focus:ring-olive"
                   required
                 />
               </div>
@@ -328,7 +334,7 @@ export default function CreateProject() {
                     setFormData({ ...formData, description: e.target.value })
                   }
                   placeholder="Décrivez votre projet agricole..."
-                  className="border-sage/30 focus:border-forest"
+                  className="border-sage/30 text-forest placeholder:text-sage focus:border-olive focus:ring-olive"
                   rows={5}
                   required
                 />
@@ -439,7 +445,7 @@ export default function CreateProject() {
                     setFormData({ ...formData, statut: value })
                   }
                 >
-                  <SelectTrigger className="border-sage/30 focus:border-forest">
+                  <SelectTrigger className="border-sage/30 text-forest focus:border-olive focus:ring-olive">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -456,7 +462,7 @@ export default function CreateProject() {
             <CardHeader>
               <div className="flex justify-between items-center">
                 <CardTitle className="text-forest">Étapes du projet</CardTitle>
-                <Button
+                {/* <Button
                   type="button"
                   onClick={handleAddStage}
                   variant="outline"
@@ -465,7 +471,7 @@ export default function CreateProject() {
                 >
                   <Plus className="h-4 w-4 mr-2" />
                   Ajouter une étape
-                </Button>
+                </Button> */}
               </div>
             </CardHeader>
             <CardContent className="space-y-5">
@@ -511,7 +517,7 @@ export default function CreateProject() {
                           handleStageChange(index, "title", e.target.value)
                         }
                         placeholder="Ex: Phase de préparation"
-                        className="border-sage/30 focus:border-forest"
+                        className="border-sage/30 text-forest placeholder:text-sage focus:border-olive focus:ring-olive"
                         required
                       />
                     </div>
@@ -534,7 +540,7 @@ export default function CreateProject() {
                           )
                         }
                         placeholder="Décrivez cette étape..."
-                        className="border-sage/30 focus:border-forest"
+                        className="border-sage/30 text-forest placeholder:text-sage focus:border-olive focus:ring-olive"
                         rows={3}
                         required
                       />
@@ -551,7 +557,7 @@ export default function CreateProject() {
                         id={`stage-amount-${index}`}
                         type="number"
                         min="0"
-                        step="0.01"
+                        step="1"
                         value={stage.targetAmount}
                         onChange={(e) =>
                           handleStageChange(
@@ -561,7 +567,7 @@ export default function CreateProject() {
                           )
                         }
                         placeholder="5000"
-                        className="border-sage/30 focus:border-forest"
+                        className="border-sage/30 text-forest placeholder:text-sage focus:border-olive focus:ring-olive"
                         required
                       />
                     </div>
@@ -674,6 +680,20 @@ export default function CreateProject() {
                 </Card>
               ))}
             </CardContent>
+            <CardFooter>
+              <div className="flex justify-end w-full">
+                <Button
+                  type="button"
+                  onClick={handleAddStage}
+                  variant="outline"
+                  className="border-forest text-forest hover:bg-forest hover:text-cream"
+                  size="sm"
+                >
+                  <Plus className="h-4 w-4 mr-2" />
+                  Ajouter une étape
+                </Button>
+              </div>
+            </CardFooter>
           </Card>
 
           {/* Submit Button */}

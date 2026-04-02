@@ -42,8 +42,7 @@ export function ProjectStageInvestmentCard({
 }: ProjectStageInvestmentCardProps) {
   const [isInvestmentModalOpen, setIsInvestmentModalOpen] = useState(false);
 
-  const currentAmount =
-    stage.collectedAmount || (stage as any).currentAmount || 0;
+  const currentAmount = stage.currentAmount || 0;
   const progress =
     stage.targetAmount > 0
       ? Math.round((currentAmount / stage.targetAmount) * 100)

@@ -96,7 +96,7 @@ export default function ProjectShowcase() {
 
         {/* Statistics Banner */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <Card className="bg-gradient-to-br from-olive/20 to-olive/10 border-olive/30">
+          <Card className="bg-linear-to-br from-olive/20 to-olive/10 border-olive/30">
             <CardContent className="p-4 flex items-center gap-3">
               <div className="flex items-center justify-center w-12 h-12 rounded-full bg-olive/20">
                 <TrendingUp className="h-6 w-6 text-olive" />
@@ -110,7 +110,7 @@ export default function ProjectShowcase() {
             </CardContent>
           </Card>
 
-          <Card className="bg-gradient-to-br from-sage/20 to-sage/10 border-sage/30">
+          <Card className="bg-linear-to-br from-sage/20 to-sage/10 border-sage/30">
             <CardContent className="p-4 flex items-center gap-3">
               <div className="flex items-center justify-center w-12 h-12 rounded-full bg-sage/20">
                 <Users className="h-6 w-6 text-forest" />
@@ -122,7 +122,7 @@ export default function ProjectShowcase() {
             </CardContent>
           </Card>
 
-          <Card className="bg-gradient-to-br from-forest/20 to-forest/10 border-forest/30">
+          <Card className="bg-linear-to-br from-forest/20 to-forest/10 border-forest/30">
             <CardContent className="p-4 flex items-center gap-3">
               <div className="flex items-center justify-center w-12 h-12 rounded-full bg-forest/20">
                 <TrendingUp className="h-6 w-6 text-forest" />
@@ -166,7 +166,7 @@ export default function ProjectShowcase() {
                     ) || 0;
                   const totalCollected =
                     project.stages?.reduce(
-                      (acc, stage) => acc + stage.collectedAmount,
+                      (acc, stage) => acc + stage.currentAmount,
                       0,
                     ) || 0;
                   const progress =
@@ -180,7 +180,7 @@ export default function ProjectShowcase() {
                       className="bg-cream border-sage/30 hover:shadow-xl transition-all duration-300 overflow-hidden group"
                     >
                       {/* Project Image */}
-                      <div className="relative h-56 overflow-hidden bg-gradient-to-br from-olive/20 to-sage/20">
+                      <div className="relative h-56 overflow-hidden bg-linear-to-br from-olive/20 to-sage/20">
                         <img
                           src={project.image || "/placeholder-project.jpg"}
                           alt={project.title}

@@ -30,6 +30,7 @@ import MyProjectsPage from "./pages/project-owner/MyProjectsPage";
 import AdminStatsPage from "./pages/admin/AdminStatsPage";
 import AdminReportsPage from "./pages/admin/AdminReportsPage";
 import AdminSettingsPage from "./pages/admin/AdminSettingsPage";
+import NotFoundPage from "./pages/NotFoundPage";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -52,6 +53,7 @@ function App() {
               <Route path="/home" element={<HomePage />} />
               <Route path="/login" element={<LoginPage />} />
               <Route path="/register" element={<RegisterPage />} />
+              <Route path="/not-found" element={<NotFoundPage />} />
               <Route
                 path="/forgot-password"
                 element={<RequestResetPasswordPage />}
@@ -140,6 +142,8 @@ function App() {
                   />
                 </Route>
               </Route>
+
+              <Route path="*" element={<NotFoundPage />} />
             </Routes>
           </BrowserRouter>
           <Toaster position="top-right" richColors />

@@ -10,9 +10,8 @@ import { useProject } from "@/features/project/hooks/useProject";
 
 export default function ProofsPage() {
   const [uploadDialogOpen, setUploadDialogOpen] = useState(false);
-  const { myProofs, isLoadingMyProofs, deleteProof } = useProofs();
-  const { projects, isLoadingProjects } = useProject();
-  const { uploadProof } = useProofs();
+  const { myProofs, isLoadingMyProofs, deleteProof, uploadProof } = useProofs();
+  const { myProjects } = useProject();
 
   const handleUpload = async (data: {
     file: File;
@@ -39,14 +38,6 @@ export default function ProofsPage() {
     pending: myProofs?.filter((p) => p.status === "PENDING") || [],
     approved: myProofs?.filter((p) => p.status === "APPROVED") || [],
     rejected: myProofs?.filter((p) => p.status === "REJECTED") || [],
-  };
-
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString("fr-FR", {
-      day: "numeric",
-      month: "long",
-      year: "numeric",
-    });
   };
 
   return (
@@ -163,7 +154,7 @@ export default function ProofsPage() {
         onOpenChange={setUploadDialogOpen}
         onUpload={handleUpload}
         projects={
-          projects?.map((p) => ({
+          myProjects?.map((p) => ({
             id: p.id,
             title: p.title,
             stages: p.stages,

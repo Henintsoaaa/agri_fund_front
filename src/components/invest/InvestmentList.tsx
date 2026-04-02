@@ -102,7 +102,7 @@ export function InvestmentList({
               <div className="flex items-start justify-between">
                 <div className="flex-1">
                   <CardTitle className="text-xl">
-                    {investment.stage?.title || "Stage supprimé"}
+                    {investment.projectStage?.title || "Stage supprimé"}
                   </CardTitle>
                   <CardDescription className="mt-1">
                     Investissement effectué le{" "}
@@ -130,9 +130,9 @@ export function InvestmentList({
                     </span>
                     <span className="text-lg text-muted-foreground">Ar</span>
                   </div>
-                  {investment.stage?.projectId && (
+                  {investment.projectStage?.projectId && (
                     <p className="text-sm text-muted-foreground">
-                      Projet ID: {investment.stage.projectId}
+                      Projet ID: {investment.projectStage.projectId}
                     </p>
                   )}
                 </div>

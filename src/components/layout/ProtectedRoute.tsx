@@ -21,15 +21,7 @@ export default function ProtectedRoute({ allowedRoles }: ProtectedRouteProps) {
 
   // Si des rôles sont spécifiés, vérifier que l'utilisateur a le bon rôle
   if (allowedRoles && !allowedRoles.includes(user.role)) {
-    // Rediriger vers la page appropriée selon le rôle
-    if (user.role === "ADMIN") {
-      return <Navigate to="/admin-dashboard" replace />;
-    } else if (user.role === "PROJECT_OWNER") {
-      return <Navigate to="/project-owner" replace />;
-    } else if (user.role === "INVESTOR") {
-      return <Navigate to="/investor" replace />;
-    }
-    return <Navigate to="/" replace />;
+    return <Navigate to="/not-found" replace />;
   }
 
   return <Outlet />;

@@ -102,7 +102,7 @@ export default function ModernHomePage() {
               <Button
                 onClick={() => navigate("/login")}
                 variant="ghost"
-                className="text-cream hover:bg-olive/20"
+                className="text-cream hover:bg-olive/20 hover:text-cream"
               >
                 Connexion
               </Button>

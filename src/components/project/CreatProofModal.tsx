@@ -103,12 +103,12 @@ export default function CreatProofModal({
           <Button
             variant="outline"
             size="sm"
-            className="w-full border-sage/30 hover:bg-olive/10"
+            className="w-full border-sage/30 text-forest hover:bg-olive/10"
           >
             Ajouter des preuves
           </Button>
         </DialogTrigger>
-        <DialogContent className="sm:max-w-131.25">
+        <DialogContent className="sm:max-w-131.25 bg-cream border-sage/20">
           <DialogHeader>
             <DialogTitle className="text-forest">
               Ajouter une preuve
@@ -127,6 +127,7 @@ export default function CreatProofModal({
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 disabled={isUploadingProof}
+                className="border-sage/30 focus:border-olive focus:ring-olive"
               />
             </div>
 
@@ -141,7 +142,7 @@ export default function CreatProofModal({
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 disabled={isUploadingProof}
-                className="min-h-25"
+                className="min-h-25 border-sage/30 focus:border-olive focus:ring-olive"
               />
             </div>
 
@@ -164,7 +165,7 @@ export default function CreatProofModal({
                   type="button"
                   variant="outline"
                   size="sm"
-                  className="w-full border-sage/30 hover:bg-olive/10"
+                  className="w-full border-sage/30 text-forest hover:bg-olive/10"
                   onClick={() => fileInputRef.current?.click()}
                   disabled={isUploadingProof}
                 >
@@ -173,7 +174,7 @@ export default function CreatProofModal({
                 </Button>
 
                 {selectedFile && (
-                  <div className="flex items-center gap-2 p-2 bg-sage/10 rounded-md">
+                  <div className="flex items-center gap-2 rounded-md border border-sage/30 bg-olive/5 p-2">
                     <FileText className="h-4 w-4 text-olive" />
                     <span className="text-sm text-forest truncate flex-1">
                       {selectedFile.name}
@@ -196,13 +197,14 @@ export default function CreatProofModal({
               variant="outline"
               onClick={() => setIsAddingProof(false)}
               disabled={isUploadingProof}
+              className="border-sage/30 text-sage hover:bg-sage/10"
             >
               Annuler
             </Button>
             <Button
               onClick={handleCreateProof}
               disabled={isUploadingProof}
-              className="bg-forest hover:bg-forest/90"
+              className="bg-forest text-cream hover:bg-forest/90"
             >
               {isUploadingProof ? "Envoi en cours..." : "Créer"}
             </Button>

@@ -139,7 +139,7 @@ export default function ProjectStageCard({
         </div>
       </div>
 
-      <CardHeader>
+      <CardHeader className="min-w-0">
         <CardTitle className="text-forest line-clamp-1 text-lg">
           {stage.title}
         </CardTitle>
@@ -148,17 +148,17 @@ export default function ProjectStageCard({
         </CardDescription>
       </CardHeader>
 
-      <CardContent className="space-y-4">
+      <CardContent className="space-y-4 min-w-0">
         {/* Funding Info */}
         <div className="space-y-2">
-          <div className="flex justify-between items-center">
-            <div className="flex items-center gap-2">
+          <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex items-center gap-2 min-w-0">
               <DollarSign className="h-4 w-4 text-olive" />
-              <span className="text-sm font-semibold text-forest">
+              <span className="text-sm font-semibold text-forest break-words">
                 {stage.currentAmount.toLocaleString("fr-FR")} MGA
               </span>
             </div>
-            <span className="text-sm text-sage">
+            <span className="text-sm text-sage break-words">
               / {stage.targetAmount.toLocaleString("fr-FR")} MGA
             </span>
           </div>
@@ -234,7 +234,7 @@ export default function ProjectStageCard({
         )}
 
         {/* Actions */}
-        <div className="flex gap-2 pt-2">
+        <div className="flex flex-col gap-2 pt-2 sm:flex-row">
           {role === "investor" ? (
             // Investor view
             stage.statut === "OPEN" ? (
@@ -272,7 +272,7 @@ export default function ProjectStageCard({
                   variant="outline"
                   size="sm"
                   onClick={onEdit}
-                  className="flex-1 border-sage/30 hover:bg-olive/10"
+                  className="w-full sm:flex-1 border-sage/30 hover:bg-olive/10"
                 >
                   <Edit className="h-4 w-4 mr-2" />
                   Modifier
@@ -283,7 +283,7 @@ export default function ProjectStageCard({
                   variant="outline"
                   size="sm"
                   onClick={onDelete}
-                  className="flex-1 border-destructive/30 text-destructive hover:bg-destructive/10"
+                  className="w-full sm:flex-1 border-destructive/30 text-destructive hover:bg-destructive/10"
                 >
                   <Trash2 className="h-4 w-4 mr-2" />
                   Supprimer

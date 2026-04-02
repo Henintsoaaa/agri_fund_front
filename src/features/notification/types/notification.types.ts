@@ -25,6 +25,8 @@ export type NotificationType =
   | "PROJECT_DELETED"
   // Stage events
   | "STAGE_FUNDED"
+  // Proof events
+  | "PROOF_CREATED"
   // Investment events
   | "INVESTMENT_CREATED"
   | "INVESTMENT_CONFIRMED"

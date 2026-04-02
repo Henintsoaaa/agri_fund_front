@@ -20,6 +20,7 @@ interface EditProjectStageDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   stage: ProjectStage;
+  mode: "create" | "update";
   onSave: (data: {
     title: string;
     description: string;
@@ -33,6 +34,7 @@ export function EditProjectStageDialog({
   open,
   onOpenChange,
   stage,
+  mode,
   onSave,
   isLoading = false,
 }: EditProjectStageDialogProps) {
@@ -130,42 +132,53 @@ export function EditProjectStageDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-150">
+      <DialogContent className="sm:max-w-150 bg-cream border-sage/20">
         <DialogHeader>
-          <DialogTitle>Modifier l'étape</DialogTitle>
-          <DialogDescription>
-            Modifiez le titre, la description, le montant cible et l'image de
-            cette étape.
+          <DialogTitle className="text-forest">
+            {mode === "create" ? "Créer une étape" : "Modifier l'étape"}
+          </DialogTitle>
+          <DialogDescription className="text-sage">
+            {mode === "create"
+              ? "Créez une nouvelle étape pour votre projet."
+              : "Modifiez le titre, la description, le montant cible et l'image de cette étape."}
           </DialogDescription>
         </DialogHeader>
 
         <div className="space-y-4 py-4">
           {/* Title */}
           <div className="space-y-2">
-            <Label htmlFor="stage-title">Titre</Label>
+            <Label htmlFor="stage-title" className="text-forest">
+              Titre
+            </Label>
             <Input
               id="stage-title"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               placeholder="Titre de l'étape"
+              className="border-sage/30 focus:border-olive focus:ring-olive"
             />
           </div>
 
           {/* Description */}
           <div className="space-y-2">
-            <Label htmlFor="stage-description">Description</Label>
+            <Label htmlFor="stage-description" className="text-forest">
+              Description
+            </Label>
             <Textarea
               id="stage-description"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               placeholder="Description de l'étape"
               rows={4}
+              className="border-sage/30 focus:border-olive focus:ring-olive"
             />
           </div>
 
           {/* Target Amount */}
           <div className="space-y-2">
-            <Label htmlFor="stage-target">Montant cible (Ar)</Label>
+            <Label htmlFor="stage-target" className="text-forest">
+              Montant cible (Ar)
+            </Label>
             <Input
               id="stage-target"
               type="number"
@@ -173,20 +186,21 @@ export function EditProjectStageDialog({
               value={targetAmount}
               onChange={(e) => setTargetAmount(e.target.value)}
               placeholder="Montant cible"
+              className="border-sage/30 focus:border-olive focus:ring-olive"
             />
           </div>
 
           {/* Image Upload */}
           <div className="space-y-2">
-            <Label>Image de l'étape</Label>
+            <Label className="text-forest">Image de l'étape</Label>
             <div
               onDragOver={handleDragOver}
               onDragLeave={handleDragLeave}
               onDrop={handleDrop}
               className={`relative border-2 border-dashed rounded-lg p-4 transition-colors ${
                 isDragging
-                  ? "border-primary bg-primary/5"
-                  : "border-gray-300 hover:border-primary/50"
+                  ? "border-olive bg-olive/10"
+                  : "border-sage/30 hover:border-olive/50"
               }`}
             >
               {imagePreview ? (
@@ -208,12 +222,18 @@ export function EditProjectStageDialog({
                 </div>
               ) : (
                 <div className="flex flex-col items-center justify-center py-8">
-                  <Upload className="h-12 w-12 text-gray-400 mb-4" />
-                  <p className="text-sm text-gray-600 mb-2">
+                  <Upload className="h-12 w-12 text-sage mb-4" />
+                  <p className="text-sm text-sage mb-2">
                     Glissez-déposez une image ou
                   </p>
                   <label htmlFor="stage-image-input">
-                    <Button type="button" variant="outline" size="sm" asChild>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      asChild
+                      className="border-sage/30 text-forest hover:bg-olive/10"
+                    >
                       <span>Sélectionner un fichier</span>
                     </Button>
                   </label>
@@ -235,15 +255,26 @@ export function EditProjectStageDialog({
             variant="outline"
             onClick={() => onOpenChange(false)}
             disabled={isBusy}
+            className="border-sage/30 text-sage hover:bg-sage/10"
           >
             Annuler
           </Button>
-          <Button onClick={handleSubmit} disabled={isBusy}>
+          <Button
+            onClick={handleSubmit}
+            disabled={isBusy}
+            className="bg-forest hover:bg-forest/90 text-cream"
+          >
             {isBusy ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                {uploadingImage ? "Upload en cours..." : "Enregistrement..."}
+                {uploadingImage
+                  ? "Upload en cours..."
+                  : mode === "create"
+                    ? "Création..."
+                    : "Enregistrement..."}
               </>
+            ) : mode === "create" ? (
+              "Créer"
             ) : (
               "Enregistrer"
             )}

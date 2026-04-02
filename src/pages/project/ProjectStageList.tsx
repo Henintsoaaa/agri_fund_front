@@ -40,6 +40,7 @@ export default function ProjectStageList() {
     useGetProjectById,
     deleteProjectStage,
     updateProjectStage,
+    createProjectStage,
     isUpdatingProjectStage,
   } = useProject();
   const { data: project, isLoading } = useGetProjectById(projectId || "");
@@ -57,6 +58,7 @@ export default function ProjectStageList() {
   } | null>(null);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [stageToEdit, setStageToEdit] = useState<ProjectStage | null>(null);
+  const [isCreateMode, setIsCreateMode] = useState(false);
 
   // Determine the correct return path based on user role
   const getReturnPath = () => {
@@ -71,7 +73,27 @@ export default function ProjectStageList() {
   };
 
   const handleEditStage = (stage: ProjectStage) => {
+    setIsCreateMode(false);
     setStageToEdit(stage);
+    setEditDialogOpen(true);
+  };
+
+  const handleAddStage = () => {
+    setIsCreateMode(true);
+    setStageToEdit({
+      id: "",
+      projectId: projectId || "",
+      title: "",
+      description: "",
+      targetAmount: 0,
+      currentAmount: 0,
+      stageOrder: stages.length + 1,
+      statut: "OPEN",
+      image: "",
+      isDeleted: false,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    });
     setEditDialogOpen(true);
   };
 
@@ -94,14 +116,30 @@ export default function ProjectStageList() {
     targetAmount: number;
     image?: string;
   }) => {
+    if (isCreateMode) {
+      await createProjectStage({
+        projectId: projectId || "",
+        data: {
+          title: data.title,
+          description: data.description,
+          targetAmount: data.targetAmount,
+          image: data.image || "",
+          stageOrder: 0, // Will be calculated in backend
+        },
+      });
+      setEditDialogOpen(false);
+      setStageToEdit(null);
+      setIsCreateMode(false);
+      return;
+    }
+
     if (stageToEdit) {
       await updateProjectStage({ projectStageId: stageToEdit.id, data });
       setEditDialogOpen(false);
       setStageToEdit(null);
+      setIsCreateMode(false);
     }
   };
-
-  const handleViewDetails = (stageId: string) => {};
 
   return (
     <div className="h-full">
@@ -203,7 +241,7 @@ export default function ProjectStageList() {
               </CardHeader>
               <CardContent>
                 <ScrollArea className="h-150">
-                  <div className="space-y-4 pr-4 grid md:grid-cols-3 gap-4 sm:grid-cols-1 h-full">
+                  <div className="grid grid-cols-1 gap-4 pr-2 sm:pr-4 md:grid-cols-2 xl:grid-cols-3">
                     {stages.map((stage) => {
                       const isLocked =
                         user?.role !== "PROJECT_OWNER" &&
@@ -211,11 +249,11 @@ export default function ProjectStageList() {
                       return (
                         <div
                           key={stage.id}
-                          className={
+                          className={`min-w-0 ${
                             isLocked
                               ? "relative pointer-events-none select-none opacity-60 grayscale-80 cursor-not-allowed"
                               : ""
-                          }
+                          }`}
                         >
                           <ProjectStageCard
                             projectId={projectId || ""}
@@ -237,7 +275,7 @@ export default function ProjectStageList() {
                                 ? () => handleDeleteStage(stage as ProjectStage)
                                 : undefined
                             }
-                            onViewDetails={() => handleViewDetails(stage.id)}
+                            onViewDetails={() => {}}
                           />
                           {isLocked && (
                             <div className="absolute inset-0 bg-gray-900/10 backdrop-blur-[0.5px]" />
@@ -245,6 +283,33 @@ export default function ProjectStageList() {
                         </div>
                       );
                     })}
+
+                    {user?.role === "PROJECT_OWNER" && (
+                      <Card
+                        role="button"
+                        tabIndex={0}
+                        onClick={handleAddStage}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter" || e.key === " ") {
+                            e.preventDefault();
+                            handleAddStage();
+                          }
+                        }}
+                        className="border-2 border-dashed border-sage/40 bg-cream/40 hover:bg-olive/5 hover:border-olive/60 transition-colors cursor-pointer"
+                      >
+                        <CardContent className="h-full min-h-60 flex flex-col items-center justify-center text-center p-6">
+                          <div className="h-12 w-12 rounded-full bg-olive/15 flex items-center justify-center mb-3">
+                            <Plus className="h-6 w-6 text-olive" />
+                          </div>
+                          <h3 className="text-forest font-semibold text-base">
+                            Ajouter une étape
+                          </h3>
+                          <p className="text-sage text-sm mt-1">
+                            Ouvrir le formulaire de l'étape
+                          </p>
+                        </CardContent>
+                      </Card>
+                    )}
                   </div>
                 </ScrollArea>
               </CardContent>
@@ -315,8 +380,15 @@ export default function ProjectStageList() {
         {stageToEdit && (
           <EditProjectStageDialog
             open={editDialogOpen}
-            onOpenChange={setEditDialogOpen}
+            onOpenChange={(open) => {
+              setEditDialogOpen(open);
+              if (!open) {
+                setIsCreateMode(false);
+                setStageToEdit(null);
+              }
+            }}
             stage={stageToEdit}
+            mode={isCreateMode ? "create" : "update"}
             onSave={handleSaveEdit}
             isLoading={isUpdatingProjectStage}
           />

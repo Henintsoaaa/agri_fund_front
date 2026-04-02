@@ -8,17 +8,41 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { FolderKanban, Loader2, Search } from "lucide-react";
+import { FolderKanban, Loader2, Search, Trash2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import ProjectCard from "@/components/project/ProjectCard";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
+import type { Project } from "@/features/project/types/project.types";
+import { EditProjectDialog } from "@/components/project/EditProjectDialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 export default function MyProjectsPage() {
-  const { myProjects, isLoadingMyProjects, refetchMyProjects } = useProject();
+  const {
+    myProjects,
+    isLoadingMyProjects,
+    refetchMyProjects,
+    updateProject,
+    isUpdatingProject,
+    deleteProject,
+  } = useProject();
   const [searchQuery, setSearchQuery] = useState("");
   const [activeTab, setActiveTab] = useState("all");
   const navigate = useNavigate();
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [projectToDelete, setProjectToDelete] = useState<{
+    id: string;
+    title: string;
+  } | null>(null);
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const [projectToEdit, setProjectToEdit] = useState<Project | null>(null);
 
   useEffect(() => {
     refetchMyProjects();
@@ -49,6 +73,36 @@ export default function MyProjectsPage() {
     draft: myProjects?.filter((p) => p.statut === "DRAFT").length || 0,
     completed: myProjects?.filter((p) => p.statut === "COMPLETED").length || 0,
     suspended: myProjects?.filter((p) => p.statut === "SUSPENDED").length || 0,
+  };
+
+  const handleEditProject = (project: Project) => {
+    setProjectToEdit(project);
+    setEditDialogOpen(true);
+  };
+
+  const handleSaveEdit = async (data: {
+    title: string;
+    description: string;
+    image?: string;
+  }) => {
+    if (projectToEdit) {
+      await updateProject({ projectId: projectToEdit.id, data });
+      setEditDialogOpen(false);
+      setProjectToEdit(null);
+    }
+  };
+
+  const confirmDeleteProject = () => {
+    if (projectToDelete) {
+      deleteProject(projectToDelete.id);
+      setDeleteDialogOpen(false);
+      setProjectToDelete(null);
+    }
+  };
+
+  const handleDeleteProject = (projectId: string, projectTitle: string) => {
+    setProjectToDelete({ id: projectId, title: projectTitle });
+    setDeleteDialogOpen(true);
   };
 
   return (
@@ -161,6 +215,10 @@ export default function MyProjectsPage() {
                         key={project.id}
                         project={project}
                         role="owner"
+                        onEdit={() => handleEditProject(project)}
+                        onDelete={() =>
+                          handleDeleteProject(project.id, project.title)
+                        }
                       />
                     ))}
                   </div>
@@ -169,6 +227,47 @@ export default function MyProjectsPage() {
             </Tabs>
           </CardContent>
         </Card>
+
+        <Dialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+          <DialogContent className="sm:max-w-md">
+            <DialogHeader>
+              <DialogTitle className="text-forest">
+                Confirmer la suppression
+              </DialogTitle>
+              <DialogDescription className="text-sage">
+                Etes-vous sur de vouloir supprimer le projet "
+                {projectToDelete?.title}" ? Cette action est irreversible.
+              </DialogDescription>
+            </DialogHeader>
+            <DialogFooter className="gap-2">
+              <Button
+                variant="outline"
+                onClick={() => setDeleteDialogOpen(false)}
+                className="border-sage/50 text-sage hover:bg-sage/10"
+              >
+                Annuler
+              </Button>
+              <Button
+                variant="destructive"
+                onClick={confirmDeleteProject}
+                className="bg-destructive hover:bg-destructive/90"
+              >
+                <Trash2 className="h-4 w-4 mr-2" />
+                Supprimer
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+
+        {projectToEdit && (
+          <EditProjectDialog
+            open={editDialogOpen}
+            onOpenChange={setEditDialogOpen}
+            project={projectToEdit}
+            onSave={handleSaveEdit}
+            isLoading={isUpdatingProject}
+          />
+        )}
       </div>
     </div>
   );

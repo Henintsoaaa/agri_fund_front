@@ -9,6 +9,7 @@ import {
   getAllProjectsApi,
   getPublicProjectsApi,
   updateProjectStageApi,
+  createProjectStageApi,
   deleteProjectStageApi,
   getAllProjectStagesOfProjectApi,
   countProjectStagesApi,
@@ -18,6 +19,7 @@ import {
 } from "../api/project.api";
 import type {
   CreateProjectPayload,
+  CreateProjectStagePayload,
   UpdateProjectPayload,
 } from "../types/project.types";
 import { toast } from "sonner";
@@ -162,6 +164,30 @@ export const useProject = () => {
     },
   });
 
+  // Create project stage
+  const createProjectStage = useMutation({
+    mutationFn: ({
+      projectId,
+      data,
+    }: {
+      projectId: string;
+      data: CreateProjectStagePayload;
+    }) => createProjectStageApi(projectId, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["my-projects"] });
+      queryClient.invalidateQueries({ queryKey: ["project"] });
+      queryClient.invalidateQueries({ queryKey: ["project-stages"] });
+      queryClient.invalidateQueries({ queryKey: ["project-stages-count"] });
+      toast.success("Étape créée avec succès");
+    },
+    onError: (error: any) => {
+      toast.error(
+        error?.response?.data?.message ||
+          "Erreur lors de la création de l'étape du projet",
+      );
+    },
+  });
+
   // Delete project stage
   const deleteProjectStageMutation = useMutation({
     mutationFn: ({ projectStageId }: { projectStageId: string }) =>
@@ -272,6 +298,8 @@ export const useProject = () => {
     isDeletingProject: deleteProjectMutation.isPending,
     updateProjectStage: updateProjectStage.mutateAsync,
     isUpdatingProjectStage: updateProjectStage.isPending,
+    createProjectStage: createProjectStage.mutateAsync,
+    isCreatingProjectStage: createProjectStage.isPending,
     deleteProjectStage: deleteProjectStageMutation.mutate,
     isDeletingProjectStage: deleteProjectStageMutation.isPending,
     getAllProjectStagesOfProject,

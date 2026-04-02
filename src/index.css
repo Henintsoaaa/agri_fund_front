@@ -121,6 +121,19 @@
   * {
     @apply border-border outline-ring/50;
   }
+
+  input::selection,
+  textarea::selection {
+    background-color: rgba(129, 144, 103, 0.35);
+    color: #0a400c;
+  }
+
+  input::-moz-selection,
+  textarea::-moz-selection {
+    background-color: rgba(129, 144, 103, 0.35);
+    color: #0a400c;
+  }
+
   body {
     @apply bg-background text-foreground;
   }

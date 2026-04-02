@@ -2,31 +2,27 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
+import { Separator } from "@/components/ui/separator";
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import {
   Eye,
   Edit,
   Trash2,
-  MoreVertical,
   Target,
   Users,
   CheckCircle2,
   XCircle,
-  Clock,
+  FolderKanban,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { getImageUrl } from "@/lib/utils/image";
@@ -106,125 +102,26 @@ export default function ProjectCard({
   const progress =
     totalTarget > 0 ? Math.round((totalCollected / totalTarget) * 100) : 0;
 
-  const openStages =
-    project.stages?.filter((s) => s.statut === "OPEN").length || 0;
-  const fundedStages =
-    project.stages?.filter((s) => s.statut === "FUNDED").length || 0;
-
   return (
-    <Card className="bg-cream border-sage/30  overflow-hidden group">
+    <Card className="bg-cream border-sage/30 overflow-hidden group hover:shadow-lg transition-shadow">
       {/* Image */}
       <div className="relative h-48 overflow-hidden bg-linear-to-br from-olive/20 to-sage/20">
-        <img
-          src={
-            project.image
-              ? getImageUrl(project.image)
-              : "/placeholder-project.jpg"
-          }
-          alt={project.title}
-          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-        />
+        {project.image ? (
+          <img
+            src={getImageUrl(project.image)}
+            alt={project.title}
+            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+          />
+        ) : (
+          <div className="w-full h-full flex items-center justify-center">
+            <FolderKanban className="h-16 w-16 text-olive/50" />
+          </div>
+        )}
         <Badge
-          className={`absolute top-3 left-3 ${getStatutColor(project.statut)}`}
+          className={`absolute top-3 right-3 ${getStatutColor(project.statut)}`}
         >
           {getStatutLabel(project.statut)}
         </Badge>
-
-        {/* Admin/Owner Actions */}
-        {(role === "admin" || role === "owner") && (
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button
-                type="button"
-                size="icon"
-                variant="ghost"
-                className="absolute top-3 right-3 bg-cream/90 hover:bg-cream text-forest"
-                onClick={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                }}
-              >
-                <MoreVertical className="h-4 w-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="bg-cream">
-              <DropdownMenuLabel className="text-forest">
-                Actions
-              </DropdownMenuLabel>
-              <DropdownMenuSeparator className="bg-sage/30" />
-              <DropdownMenuItem
-                onClick={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  navigate(getProjectStageRoute(project.id));
-                }}
-                className="cursor-pointer hover:bg-olive/10"
-              >
-                <Eye className="mr-2 h-4 w-4 text-forest" />
-                <span className="text-forest">Voir détails</span>
-              </DropdownMenuItem>
-              {onEdit && (
-                <DropdownMenuItem
-                  onClick={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    onEdit(project.id);
-                  }}
-                  className="cursor-pointer hover:bg-olive/10"
-                >
-                  <Edit className="mr-2 h-4 w-4 text-forest" />
-                  <span className="text-forest">Modifier</span>
-                </DropdownMenuItem>
-              )}
-              {role === "admin" && (
-                <>
-                  {project.statut === "DRAFT" && onActivate && (
-                    <DropdownMenuItem
-                      onClick={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        onActivate(project.id);
-                      }}
-                      className="cursor-pointer hover:bg-olive/10"
-                    >
-                      <CheckCircle2 className="mr-2 h-4 w-4 text-olive" />
-                      <span className="text-olive">Activer</span>
-                    </DropdownMenuItem>
-                  )}
-                  {project.statut === "ACTIVE" && onSuspend && (
-                    <DropdownMenuItem
-                      onClick={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        onSuspend(project.id);
-                      }}
-                      className="cursor-pointer hover:bg-destructive/10"
-                    >
-                      <XCircle className="mr-2 h-4 w-4 text-destructive" />
-                      <span className="text-destructive">Suspendre</span>
-                    </DropdownMenuItem>
-                  )}
-                </>
-              )}
-              {onDelete && (
-                <>
-                  <DropdownMenuSeparator className="bg-sage/30" />
-                  <DropdownMenuItem
-                    onClick={(e) => {
-                      e.preventDefault();
-                      e.stopPropagation();
-                      onDelete(project.id);
-                    }}
-                    className="cursor-pointer hover:bg-destructive/10"
-                  >
-                    <Trash2 className="mr-2 h-4 w-4 text-destructive" />
-                    <span className="text-destructive">Supprimer</span>
-                  </DropdownMenuItem>
-                </>
-              )}
-            </DropdownMenuContent>
-          </DropdownMenu>
-        )}
       </div>
 
       <CardHeader>
@@ -237,38 +134,23 @@ export default function ProjectCard({
       </CardHeader>
 
       <CardContent className="space-y-4">
-        {/* Stages Summary */}
-        <div className="flex items-center gap-4 text-xs">
-          <div className="flex items-center gap-1">
-            <Target className="h-3 w-3 text-olive" />
+        <div className="grid grid-cols-2 gap-3">
+          <div className="flex items-center gap-2 text-sm">
+            <Target className="h-4 w-4 text-olive" />
             <span className="text-forest">
               {project.stages?.length || 0} étapes
             </span>
           </div>
-          {openStages > 0 && (
-            <Badge
-              variant="outline"
-              className="border-olive/50 text-olive text-xs"
-            >
-              <Clock className="h-3 w-3 mr-1" />
-              {openStages} ouvertes
-            </Badge>
-          )}
-          {fundedStages > 0 && (
-            <Badge
-              variant="outline"
-              className="border-sage/50 text-sage text-xs"
-            >
-              {fundedStages} financées
-            </Badge>
-          )}
+          <div className="flex items-center gap-2 text-sm">
+            <Users className="h-4 w-4 text-olive" />
+            <span className="text-forest">0 investisseurs</span>
+          </div>
         </div>
 
-        {/* Progress */}
         {role !== "investor" && (
-          <div className="block">
+          <div>
             <div className="flex justify-between text-sm mb-2">
-              <span className="font-semibold text-forest">
+              <span className="text-forest font-semibold">
                 {totalCollected.toLocaleString("fr-FR")} MGA
               </span>
               <span className="text-sage">
@@ -276,31 +158,98 @@ export default function ProjectCard({
               </span>
             </div>
             <Progress value={progress} className="h-2" />
-            <div className="flex justify-between items-center mt-1">
-              <span className="text-xs text-sage">{progress}% financé</span>
-              <div className="flex items-center gap-1 text-xs text-sage">
-                <Users className="h-3 w-3" />
-                <span>0 investisseurs</span>
-              </div>
-            </div>
+            <p className="text-xs text-sage mt-1">{progress}% financé</p>
+          </div>
+        )}
+
+        <Separator className="bg-sage/30" />
+
+        <div className="flex gap-2">
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                type="button"
+                size="sm"
+                variant="outline"
+                className="flex-1 border-olive/50 hover:bg-olive/10"
+                onClick={() => navigate(getProjectStageRoute(project.id))}
+              >
+                <Eye className="h-4 w-4" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Voir les détails</p>
+            </TooltipContent>
+          </Tooltip>
+
+          {onEdit && (
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  type="button"
+                  size="sm"
+                  variant="outline"
+                  className="flex-1 border-olive/50 hover:bg-olive/10"
+                  onClick={() => onEdit(project.id)}
+                >
+                  <Edit className="h-4 w-4" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Modifier</p>
+              </TooltipContent>
+            </Tooltip>
+          )}
+
+          {onDelete && (
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  type="button"
+                  size="sm"
+                  variant="outline"
+                  className="flex-1 border-destructive/50 hover:bg-destructive/10"
+                  onClick={() => onDelete(project.id)}
+                >
+                  <Trash2 className="h-4 w-4 text-destructive" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Supprimer</p>
+              </TooltipContent>
+            </Tooltip>
+          )}
+        </div>
+
+        {role === "admin" && (
+          <div className="flex gap-2">
+            {project.statut === "DRAFT" && onActivate && (
+              <Button
+                type="button"
+                size="sm"
+                variant="outline"
+                className="flex-1 border-olive/50 text-olive hover:bg-olive/10"
+                onClick={() => onActivate(project.id)}
+              >
+                <CheckCircle2 className="h-4 w-4 mr-2" />
+                Activer
+              </Button>
+            )}
+            {project.statut === "ACTIVE" && onSuspend && (
+              <Button
+                type="button"
+                size="sm"
+                variant="outline"
+                className="flex-1 border-destructive/50 text-destructive hover:bg-destructive/10"
+                onClick={() => onSuspend(project.id)}
+              >
+                <XCircle className="h-4 w-4 mr-2" />
+                Suspendre
+              </Button>
+            )}
           </div>
         )}
       </CardContent>
-
-      <CardFooter>
-        <Button
-          type="button"
-          onClick={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            navigate(getProjectStageRoute(project.id));
-          }}
-          className="w-full bg-forest hover:bg-forest/90 text-cream group-hover:bg-olive transition-colors"
-        >
-          <Eye className="h-4 w-4 mr-2" />
-          Voir les détails
-        </Button>
-      </CardFooter>
     </Card>
   );
 }

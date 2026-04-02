@@ -2,6 +2,7 @@ import { api } from "@/lib/api/axios";
 import { PROJECT_ENDPOINTS } from "@/lib/api/endpoints";
 import type {
   CreateProjectPayload,
+  CreateProjectStagePayload,
   UpdateProjectPayload,
   Project,
 } from "../types/project.types";
@@ -82,6 +83,13 @@ export const updateProjectStageApi = (
   },
 ) => {
   return api.put(PROJECT_ENDPOINTS.UPDATE_PROJECT_STAGE(projectStageId), data);
+};
+
+export const createProjectStageApi = (
+  projectId: string,
+  data: CreateProjectStagePayload,
+) => {
+  return api.post(PROJECT_ENDPOINTS.CREATE_PROJECT_STAGE(projectId), data);
 };
 
 export const deleteProjectStageApi = (projectStageId: string) => {

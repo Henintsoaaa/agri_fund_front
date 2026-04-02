@@ -45,6 +45,8 @@ export const PROJECT_ENDPOINTS = {
     `project/update-stage/${projectStageId}`,
   DELETE_PROJECT_STAGE: (projectStageId: string) =>
     `project/delete-stage/${projectStageId}`,
+  CREATE_PROJECT_STAGE: (projectId: string) =>
+    `project/create-stage/${projectId}`,
   GET_ALL_PROJECT_STAGES_OF_PROJECT: (projectId: string) =>
     `project/stages/${projectId}`,
   COUNT_PROJECT_STAGES: (projectId: string) =>
