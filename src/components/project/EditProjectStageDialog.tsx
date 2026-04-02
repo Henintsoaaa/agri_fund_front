@@ -155,7 +155,7 @@ export function EditProjectStageDialog({
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               placeholder="Titre de l'étape"
-              className="border-sage/30 focus:border-olive focus:ring-olive"
+              className="border-sage/30 focus:border-olive focus:ring-olive selection:bg-olive selection:text-cream"
             />
           </div>
 
@@ -186,7 +186,7 @@ export function EditProjectStageDialog({
               value={targetAmount}
               onChange={(e) => setTargetAmount(e.target.value)}
               placeholder="Montant cible"
-              className="border-sage/30 focus:border-olive focus:ring-olive"
+              className="border-sage/30 focus:border-olive focus:ring-olive selection:bg-olive selection:text-cream"
             />
           </div>
 
@@ -241,7 +241,7 @@ export function EditProjectStageDialog({
                     id="stage-image-input"
                     type="file"
                     accept="image/*"
-                    className="hidden"
+                    className="hidden selection:bg-olive selection:text-cream "
                     onChange={handleFileSelect}
                   />
                 </div>

@@ -160,7 +160,11 @@ export default function ProjectStageList() {
               {project?.title || "Étapes du projet"}
             </h1>
             <p className="text-sage text-lg">
-              Suivez l'avancement de votre projet étape par étape
+              {user?.role === "PROJECT_OWNER"
+                ? "Suivez l'avancement de votre projet étape par étape"
+                : user?.role === "INVESTOR"
+                  ? "Investissez dans les différentes étapes du projet"
+                  : "Visualisez les étapes de financement du projet"}
             </p>
           </div>
         </div>
@@ -236,7 +240,11 @@ export default function ProjectStageList() {
               <CardHeader>
                 <CardTitle className="text-forest">Étapes du projet</CardTitle>
                 <CardDescription className="text-sage">
-                  Gérez les étapes de financement de votre projet
+                  {user?.role === "PROJECT_OWNER"
+                    ? "Gérez les étapes de financement de votre projet"
+                    : user?.role === "INVESTOR"
+                      ? "Investissez étapes par étapes."
+                      : "Visualisez les étapes de tous les projets"}
                 </CardDescription>
               </CardHeader>
               <CardContent>

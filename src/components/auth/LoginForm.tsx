@@ -59,7 +59,7 @@ export function LoginForm() {
                 type="email"
                 placeholder="m@example.com"
                 required
-                className="border-sage/30 focus:border-forest"
+                className="border-sage/30 focus:border-forest selection:bg-olive selection:text-cream"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
@@ -81,7 +81,7 @@ export function LoginForm() {
                 id="password"
                 type="password"
                 required
-                className="border-sage/30 focus:border-forest"
+                className="border-sage/30 focus:border-forest selection:bg-olive selection:text-cream"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />

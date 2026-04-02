@@ -154,11 +154,11 @@ export default function ProjectStageCard({
           <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex items-center gap-2 min-w-0">
               <DollarSign className="h-4 w-4 text-olive" />
-              <span className="text-sm font-semibold text-forest break-words">
+              <span className="text-sm font-semibold text-forest wrap-break-words">
                 {stage.currentAmount.toLocaleString("fr-FR")} MGA
               </span>
             </div>
-            <span className="text-sm text-sage break-words">
+            <span className="text-sm text-sage wrap-break-words">
               / {stage.targetAmount.toLocaleString("fr-FR")} MGA
             </span>
           </div>

@@ -144,6 +144,7 @@ export function EditProjectDialog({
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               placeholder="Titre du projet"
+              className="selection:bg-olive selection:text-cream"
             />
           </div>
 
@@ -204,7 +205,7 @@ export function EditProjectDialog({
                       type="file"
                       accept="image/*"
                       onChange={handleFileSelect}
-                      className="hidden"
+                      className="hidden selection:bg-olive selection:text-cream"
                     />
                   </label>
                 </div>

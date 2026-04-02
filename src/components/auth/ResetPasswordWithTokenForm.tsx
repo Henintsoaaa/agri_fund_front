@@ -112,7 +112,7 @@ export default function ResetPasswordForm() {
               required
               value={newPassword}
               onChange={(e) => setNewPassword(e.target.value)}
-              className="border-sage/30 focus:border-forest"
+              className="border-sage/30 focus:border-forest selection:bg-olive selection:text-cream"
             />
           </div>
 
@@ -129,7 +129,7 @@ export default function ResetPasswordForm() {
               required
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
-              className="border-sage/30 focus:border-forest"
+              className="border-sage/30 focus:border-forest selection:bg-olive selection:text-cream"
             />
           </div>
 
@@ -138,7 +138,7 @@ export default function ResetPasswordForm() {
           <Button
             type="submit"
             disabled={isLoading}
-            className="w-full bg-forest text-cream hover:bg-forest/90"
+            className="w-full bg-forest text-cream hover:bg-forest/90 "
           >
             {isLoading ? "Réinitialisation..." : "Réinitialiser"}
           </Button>

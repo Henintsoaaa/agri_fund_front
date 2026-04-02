@@ -66,7 +66,7 @@ export function RegisterForm() {
                 required
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="border-sage/30 focus:border-forest"
+                className="border-sage/30 focus:border-forest selection:bg-olive selection:text-cream"
               />
             </div>
 
@@ -81,7 +81,7 @@ export function RegisterForm() {
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="border-sage/30 focus:border-forest"
+                className="border-sage/30 focus:border-forest selection:bg-olive selection:text-cream"
               />
             </div>
 
@@ -96,7 +96,7 @@ export function RegisterForm() {
                 required
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
-                className="border-sage/30 focus:border-forest"
+                className="border-sage/30 focus:border-forest selection:bg-olive selection:text-cream"
               />
             </div>
 
@@ -111,7 +111,7 @@ export function RegisterForm() {
                 required
                 value={country}
                 onChange={(e) => setCountry(e.target.value)}
-                className="border-sage/30 focus:border-forest"
+                className="border-sage/30 focus:border-forest selection:bg-olive selection:text-cream"
               />
             </div>
 
@@ -125,7 +125,7 @@ export function RegisterForm() {
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="border-sage/30 focus:border-forest"
+                className="border-sage/30 focus:border-forest selection:bg-olive selection:text-cream"
               />
             </div>
 

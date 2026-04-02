@@ -138,7 +138,7 @@ export default function InvestmentModal({
                 placeholder="Entrez le montant"
                 value={amount}
                 onChange={(e) => setAmount(e.target.value)}
-                className="pl-10 border-sage/30 focus:border-forest"
+                className="pl-10 border-sage/30 focus:border-forest selection:bg-olive selection:text-cream"
               />
             </div>
             <p className="text-xs text-sage">

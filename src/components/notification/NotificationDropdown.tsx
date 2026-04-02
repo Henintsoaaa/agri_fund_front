@@ -66,7 +66,13 @@ export const NotificationDropdown = () => {
   };
 
   return (
-    <DropdownMenu>
+    <DropdownMenu
+      onOpenChange={(open) => {
+        if (open && unreadCount > 0 && !markAllAsRead.isPending) {
+          markAllAsRead.mutate({ silent: true });
+        }
+      }}
+    >
       <DropdownMenuTrigger asChild>
         <Button
           variant="ghost"
@@ -96,7 +102,7 @@ export const NotificationDropdown = () => {
               className="h-auto p-1 text-xs text-olive hover:bg-olive/10"
               onClick={(e) => {
                 e.preventDefault();
-                markAllAsRead.mutate();
+                markAllAsRead.mutate({ silent: false });
               }}
               disabled={markAllAsRead.isPending}
             >

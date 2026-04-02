@@ -46,13 +46,18 @@ export const useMarkAllAsRead = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: notificationApi.markAllAsRead,
-    onSuccess: () => {
+    mutationFn: async (_options?: { silent?: boolean }) => {
+      await notificationApi.markAllAsRead();
+      return _options;
+    },
+    onSuccess: (options) => {
       queryClient.invalidateQueries({ queryKey: NOTIFICATION_KEYS.list() });
       queryClient.invalidateQueries({
         queryKey: NOTIFICATION_KEYS.unreadCount(),
       });
-      toast.success("Toutes les notifications ont été marquées comme lues");
+      if (!options?.silent) {
+        toast.success("Toutes les notifications ont été marquées comme lues");
+      }
     },
     onError: (error: any) => {
       toast.error("Erreur lors de la mise à jour des notifications");

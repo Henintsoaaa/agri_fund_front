@@ -106,7 +106,7 @@ export default function UploadProofDialog({
                 type="file"
                 accept="image/*,.pdf,.doc,.docx"
                 onChange={handleFileChange}
-                className="flex-1"
+                className="flex-1 selection:bg-olive selection:text-cream"
                 required
               />
               {file && (
@@ -185,6 +185,7 @@ export default function UploadProofDialog({
               onChange={(e) => setTitle(e.target.value)}
               placeholder="Ex: Construction de la serre - Semaine 1"
               required
+              className="selection:bg-olive selection:text-cream"
             />
           </div>
 

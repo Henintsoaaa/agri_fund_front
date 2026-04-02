@@ -315,7 +315,7 @@ export default function CreateProject() {
                     setFormData({ ...formData, title: e.target.value })
                   }
                   placeholder="Ex: Riziculture Bio Antsirabe"
-                  className="border-sage/30 text-forest placeholder:text-sage focus:border-olive focus:ring-olive"
+                  className="border-sage/30 text-forest placeholder:text-sage focus:border-olive focus:ring-olive selection:bg-olive selection:text-cream"
                   required
                 />
               </div>
@@ -360,7 +360,7 @@ export default function CreateProject() {
                     type="file"
                     accept="image/*"
                     onChange={handleProjectImageChange}
-                    className="hidden"
+                    className="hidden selection:bg-olive selection:text-cream"
                   />
 
                   {projectImageFile ? (
@@ -517,7 +517,7 @@ export default function CreateProject() {
                           handleStageChange(index, "title", e.target.value)
                         }
                         placeholder="Ex: Phase de préparation"
-                        className="border-sage/30 text-forest placeholder:text-sage focus:border-olive focus:ring-olive"
+                        className="border-sage/30 text-forest placeholder:text-sage focus:border-olive focus:ring-olive selection:bg-olive selection:text-cream"
                         required
                       />
                     </div>
@@ -567,7 +567,7 @@ export default function CreateProject() {
                           )
                         }
                         placeholder="5000"
-                        className="border-sage/30 text-forest placeholder:text-sage focus:border-olive focus:ring-olive"
+                        className="border-sage/30 text-forest placeholder:text-sage focus:border-olive focus:ring-olive selection:bg-olive selection:text-cream"
                         required
                       />
                     </div>
@@ -599,7 +599,7 @@ export default function CreateProject() {
                               handleStageImageChange(index, file);
                             }
                           }}
-                          className="hidden"
+                          className="hidden selection:bg-olive selection:text-cream"
                         />
 
                         {stage.imageFile ? (

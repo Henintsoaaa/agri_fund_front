@@ -158,7 +158,7 @@ export const NotificationsPage = () => {
           {unreadCount > 0 && (
             <Button
               variant="outline"
-              onClick={() => markAllAsRead.mutate()}
+              onClick={() => markAllAsRead.mutate(undefined)}
               disabled={markAllAsRead.isPending}
               className="border-sage/30 hover:bg-olive/10"
             >

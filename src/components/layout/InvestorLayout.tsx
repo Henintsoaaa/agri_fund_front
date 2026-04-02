@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
+import { useInvestment } from "@/features/investment/hooks/useInvestment";
 
 const navItems = [
   {
@@ -22,7 +23,6 @@ const navItems = [
     title: "Mes Investissements",
     href: "/investor/investments",
     icon: Wallet,
-    badge: 8,
   },
 
   {
@@ -35,6 +35,18 @@ const navItems = [
 export default function InvestorLayout() {
   const navigate = useNavigate();
   const location = useLocation();
+  const { myInvestments, myTransactionStats, isLoadingMyInvestments } =
+    useInvestment();
+
+  const investmentsCount = myInvestments?.length ?? 0;
+  const totalInvested = myTransactionStats?.totalInvested ?? 0;
+  const totalRefunded = myTransactionStats?.totalRefunded ?? 0;
+  const totalDividends = myTransactionStats?.totalDividends ?? 0;
+  const portfolioValue = totalInvested - totalRefunded + totalDividends;
+  const avgROI =
+    totalInvested > 0
+      ? ((portfolioValue - totalInvested) / totalInvested) * 100
+      : 0;
 
   return (
     <div className="h-screen flex flex-col bg-linear-to-br from-cream via-sage/10 to-olive/10">
@@ -63,7 +75,7 @@ export default function InvestorLayout() {
                   >
                     <Icon className="h-5 w-5" />
                     <span className="flex-1 text-left">{item.title}</span>
-                    {item.badge && (
+                    {item.href === "/investor/investments" && (
                       <Badge
                         variant={isActive ? "secondary" : "default"}
                         className={cn(
@@ -73,7 +85,7 @@ export default function InvestorLayout() {
                             : "bg-forest text-cream",
                         )}
                       >
-                        {item.badge}
+                        {isLoadingMyInvestments ? "-" : investmentsCount}
                       </Badge>
                     )}
                   </Button>
@@ -93,11 +105,16 @@ export default function InvestorLayout() {
               <div className="space-y-1">
                 <div className="flex justify-between text-xs">
                   <span className="text-forest/70">Total investi</span>
-                  <span className="font-semibold text-forest">15 000 MGA</span>
+                  <span className="font-semibold text-forest">
+                    {totalInvested.toLocaleString("fr-FR")} MGA
+                  </span>
                 </div>
                 <div className="flex justify-between text-xs">
                   <span className="text-forest/70">ROI moyen</span>
-                  <span className="font-semibold text-olive">+12.5%</span>
+                  <span className="font-semibold text-olive">
+                    {avgROI >= 0 ? "+" : ""}
+                    {avgROI.toFixed(1)}%
+                  </span>
                 </div>
               </div>
             </div>

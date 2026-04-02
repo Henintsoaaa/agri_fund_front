@@ -38,7 +38,7 @@ export default function AdminSettingsPage() {
                 <Input
                   id="platformName"
                   defaultValue="AgriConnect"
-                  className="border-sage/30 bg-cream"
+                  className="border-sage/30 bg-cream selection:bg-olive selection:text-cream"
                 />
               </div>
               <div className="space-y-2">
@@ -49,7 +49,7 @@ export default function AdminSettingsPage() {
                   id="supportEmail"
                   type="email"
                   defaultValue="support@agriconnect.mg"
-                  className="border-sage/30 bg-cream"
+                  className="border-sage/30 bg-cream selection:bg-olive selection:text-cream"
                 />
               </div>
               <div className="flex items-center justify-between">

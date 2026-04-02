@@ -66,7 +66,7 @@ export default function CreateUserDialog({ onCreate }: CreateUserDialogProps) {
               placeholder="Jean Dupont"
               required
               disabled={loading}
-              className="border-sage/30 focus:border-olive focus:ring-olive"
+              className="border-sage/30 focus:border-olive focus:ring-olive selection:bg-olive selection:text-cream"
             />
           </div>
           <div className="space-y-2">
@@ -81,7 +81,7 @@ export default function CreateUserDialog({ onCreate }: CreateUserDialogProps) {
               placeholder="jean.dupont@example.com"
               required
               disabled={loading}
-              className="border-sage/30 focus:border-olive focus:ring-olive"
+              className="border-sage/30 focus:border-olive focus:ring-olive selection:bg-olive selection:text-cream"
             />
           </div>
           <div className="flex justify-end gap-2">

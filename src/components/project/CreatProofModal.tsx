@@ -127,7 +127,7 @@ export default function CreatProofModal({
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 disabled={isUploadingProof}
-                className="border-sage/30 focus:border-olive focus:ring-olive"
+                className="border-sage/30 focus:border-olive focus:ring-olive selection:bg-olive selection:text-cream"
               />
             </div>
 
@@ -142,7 +142,7 @@ export default function CreatProofModal({
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 disabled={isUploadingProof}
-                className="min-h-25 border-sage/30 focus:border-olive focus:ring-olive"
+                className="min-h-25 border-sage/30 focus:border-olive focus:ring-olive selection:bg-olive selection:text-cream"
               />
             </div>
 

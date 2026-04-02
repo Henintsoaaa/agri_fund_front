@@ -134,7 +134,7 @@ export default function MyProjectsPage() {
                 placeholder="Rechercher un projet..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10 border-sage/30 bg-cream"
+                className="pl-10 border-sage/30 bg-cream selection:bg-olive selection:text-cream"
               />
             </div>
           </CardContent>

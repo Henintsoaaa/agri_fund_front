@@ -36,7 +36,7 @@ export default function FavoritesPage() {
               placeholder="Rechercher un projet..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10"
+              className="pl-10 selection:bg-olive selection:text-cream"
             />
           </div>
           <Select value={filterStatus} onValueChange={setFilterStatus}>

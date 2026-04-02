@@ -1,5 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
+import { useAuthContext } from "@/features/auth/context/AuthContext";
 import {
   uploadProofApi,
   getMyProofsApi,
@@ -16,6 +17,7 @@ import type { UploadProofPayload } from "../types/proof.types";
 
 export const useProofs = () => {
   const queryClient = useQueryClient();
+  const { user } = useAuthContext();
 
   // Get my proofs (project owner)
   const {
@@ -28,6 +30,7 @@ export const useProofs = () => {
       const response = await getMyProofsApi();
       return response.data;
     },
+    enabled: user?.role === "PROJECT_OWNER",
     staleTime: 1000 * 60 * 5,
   });
 
@@ -98,6 +101,7 @@ export const useProofs = () => {
       const response = await getPendingProofsApi();
       return response.data;
     },
+    enabled: user?.role === "ADMIN",
     staleTime: 1000 * 60 * 2,
   });
 
