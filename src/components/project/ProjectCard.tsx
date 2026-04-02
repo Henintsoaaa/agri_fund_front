@@ -10,6 +10,12 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Separator } from "@/components/ui/separator";
 import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
@@ -20,9 +26,8 @@ import {
   Trash2,
   Target,
   Users,
-  CheckCircle2,
-  XCircle,
   FolderKanban,
+  ChevronDown,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { getImageUrl } from "@/lib/utils/image";
@@ -102,6 +107,16 @@ export default function ProjectCard({
   const progress =
     totalTarget > 0 ? Math.round((totalCollected / totalTarget) * 100) : 0;
 
+  const handleStatusChange = (nextStatus: "DRAFT" | "ACTIVE" | "SUSPENDED") => {
+    if (nextStatus === "ACTIVE" && onActivate) {
+      onActivate(project.id);
+    }
+
+    if (nextStatus === "SUSPENDED" && onSuspend) {
+      onSuspend(project.id);
+    }
+  };
+
   return (
     <Card className="bg-cream border-sage/30 overflow-hidden group hover:shadow-lg transition-shadow">
       {/* Image */}
@@ -117,11 +132,51 @@ export default function ProjectCard({
             <FolderKanban className="h-16 w-16 text-olive/50" />
           </div>
         )}
-        <Badge
-          className={`absolute top-3 right-3 ${getStatutColor(project.statut)}`}
-        >
-          {getStatutLabel(project.statut)}
-        </Badge>
+        {role === "admin" ? (
+          <div className="absolute top-3 right-3 flex items-center gap-2">
+            <Badge className={getStatutColor(project.statut)}>
+              {getStatutLabel(project.statut)}
+            </Badge>
+
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  type="button"
+                  size="icon"
+                  variant="secondary"
+                  className="h-7 w-7 bg-cream/90 hover:bg-cream text-forest"
+                >
+                  <ChevronDown className="h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent
+                align="end"
+                className="bg-cream border-sage/30"
+              >
+                <DropdownMenuItem
+                  disabled={project.statut === "ACTIVE" || !onActivate}
+                  onClick={() => handleStatusChange("ACTIVE")}
+                  className="text-forest"
+                >
+                  Activer
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  disabled={project.statut === "SUSPENDED" || !onSuspend}
+                  onClick={() => handleStatusChange("SUSPENDED")}
+                  className="text-destructive"
+                >
+                  Suspendre
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+        ) : (
+          <Badge
+            className={`absolute top-3 right-3 ${getStatutColor(project.statut)}`}
+          >
+            {getStatutLabel(project.statut)}
+          </Badge>
+        )}
       </div>
 
       <CardHeader>
@@ -220,35 +275,6 @@ export default function ProjectCard({
             </Tooltip>
           )}
         </div>
-
-        {role === "admin" && (
-          <div className="flex gap-2">
-            {project.statut === "DRAFT" && onActivate && (
-              <Button
-                type="button"
-                size="sm"
-                variant="outline"
-                className="flex-1 border-olive/50 text-olive hover:bg-olive/10"
-                onClick={() => onActivate(project.id)}
-              >
-                <CheckCircle2 className="h-4 w-4 mr-2" />
-                Activer
-              </Button>
-            )}
-            {project.statut === "ACTIVE" && onSuspend && (
-              <Button
-                type="button"
-                size="sm"
-                variant="outline"
-                className="flex-1 border-destructive/50 text-destructive hover:bg-destructive/10"
-                onClick={() => onSuspend(project.id)}
-              >
-                <XCircle className="h-4 w-4 mr-2" />
-                Suspendre
-              </Button>
-            )}
-          </div>
-        )}
       </CardContent>
     </Card>
   );

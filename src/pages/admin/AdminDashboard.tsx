@@ -36,7 +36,8 @@ export default function AdminDashboard() {
     deleteUser,
     getStats,
   } = useUser();
-  const { allProjects, isLoadingAllProjects } = useProject();
+  const { allProjects, isLoadingAllProjects, activateProject, suspendProject } =
+    useProject();
   const [activeTab, setActiveTab] = useState("all");
   const [projectTab, setProjectTab] = useState("all");
   const [section, setSection] = useQueryState("section", {
@@ -309,7 +310,13 @@ export default function AdminDashboard() {
                     ) : (
                       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 pr-4">
                         {filteredProjects().map((project) => (
-                          <ProjectCard key={project.id} project={project} />
+                          <ProjectCard
+                            key={project.id}
+                            project={project}
+                            role="admin"
+                            onActivate={activateProject}
+                            onSuspend={suspendProject}
+                          />
                         ))}
                       </div>
                     )}

@@ -43,7 +43,7 @@ export default function ProofCard({
       <CardContent className="p-4">
         <div className="flex flex-col gap-4">
           {/* File Preview */}
-          <div className="w-20 h-20 rounded-lg overflow-hidden bg-sage/10 flex items-center justify-center shrink-0">
+          <div className="w-full rounded-lg overflow-hidden bg-sage/10 flex items-center justify-center shrink-0">
             {proof.fileType === "image" ? (
               <img
                 src={`${import.meta.env.VITE_API_URL}${proof.fileUrl}`}
